@@ -1,0 +1,9 @@
+Caricato il codice sorgente e l'eseguibile preso dal GitHub di AudioProgrammer.
+Il codice è stato modificato per essere compilabile.
+Se in futuro si vuole riprovare la build da zero, la gerarchia da rispettare tra Maximilian e il progetto è diversa da quella indicata da AudioProgrammer:
+(vedi immagine allegata)
+1) Spostare stb_vorbis.c / .h direttamente in cartella Maximilian
+2) spostare libs fuori da source
+3) Probabilmente darà tanti errori il codice a causa di parti deprecate, ho usato GitHub Copilot per risolvere velocemente
+
+Il file completo una volta compilato pesa circa 4 GB ed è impossibile da caricare su GitHub attualmente.
