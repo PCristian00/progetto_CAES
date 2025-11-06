@@ -13,12 +13,14 @@
 //==============================================================================
 /**
 */
-class NewProjectAudioProcessor  : public juce::AudioProcessor
+
+//part 0 del tutorial
+class BasicOscillatorAudioProcessor  : public juce::AudioProcessor
 {
 public:
     //==============================================================================
-    NewProjectAudioProcessor();
-    ~NewProjectAudioProcessor() override;
+    BasicOscillatorAudioProcessor();
+    ~BasicOscillatorAudioProcessor() override;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -54,6 +56,10 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
+
+	juce::dsp::Oscillator<float> osc{ [](float x) { return std::sin(x); } };
+    juce::dsp::Gain<float> gain;
+
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NewProjectAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicOscillatorAudioProcessor)
 };
