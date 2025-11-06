@@ -19,7 +19,7 @@ SubSynthAudioProcessor::SubSynthAudioProcessor()
 #endif
 		.withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
-	)
+	), apvts(*this, nullptr, "Parameters", createParameters())
 #endif
 {
 	synth.addSound(new SynthSound());
@@ -155,7 +155,7 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 
 
 
-	
+
 
 	for (int i = 0; i < synth.getNumVoices(); i++)
 	{
@@ -200,4 +200,22 @@ void SubSynthAudioProcessor::setStateInformation(const void* data, int sizeInByt
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
 	return new SubSynthAudioProcessor();
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout SubSynthAudioProcessor::createParameters()
+{
+	// autocompletamento da RIMUOVERE?
+	// juce::AudioProcessorValueTreeState::ParameterLayout layout;
+
+	std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
+
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("GAIN", // parameterID
+		"Gain", // parameter name
+		0.0f, // min value
+		1.0f, // max value
+		0.5f)); // default value
+
+	return { params.begin(), params.end() };
+
+	//return layout;
 }
