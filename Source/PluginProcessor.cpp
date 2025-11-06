@@ -22,6 +22,9 @@ SubSynthAudioProcessor::SubSynthAudioProcessor()
 	)
 #endif
 {
+	synth.addSound(new SynthSound());
+	synth.addVoice(new SynthVoice());
+
 }
 
 SubSynthAudioProcessor::~SubSynthAudioProcessor()
@@ -105,6 +108,9 @@ void SubSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 
 	osc.setFrequency(220.0f);
 	gain.setGainLinear(0.1f);
+
+	// part 1 del tutorial
+	synth.setCurrentPlaybackSampleRate(sampleRate);
 }
 
 void SubSynthAudioProcessor::releaseResources()
@@ -152,6 +158,18 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	juce::dsp::AudioBlock<float> audioBlock{ buffer };
 	osc.process(juce::dsp::ProcessContextReplacing<float>{ audioBlock });	
 	gain.process(juce::dsp::ProcessContextReplacing<float>{ audioBlock });
+
+	// part 1 del tutorial
+	synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());	
+
+	for(int i=0; i<synth.getNumVoices(); i++)
+	{
+		// in part 1 <SynthesiserVoice*> (synth.getVoice(i))
+		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
+		{
+			// You can now use the 'voice' pointer to access your SynthVoice methods and members
+		}
+	}
 }
 
 //==============================================================================

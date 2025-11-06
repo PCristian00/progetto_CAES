@@ -11,6 +11,9 @@
       <FILE id="GaIsDK" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="PCs4hU" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="X6Iy4f" name="SynthVoice.cpp" compile="1" resource="0" file="Source/SynthVoice.cpp"/>
+      <FILE id="a3Azs6" name="SynthVoice.h" compile="0" resource="0" file="Source/SynthVoice.h"/>
+      <FILE id="Zlo4sn" name="SynthSound.h" compile="0" resource="0" file="Source/SynthSound.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>

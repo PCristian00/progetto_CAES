@@ -9,6 +9,8 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "SynthVoice.h"
+#include "SynthSound.h"
 
 //==============================================================================
 /**
@@ -66,6 +68,8 @@ private:
 
 
 	juce::dsp::Gain<float> gain;
+
+	juce::Synthesiser synth;
 
 	//==============================================================================
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SubSynthAudioProcessor)
