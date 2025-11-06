@@ -57,17 +57,7 @@ public:
 	void getStateInformation(juce::MemoryBlock& destData) override;
 	void setStateInformation(const void* data, int sizeInBytes) override;
 
-private:
-
-	// 200 indica la LUT (controllare dopo)
-	juce::dsp::Oscillator<float> osc{ [](float x) { return std::sin(x); 200;} };  //sin
-
-	// juce::dsp::Oscillator<float> osc{ [](float x) { return x / juce::MathConstants<float>::pi; } }; // saw
-	// juce::dsp::Oscillator<float> osc{ [](float x) { return x < 0.0f ? -1.0f : 1.0f; } }; // square
-
-
-
-	juce::dsp::Gain<float> gain;
+private:	
 
 	juce::Synthesiser synth;
 

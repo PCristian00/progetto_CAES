@@ -97,20 +97,18 @@ void SubSynthAudioProcessor::changeProgramName(int index, const juce::String& ne
 // part 0 del tutorial
 void SubSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-	juce::dsp::ProcessSpec spec;
-	spec.sampleRate = sampleRate;
-	spec.maximumBlockSize = samplesPerBlock;
-	spec.numChannels = getTotalNumOutputChannels();
-	
-	osc.prepare(spec);
-	
-	gain.prepare(spec);
 
-	osc.setFrequency(220.0f);
-	gain.setGainLinear(0.1f);
 
 	// part 1 del tutorial
 	synth.setCurrentPlaybackSampleRate(sampleRate);
+
+	for (int i = 0; i < synth.getNumVoices(); i++)
+	{
+		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
+		{
+			voice->prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
+		}
+	}
 }
 
 void SubSynthAudioProcessor::releaseResources()
@@ -155,21 +153,21 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
 		buffer.clear(i, 0, buffer.getNumSamples());
 
-	juce::dsp::AudioBlock<float> audioBlock{ buffer };
-	osc.process(juce::dsp::ProcessContextReplacing<float>{ audioBlock });	
-	gain.process(juce::dsp::ProcessContextReplacing<float>{ audioBlock });
 
-	// part 1 del tutorial
-	synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());	
 
-	for(int i=0; i<synth.getNumVoices(); i++)
+	
+
+	for (int i = 0; i < synth.getNumVoices(); i++)
 	{
 		// in part 1 <SynthesiserVoice*> (synth.getVoice(i))
 		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
 		{
-			// You can now use the 'voice' pointer to access your SynthVoice methods and members
+			// OSC Controls, ADSR...
 		}
 	}
+
+	// part 1 del tutorial
+	synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 }
 
 //==============================================================================
