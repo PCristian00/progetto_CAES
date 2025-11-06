@@ -15,12 +15,12 @@
 */
 
 //part 0 del tutorial
-class BasicOscillatorAudioProcessor  : public juce::AudioProcessor
+class SubSynthAudioProcessor  : public juce::AudioProcessor
 {
 public:
     //==============================================================================
-    BasicOscillatorAudioProcessor();
-    ~BasicOscillatorAudioProcessor() override;
+    SubSynthAudioProcessor();
+    ~SubSynthAudioProcessor() override;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -61,5 +61,5 @@ private:
     juce::dsp::Gain<float> gain;
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicOscillatorAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SubSynthAudioProcessor)
 };

@@ -10,7 +10,7 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-BasicOscillatorAudioProcessor::BasicOscillatorAudioProcessor()
+SubSynthAudioProcessor::SubSynthAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
 	: AudioProcessor(BusesProperties()
 #if ! JucePlugin_IsMidiEffect
@@ -24,17 +24,17 @@ BasicOscillatorAudioProcessor::BasicOscillatorAudioProcessor()
 {
 }
 
-BasicOscillatorAudioProcessor::~BasicOscillatorAudioProcessor()
+SubSynthAudioProcessor::~SubSynthAudioProcessor()
 {
 }
 
 //==============================================================================
-const juce::String BasicOscillatorAudioProcessor::getName() const
+const juce::String SubSynthAudioProcessor::getName() const
 {
 	return JucePlugin_Name;
 }
 
-bool BasicOscillatorAudioProcessor::acceptsMidi() const
+bool SubSynthAudioProcessor::acceptsMidi() const
 {
 #if JucePlugin_WantsMidiInput
 	return true;
@@ -43,7 +43,7 @@ bool BasicOscillatorAudioProcessor::acceptsMidi() const
 #endif
 }
 
-bool BasicOscillatorAudioProcessor::producesMidi() const
+bool SubSynthAudioProcessor::producesMidi() const
 {
 #if JucePlugin_ProducesMidiOutput
 	return true;
@@ -52,7 +52,7 @@ bool BasicOscillatorAudioProcessor::producesMidi() const
 #endif
 }
 
-bool BasicOscillatorAudioProcessor::isMidiEffect() const
+bool SubSynthAudioProcessor::isMidiEffect() const
 {
 #if JucePlugin_IsMidiEffect
 	return true;
@@ -61,38 +61,38 @@ bool BasicOscillatorAudioProcessor::isMidiEffect() const
 #endif
 }
 
-double BasicOscillatorAudioProcessor::getTailLengthSeconds() const
+double SubSynthAudioProcessor::getTailLengthSeconds() const
 {
 	return 0.0;
 }
 
-int BasicOscillatorAudioProcessor::getNumPrograms()
+int SubSynthAudioProcessor::getNumPrograms()
 {
 	return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
 	// so this should be at least 1, even if you're not really implementing programs.
 }
 
-int BasicOscillatorAudioProcessor::getCurrentProgram()
+int SubSynthAudioProcessor::getCurrentProgram()
 {
 	return 0;
 }
 
-void BasicOscillatorAudioProcessor::setCurrentProgram(int index)
+void SubSynthAudioProcessor::setCurrentProgram(int index)
 {
 }
 
-const juce::String BasicOscillatorAudioProcessor::getProgramName(int index)
+const juce::String SubSynthAudioProcessor::getProgramName(int index)
 {
 	return {};
 }
 
-void BasicOscillatorAudioProcessor::changeProgramName(int index, const juce::String& newName)
+void SubSynthAudioProcessor::changeProgramName(int index, const juce::String& newName)
 {
 }
 
 //==============================================================================
 // part 0 del tutorial
-void BasicOscillatorAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
+void SubSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
 	juce::dsp::ProcessSpec spec;
 	spec.sampleRate = sampleRate;
@@ -107,14 +107,14 @@ void BasicOscillatorAudioProcessor::prepareToPlay(double sampleRate, int samples
 	gain.setGainLinear(0.1f);
 }
 
-void BasicOscillatorAudioProcessor::releaseResources()
+void SubSynthAudioProcessor::releaseResources()
 {
 	// When playback stops, you can use this as an opportunity to free up any
 	// spare memory, etc.
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool BasicOscillatorAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
+bool SubSynthAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
 {
 #if JucePlugin_IsMidiEffect
 	juce::ignoreUnused(layouts);
@@ -140,7 +140,7 @@ bool BasicOscillatorAudioProcessor::isBusesLayoutSupported(const BusesLayout& la
 #endif
 
 // part 0 del tutorial
-void BasicOscillatorAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	juce::ScopedNoDenormals noDenormals;
 	auto totalNumInputChannels = getTotalNumInputChannels();
@@ -155,25 +155,25 @@ void BasicOscillatorAudioProcessor::processBlock(juce::AudioBuffer<float>& buffe
 }
 
 //==============================================================================
-bool BasicOscillatorAudioProcessor::hasEditor() const
+bool SubSynthAudioProcessor::hasEditor() const
 {
 	return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* BasicOscillatorAudioProcessor::createEditor()
+juce::AudioProcessorEditor* SubSynthAudioProcessor::createEditor()
 {
-	return new NewProjectAudioProcessorEditor(*this);
+	return new SubSynthAudioProcessorEditor(*this);
 }
 
 //==============================================================================
-void BasicOscillatorAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
+void SubSynthAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
 {
 	// You should use this method to store your parameters in the memory block.
 	// You could do that either as raw data, or use the XML or ValueTree classes
 	// as intermediaries to make it easy to save and load complex data.
 }
 
-void BasicOscillatorAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
+void SubSynthAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 {
 	// You should use this method to restore your parameters from this memory block,
 	// whose contents will have been created by the getStateInformation() call.
@@ -183,5 +183,5 @@ void BasicOscillatorAudioProcessor::setStateInformation(const void* data, int si
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-	return new BasicOscillatorAudioProcessor();
+	return new SubSynthAudioProcessor();
 }
