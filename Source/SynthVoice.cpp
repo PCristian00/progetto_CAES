@@ -59,7 +59,7 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outpu
 	osc.prepare(spec);
 	gain.prepare(spec);
 
-	
+	// In futuro, vedere come collegare il gain al parametro del plugin
 	gain.setGainLinear(0.1f);
 
 	isPrepared = true;

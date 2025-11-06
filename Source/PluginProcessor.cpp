@@ -150,6 +150,9 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	auto totalNumInputChannels = getTotalNumInputChannels();
 	auto totalNumOutputChannels = getTotalNumOutputChannels();
 
+	// In futuro, vedere come collegare il gain al parametro del plugin
+	apvts.getRawParameterValue("GAIN")->load();
+
 	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
 		buffer.clear(i, 0, buffer.getNumSamples());
 
@@ -162,6 +165,9 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 		// in part 1 <SynthesiserVoice*> (synth.getVoice(i))
 		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
 		{
+
+			// VEDERE part 5: fare funzione tipo UpdateGain in SynthVoice
+			// voice->gain.setGainLinear(apvts.getRawParameterValue("GAIN")->load());
 			// OSC Controls, ADSR...
 		}
 	}
