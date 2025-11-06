@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="IN6TnE" name="SubSynth" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn">
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
+              companyName="univpm">
   <MAINGROUP id="nUzka3" name="SubSynth">
     <GROUP id="{5EA7C0B8-CE74-4FC6-ACF3-1AEF8689B221}" name="Source">
       <FILE id="Oh3b7h" name="PluginProcessor.cpp" compile="1" resource="0"
