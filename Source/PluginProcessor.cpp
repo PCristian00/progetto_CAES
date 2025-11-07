@@ -163,12 +163,19 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	for (int i = 0; i < synth.getNumVoices(); i++)
 	{
 		// in part 1 <SynthesiserVoice*> (synth.getVoice(i))
-		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
+		if (auto voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
 		{
 
 			// VEDERE part 5: fare funzione tipo UpdateGain in SynthVoice
 			// voice->gain.setGainLinear(apvts.getRawParameterValue("GAIN")->load());
 			// OSC Controls, ADSR...
+
+
+
+			voice->updateADSR(apvts.getRawParameterValue("ATTACK")->load(),
+				apvts.getRawParameterValue("DECAY")->load(),
+				apvts.getRawParameterValue("SUSTAIN")->load(),
+				apvts.getRawParameterValue("RELEASE")->load());
 		}
 	}
 

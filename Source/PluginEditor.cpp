@@ -18,9 +18,12 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 
 	setSize(400, 300);
 
-	gainSlider.setSliderStyle(juce::Slider::LinearBarVertical);
-	gainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 100, 50);
-	addAndMakeVisible(gainSlider);
+	setSliderParams(gainSlider);
+
+	setSliderParams(attackSlider);
+	setSliderParams(decaySlider);
+	setSliderParams(sustainSlider);
+	setSliderParams(releaseSlider);
 
 	gainSliderAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "GAIN", gainSlider);
 
@@ -30,7 +33,8 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 	releaseSliderAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "RELEASE", releaseSlider);
 
 	oscSelectorAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "OSC", oscSelector);
-	
+
+
 }
 
 SubSynthAudioProcessorEditor::~SubSynthAudioProcessorEditor()
@@ -53,5 +57,27 @@ void SubSynthAudioProcessorEditor::resized()
 	// This is generally where you'll want to lay out the positions of any
 	// subcomponents in your editor..
 
-	gainSlider.setBounds(getWidth() / 2 - 100, getHeight() / 2 - 50, 200, 100);
+	const auto bounds = getLocalBounds().reduced(10);
+	const auto padding = 10;
+	const auto sliderWidth = bounds.getWidth() / 4 - padding;
+	const auto sliderHeight = bounds.getHeight() / 4 - padding;
+	const auto sliderXstart = 0;
+	const auto sliderYstart = bounds.getHeight() / 2 - (sliderHeight / 2);
+
+	setSliderBounds(attackSlider, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
+	setSliderBounds(decaySlider, attackSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
+	setSliderBounds(sustainSlider, decaySlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
+	setSliderBounds(releaseSlider, sustainSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
+
+	setSliderBounds(gainSlider, releaseSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
+}
+
+void SubSynthAudioProcessorEditor::setSliderParams(juce::Slider& slider) {
+	slider.setSliderStyle(juce::Slider::LinearBarVertical);
+	slider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 25);
+	addAndMakeVisible(slider);
+}
+
+void SubSynthAudioProcessorEditor::setSliderBounds(juce::Slider& slider, int x, int y, int width, int height) {
+	slider.setBounds(x, y, width, height);
 }
