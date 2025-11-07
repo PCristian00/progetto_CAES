@@ -16,7 +16,7 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 	// Make sure that before the constructor has finished, you've set the
 	// editor's size to whatever you need it to be.
 
-	setSize(400, 300);
+	setSize(800, 600);
 
 	setSliderParams(gainSlider);
 
@@ -59,9 +59,10 @@ void SubSynthAudioProcessorEditor::resized()
 
 	const auto bounds = getLocalBounds().reduced(10);
 	const auto padding = 10;
-	const auto sliderWidth = bounds.getWidth() / 4 - padding;
-	const auto sliderHeight = bounds.getHeight() / 4 - padding;
-	const auto sliderXstart = 0;
+	const int numSliders = 5;
+	const auto sliderWidth = bounds.getWidth() / numSliders - padding;
+	const auto sliderHeight = bounds.getHeight() / numSliders - padding;
+	const auto sliderXstart = padding;
 	const auto sliderYstart = bounds.getHeight() / 2 - (sliderHeight / 2);
 
 	setSliderBounds(attackSlider, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
