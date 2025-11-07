@@ -16,12 +16,21 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 	// Make sure that before the constructor has finished, you've set the
 	// editor's size to whatever you need it to be.
 
+	setSize(400, 300);
+
 	gainSlider.setSliderStyle(juce::Slider::LinearBarVertical);
 	gainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 100, 50);
 	addAndMakeVisible(gainSlider);
 
-	gainSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "GAIN", gainSlider);
-	setSize(400, 300);
+	gainSliderAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "GAIN", gainSlider);
+
+	attackSliderAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "ATTACK", attackSlider);
+	decaySliderAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "DECAY", decaySlider);
+	sustainSliderAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "SUSTAIN", sustainSlider);
+	releaseSliderAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "RELEASE", releaseSlider);
+
+	oscSelectorAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "OSC", oscSelector);
+	
 }
 
 SubSynthAudioProcessorEditor::~SubSynthAudioProcessorEditor()

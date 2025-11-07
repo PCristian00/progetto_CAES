@@ -215,6 +215,37 @@ juce::AudioProcessorValueTreeState::ParameterLayout SubSynthAudioProcessor::crea
 
 	std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
 
+	// Combobox: switch oscillator
+
+	params.push_back(std::make_unique<juce::AudioParameterChoice>("OSC", // parameterID
+		"Oscillator", // parameter name
+		juce::StringArray{ "Sine", "Saw", "Square" }, // choices
+		0)); // default index
+
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("ATTACK", // parameterID
+		"Attack", // parameter name
+		0.1f, // min value
+		1.0f, // max value
+		0.1f)); // default value
+
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", // parameterID
+		"Decay", // parameter name
+		0.1f, // min value
+		1.0f, // max value
+		0.1f)); // default value
+
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("SUSTAIN", // parameterID
+		"Sustain", // parameter name
+		0.0f, // min value
+		1.0f, // max value
+		1.0f)); // default value
+
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("RELEASE", // parameterID
+		"Release", // parameter name
+		0.1f, // min value
+		3.0f, // max value
+		0.4f)); // default value
+
 	params.push_back(std::make_unique<juce::AudioParameterFloat>("GAIN", // parameterID
 		"Gain", // parameter name
 		0.0f, // min value
