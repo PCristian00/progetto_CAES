@@ -170,6 +170,8 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 			// voice->gain.setGainLinear(apvts.getRawParameterValue("GAIN")->load());
 			// OSC Controls, ADSR...
 
+			voice->updateGain(apvts.getRawParameterValue("GAIN")->load());
+
 
 
 			voice->updateADSR(apvts.getRawParameterValue("ATTACK")->load(),
@@ -243,7 +245,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SubSynthAudioProcessor::crea
 
 	params.push_back(std::make_unique<juce::AudioParameterFloat>("SUSTAIN", // parameterID
 		"Sustain", // parameter name
-		0.0f, // min value
+		0.1f, // min value
 		1.0f, // max value
 		1.0f)); // default value
 

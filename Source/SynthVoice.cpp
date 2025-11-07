@@ -74,6 +74,11 @@ void SynthVoice::updateADSR(const float attack, const float decay, const float s
 	adsr.setParameters(adsrParams);
 }
 
+void SynthVoice::updateGain(const float gainValue)
+{
+	gain.setGainLinear(gainValue);
+}
+
 
 // part 2
 void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
