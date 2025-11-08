@@ -8,8 +8,12 @@
   ==============================================================================
 */
 
-#include <JuceHeader.h>
+// #include <JuceHeader.h>
 #include "ADSRComponent.h"
+//#include "Utils.h"
+
+//using namespace utils;
+// #include "UI/Utils.h"
 
 //==============================================================================
 ADSRComponent::ADSRComponent(juce::AudioProcessorValueTreeState& apvts)
@@ -18,6 +22,8 @@ ADSRComponent::ADSRComponent(juce::AudioProcessorValueTreeState& apvts)
 	decaySliderAttachment = std::make_unique<SliderAttachment>(apvts, "DECAY", decaySlider);
 	sustainSliderAttachment = std::make_unique<SliderAttachment>(apvts, "SUSTAIN", sustainSlider);
 	releaseSliderAttachment = std::make_unique<SliderAttachment>(apvts, "RELEASE", releaseSlider);
+
+	//using namespace utils;
 
 	setSliderParams(attackSlider);
 	setSliderParams(decaySlider);
@@ -47,19 +53,9 @@ void ADSRComponent::resized()
 	const auto sliderXstart = padding;
 	const auto sliderYstart = padding;
 
+	//	using namespace utils;
 	setSliderBounds(attackSlider, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
 	setSliderBounds(decaySlider, attackSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
 	setSliderBounds(sustainSlider, decaySlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
 	setSliderBounds(releaseSlider, sustainSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
-
-}
-
-void ADSRComponent::setSliderParams(juce::Slider& slider) {
-	slider.setSliderStyle(juce::Slider::LinearBarVertical);
-	slider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 25);
-	addAndMakeVisible(slider);
-}
-
-void ADSRComponent::setSliderBounds(juce::Slider& slider, int x, int y, int width, int height) {
-	slider.setBounds(x, y, width, height);
 }
