@@ -8,8 +8,9 @@
   ==============================================================================
 */
 
-#include <JuceHeader.h>
+
 #include "ADSRComponent.h"
+
 
 //==============================================================================
 ADSRComponent::ADSRComponent(juce::AudioProcessorValueTreeState& apvts)
@@ -19,11 +20,10 @@ ADSRComponent::ADSRComponent(juce::AudioProcessorValueTreeState& apvts)
 	sustainSliderAttachment = std::make_unique<SliderAttachment>(apvts, "SUSTAIN", sustainSlider);
 	releaseSliderAttachment = std::make_unique<SliderAttachment>(apvts, "RELEASE", releaseSlider);
 
-	setSliderParams(attackSlider);
-	setSliderParams(decaySlider);
-	setSliderParams(sustainSlider);
-	setSliderParams(releaseSlider);
-
+	setSliderParams(attackSlider, this);
+	setSliderParams(decaySlider, this);
+	setSliderParams(sustainSlider, this);
+	setSliderParams(releaseSlider, this);
 }
 
 ADSRComponent::~ADSRComponent()
@@ -41,25 +41,14 @@ void ADSRComponent::resized()
 	// components that your component contains..
 	const auto bounds = getLocalBounds().reduced(10);
 	const auto padding = 10;
-	const int numSliders = 5;
+	const int numSliders = 4;
 	const auto sliderWidth = bounds.getWidth() / numSliders - padding;
-	const auto sliderHeight = bounds.getHeight() / numSliders - padding;
+	const auto sliderHeight = bounds.getHeight();
 	const auto sliderXstart = padding;
-	const auto sliderYstart = bounds.getHeight() / 2 - (sliderHeight / 2);
+	const auto sliderYstart = padding;
 
 	setSliderBounds(attackSlider, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
 	setSliderBounds(decaySlider, attackSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
 	setSliderBounds(sustainSlider, decaySlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
 	setSliderBounds(releaseSlider, sustainSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
-
-}
-
-void ADSRComponent::setSliderParams(juce::Slider& slider) {
-	slider.setSliderStyle(juce::Slider::LinearBarVertical);
-	slider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 25);
-	addAndMakeVisible(slider);
-}
-
-void ADSRComponent::setSliderBounds(juce::Slider& slider, int x, int y, int width, int height) {
-	slider.setBounds(x, y, width, height);
 }

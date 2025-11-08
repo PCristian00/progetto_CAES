@@ -149,7 +149,6 @@ bool SubSynthAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) 
 }
 #endif
 
-// part 0 del tutorial
 void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	juce::ScopedNoDenormals noDenormals;
@@ -161,24 +160,12 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 
 	for (int i = 0; i < synth.getNumVoices(); i++)
 	{
-		// in part 1 <SynthesiserVoice*> (synth.getVoice(i))
 		if (auto voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
-		{
-
-			// VEDERE part 5: fare funzione tipo UpdateGain in SynthVoice
-			// voice->gain.setGainLinear(apvts.getRawParameterValue("GAIN")->load());
-			// OSC Controls, ADSR...
-
-			voice->updateGain(apvts.getRawParameterValue("GAIN")->load());
-
-			voice->updateADSR(apvts.getRawParameterValue("ATTACK")->load(),
-				apvts.getRawParameterValue("DECAY")->load(),
-				apvts.getRawParameterValue("SUSTAIN")->load(),
-				apvts.getRawParameterValue("RELEASE")->load());
+		{		
+			voice->update(apvts.getRawParameterValue("ATTACK")->load(), apvts.getRawParameterValue("DECAY")->load(), apvts.getRawParameterValue("SUSTAIN")->load(), apvts.getRawParameterValue("RELEASE")->load(), apvts.getRawParameterValue("GAIN")->load());
 		}
 	}
 
-	// part 1 del tutorial
 	synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 }
 

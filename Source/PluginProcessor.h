@@ -16,7 +16,6 @@
 /**
 */
 
-//part 0 del tutorial
 class SubSynthAudioProcessor : public juce::AudioProcessor
 {
 public:
