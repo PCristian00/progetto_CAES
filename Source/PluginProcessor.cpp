@@ -150,15 +150,8 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	auto totalNumInputChannels = getTotalNumInputChannels();
 	auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-	// In futuro, vedere come collegare il gain al parametro del plugin
-	apvts.getRawParameterValue("GAIN")->load();
-
 	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
 		buffer.clear(i, 0, buffer.getNumSamples());
-
-
-
-
 
 	for (int i = 0; i < synth.getNumVoices(); i++)
 	{
@@ -171,8 +164,6 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 			// OSC Controls, ADSR...
 
 			voice->updateGain(apvts.getRawParameterValue("GAIN")->load());
-
-
 
 			voice->updateADSR(apvts.getRawParameterValue("ATTACK")->load(),
 				apvts.getRawParameterValue("DECAY")->load(),
@@ -219,17 +210,12 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 
 juce::AudioProcessorValueTreeState::ParameterLayout SubSynthAudioProcessor::createParameters()
 {
-	// autocompletamento da RIMUOVERE?
-	// juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
 	std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
 
 	// Combobox: switch oscillator
 
-	params.push_back(std::make_unique<juce::AudioParameterChoice>("OSC", // parameterID
-		"Oscillator", // parameter name
-		juce::StringArray{ "Sine", "Saw", "Square" }, // choices
-		0)); // default index
+	params.push_back(std::make_unique<juce::AudioParameterChoice>("OSC","Oscillator",juce::StringArray{ "Sine", "Saw", "Square" },0));
 
 	params.push_back(std::make_unique<juce::AudioParameterFloat>("ATTACK", // parameterID
 		"Attack", // parameter name

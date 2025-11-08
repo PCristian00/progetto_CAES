@@ -85,14 +85,28 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 	int startSample,
 	int numSamples)
 {
-	// Implementation for rendering the next audio block
-	jassert(isPrepared);
+	// Safety: assicurarsi che la voce sia pronta
+	if (!isPrepared)
+		return;
 
-	juce::dsp::AudioBlock<float> audioBlock{ outputBuffer };
-	osc.process(juce::dsp::ProcessContextReplacing<float>{ audioBlock });
-	gain.process(juce::dsp::ProcessContextReplacing<float>{ audioBlock });
+	// Non modificare i parametri in ingresso; usare copie locali
+	int writePos = startSample;
+	int samplesToWrite = numSamples;
 
-	adsr.applyEnvelopeToBuffer(outputBuffer, startSample, numSamples);
+	for (int i = 0; i < samplesToWrite; ++i)
+	{
+		// genera un sample mono, applica ADSR
+		const float sample = osc.processSample(0.0f) * adsr.getNextSample();
+
+		for (int channel = 0; channel < outputBuffer.getNumChannels(); ++channel)
+		{
+			outputBuffer.addSample(channel, writePos, sample);
+		}
+		++writePos;
+	}
+
+	// Non richiamare nuovamente osc.process(...) o adsr.applyEnvelopeToBuffer qui
+	// se hai già generato ed applicato l'inviluppo manualmente.
 }
 
 void SynthVoice::pitchWheelMoved(int newPitchWheelValue)
