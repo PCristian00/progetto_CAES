@@ -5,6 +5,15 @@
               companyName="univpm">
   <MAINGROUP id="nUzka3" name="SubSynth">
     <GROUP id="{5EA7C0B8-CE74-4FC6-ACF3-1AEF8689B221}" name="Source">
+      <GROUP id="{7C32DD4C-AE0D-B14E-70AC-FDF565B05F9C}" name="Data">
+        <FILE id="KBwWoF" name="ADSRData.cpp" compile="1" resource="0" file="Source/Data/ADSRData.cpp"/>
+        <FILE id="cUskYo" name="ADSRData.h" compile="0" resource="0" file="Source/Data/ADSRData.h"/>
+      </GROUP>
+      <GROUP id="{44B03D67-D4FE-28C8-B1E5-1DEFA5966612}" name="UI">
+        <FILE id="tNeWsy" name="ADSRComponent.cpp" compile="1" resource="0"
+              file="Source/UI/ADSRComponent.cpp"/>
+        <FILE id="GkHhDp" name="ADSRComponent.h" compile="0" resource="0" file="Source/UI/ADSRComponent.h"/>
+      </GROUP>
       <FILE id="Oh3b7h" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="wF8Oh8" name="PluginProcessor.h" compile="0" resource="0"

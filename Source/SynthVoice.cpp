@@ -106,7 +106,7 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 	}
 
 	// Non richiamare nuovamente osc.process(...) o adsr.applyEnvelopeToBuffer qui
-	// se hai gi‡ generato ed applicato l'inviluppo manualmente.
+	// se hai gi√† generato ed applicato l'inviluppo manualmente.
 }
 
 //void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,

@@ -26,7 +26,7 @@ SubSynthAudioProcessor::SubSynthAudioProcessor()
 
 	synth.addVoice(new SynthVoice());
 
-	// Testate più voci, funzionanti
+	// Testate piÃ¹ voci, funzionanti
 	// una voce per tasto in contemporanea
 	/*synth.addVoice(new SynthVoice());
 	synth.addVoice(new SynthVoice());

@@ -11,7 +11,7 @@
 
 //==============================================================================
 SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcessor& p)
-	: AudioProcessorEditor(&p), audioProcessor(p)
+	: AudioProcessorEditor(&p), audioProcessor(p), adsr(audioProcessor.apvts)
 {
 	// Make sure that before the constructor has finished, you've set the
 	// editor's size to whatever you need it to be.
@@ -20,20 +20,15 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 
 	setSliderParams(gainSlider);
 
-	setSliderParams(attackSlider);
-	setSliderParams(decaySlider);
-	setSliderParams(sustainSlider);
-	setSliderParams(releaseSlider);
+	
 
 	gainSliderAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "GAIN", gainSlider);
 
-	attackSliderAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "ATTACK", attackSlider);
-	decaySliderAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "DECAY", decaySlider);
-	sustainSliderAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "SUSTAIN", sustainSlider);
-	releaseSliderAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "RELEASE", releaseSlider);
+	
 
 	oscSelectorAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "OSC", oscSelector);
 
+	addAndMakeVisible(adsr);
 
 }
 
@@ -54,10 +49,14 @@ void SubSynthAudioProcessorEditor::paint(juce::Graphics& g)
 
 void SubSynthAudioProcessorEditor::resized()
 {
+
+	adsr.setBounds(getLocalBounds());
+	// SPOSTATO IN ADSRComponent.cpp
+	// 
 	// This is generally where you'll want to lay out the positions of any
 	// subcomponents in your editor..
 
-	const auto bounds = getLocalBounds().reduced(10);
+	/*const auto bounds = getLocalBounds().reduced(10);
 	const auto padding = 10;
 	const int numSliders = 5;
 	const auto sliderWidth = bounds.getWidth() / numSliders - padding;
@@ -68,11 +67,15 @@ void SubSynthAudioProcessorEditor::resized()
 	setSliderBounds(attackSlider, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
 	setSliderBounds(decaySlider, attackSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
 	setSliderBounds(sustainSlider, decaySlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
-	setSliderBounds(releaseSlider, sustainSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
+	setSliderBounds(releaseSlider, sustainSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);*/
 
-	setSliderBounds(gainSlider, releaseSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
+	// ATTENZIONE: Slider del gain temporaneamente disattivato, forse CREARE COMPONENTE anche per Gain come per ADSR
+	// setSliderBounds(gainSlider, releaseSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
 }
 
+// Informarsi su come rendere STATICHE queste funzioni
+// Probabilmente creare una classe di UTILITIES con funzioni STATICHE
+// Per ora copio queste funzioni in ADSRComponent.cpp
 void SubSynthAudioProcessorEditor::setSliderParams(juce::Slider& slider) {
 	slider.setSliderStyle(juce::Slider::LinearBarVertical);
 	slider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 25);
