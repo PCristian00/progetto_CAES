@@ -47,8 +47,8 @@ void SubSynthAudioProcessorEditor::resized()
 {
 
 	adsr.setBounds(getWidth() / 2, 0, getWidth() / 2, getHeight());
-	setSliderBounds(gainSlider, 20, 10, 100, 200);
-	
+	setSliderBounds(gainSlider, 0, 0, getWidth() / 8, getHeight() - gainSlider.getWidth());
+
 	// SPOSTATO IN ADSRComponent.cpp
 	// 
 	// This is generally where you'll want to lay out the positions of any

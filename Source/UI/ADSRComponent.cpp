@@ -43,7 +43,7 @@ void ADSRComponent::resized()
 	// components that your component contains..
 	const auto bounds = getLocalBounds().reduced(10);
 	const auto padding = 10;
-	const int numSliders = 5;
+	const int numSliders = 4;
 	const auto sliderWidth = bounds.getWidth() / numSliders - padding;
 	const auto sliderHeight = bounds.getHeight();
 	const auto sliderXstart = padding;
