@@ -18,7 +18,7 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 
 	setSize(800, 600);
 
-	setSliderParams(gainSlider);
+	setSliderParams(gainSlider, this);
 
 	gainSliderAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "GAIN", gainSlider);
 
@@ -47,6 +47,7 @@ void SubSynthAudioProcessorEditor::resized()
 {
 
 	adsr.setBounds(getWidth() / 2, 0, getWidth() / 2, getHeight());
+	setSliderBounds(gainSlider, 20, 10, 100, 200);
 	
 	// SPOSTATO IN ADSRComponent.cpp
 	// 
@@ -68,17 +69,4 @@ void SubSynthAudioProcessorEditor::resized()
 
 	// ATTENZIONE: Slider del gain temporaneamente disattivato, forse CREARE COMPONENTE anche per Gain come per ADSR
 	// setSliderBounds(gainSlider, releaseSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
-}
-
-// Informarsi su come rendere STATICHE queste funzioni
-// Probabilmente creare una classe di UTILITIES con funzioni STATICHE
-// Per ora copio queste funzioni in ADSRComponent.cpp
-void SubSynthAudioProcessorEditor::setSliderParams(juce::Slider& slider) {
-	slider.setSliderStyle(juce::Slider::LinearBarVertical);
-	slider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 25);
-	addAndMakeVisible(slider);
-}
-
-void SubSynthAudioProcessorEditor::setSliderBounds(juce::Slider& slider, int x, int y, int width, int height) {
-	slider.setBounds(x, y, width, height);
 }
