@@ -20,11 +20,11 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 
 	setSliderParams(gainSlider);
 
-	
+
 
 	gainSliderAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "GAIN", gainSlider);
 
-	
+
 
 	oscSelectorAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "OSC", oscSelector);
 
@@ -50,7 +50,8 @@ void SubSynthAudioProcessorEditor::paint(juce::Graphics& g)
 void SubSynthAudioProcessorEditor::resized()
 {
 
-	adsr.setBounds(getLocalBounds());
+	adsr.setBounds(getWidth() / 2, 0, getWidth() / 2, getHeight());
+	
 	// SPOSTATO IN ADSRComponent.cpp
 	// 
 	// This is generally where you'll want to lay out the positions of any

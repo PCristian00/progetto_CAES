@@ -43,9 +43,9 @@ void ADSRComponent::resized()
 	const auto padding = 10;
 	const int numSliders = 5;
 	const auto sliderWidth = bounds.getWidth() / numSliders - padding;
-	const auto sliderHeight = bounds.getHeight() / numSliders - padding;
+	const auto sliderHeight = bounds.getHeight();
 	const auto sliderXstart = padding;
-	const auto sliderYstart = bounds.getHeight() / 2 - (sliderHeight / 2);
+	const auto sliderYstart = padding;
 
 	setSliderBounds(attackSlider, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
 	setSliderBounds(decaySlider, attackSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
