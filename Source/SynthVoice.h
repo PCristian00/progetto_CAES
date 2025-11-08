@@ -11,6 +11,7 @@
 #pragma once
 #include <JuceHeader.h>
 #include "SynthSound.h"
+#include "Data/ADSRData.h"
 
 class SynthVoice : public juce::SynthesiserVoice
 {
@@ -27,8 +28,8 @@ public:
 	void controllerMoved(int controllerNumber, int newControllerValue) override;
 
 	void prepareToPlay(double sampleRate, int samplesPerBlock, int outputChannels);
-
-	void updateADSR(const float attack, const float decay, const float sustain, const float release);
+	void update(const float attack, const float decay, const float sustain, const float release, const float gainValue);
+	
 	void updateGain(const float gainValue);
 
 	void renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
@@ -37,8 +38,7 @@ public:
 
 private:
 
-	juce::ADSR adsr;
-	juce::ADSR::Parameters adsrParams;
+	ADSRData adsr;
 
 	// 200 indica la LUT (controllare dopo)
 	juce::dsp::Oscillator<float> osc{ [](float x) { return std::sin(x); 200;} };  //sin

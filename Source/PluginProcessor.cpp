@@ -169,12 +169,9 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 			// voice->gain.setGainLinear(apvts.getRawParameterValue("GAIN")->load());
 			// OSC Controls, ADSR...
 
-			voice->updateGain(apvts.getRawParameterValue("GAIN")->load());
+			// voice->updateGain(apvts.getRawParameterValue("GAIN")->load());
 
-			voice->updateADSR(apvts.getRawParameterValue("ATTACK")->load(),
-				apvts.getRawParameterValue("DECAY")->load(),
-				apvts.getRawParameterValue("SUSTAIN")->load(),
-				apvts.getRawParameterValue("RELEASE")->load());
+			voice->update(apvts.getRawParameterValue("ATTACK")->load(), apvts.getRawParameterValue("DECAY")->load(), apvts.getRawParameterValue("SUSTAIN")->load(), apvts.getRawParameterValue("RELEASE")->load(), apvts.getRawParameterValue("GAIN")->load());
 		}
 	}
 

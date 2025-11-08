@@ -65,19 +65,15 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outpu
 	isPrepared = true;
 }
 
-void SynthVoice::updateADSR(const float attack, const float decay, const float sustain, const float release)
-{
-	adsrParams.attack = attack;
-	adsrParams.decay = decay;
-	adsrParams.sustain = sustain;
-	adsrParams.release = release;
-	adsr.setParameters(adsrParams);
-}
-
-void SynthVoice::updateGain(const float gainValue)
-{
+void SynthVoice::update(const float attack, const float decay, const float sustain, const float release, const float gainValue) {
+	adsr.updateADSR(attack, decay, sustain, release);
 	gain.setGainLinear(gainValue);
 }
+
+//void SynthVoice::updateGain(const float gainValue)
+//{
+//	gain.setGainLinear(gainValue);
+//}
 
 
 // part 2
