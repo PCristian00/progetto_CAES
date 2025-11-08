@@ -23,8 +23,14 @@ SubSynthAudioProcessor::SubSynthAudioProcessor()
 #endif
 {
 	synth.addSound(new SynthSound());
+
 	synth.addVoice(new SynthVoice());
 
+	// Testate più voci, funzionanti
+	// una voce per tasto in contemporanea
+	/*synth.addVoice(new SynthVoice());
+	synth.addVoice(new SynthVoice());
+	synth.addVoice(new SynthVoice());*/
 }
 
 SubSynthAudioProcessor::~SubSynthAudioProcessor()
@@ -214,40 +220,14 @@ juce::AudioProcessorValueTreeState::ParameterLayout SubSynthAudioProcessor::crea
 	std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
 
 	// Combobox: switch oscillator
+	params.push_back(std::make_unique<juce::AudioParameterChoice>("OSC", "Oscillator", juce::StringArray{ "Sine", "Saw", "Square" }, 0));
 
-	params.push_back(std::make_unique<juce::AudioParameterChoice>("OSC","Oscillator",juce::StringArray{ "Sine", "Saw", "Square" },0));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("GAIN", "Gain", 0.0f, 1.0f, 0.5f));
 
-	params.push_back(std::make_unique<juce::AudioParameterFloat>("ATTACK", // parameterID
-		"Attack", // parameter name
-		0.1f, // min value
-		1.0f, // max value
-		0.1f)); // default value
-
-	params.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", // parameterID
-		"Decay", // parameter name
-		0.1f, // min value
-		1.0f, // max value
-		0.1f)); // default value
-
-	params.push_back(std::make_unique<juce::AudioParameterFloat>("SUSTAIN", // parameterID
-		"Sustain", // parameter name
-		0.1f, // min value
-		1.0f, // max value
-		1.0f)); // default value
-
-	params.push_back(std::make_unique<juce::AudioParameterFloat>("RELEASE", // parameterID
-		"Release", // parameter name
-		0.1f, // min value
-		3.0f, // max value
-		0.4f)); // default value
-
-	params.push_back(std::make_unique<juce::AudioParameterFloat>("GAIN", // parameterID
-		"Gain", // parameter name
-		0.0f, // min value
-		1.0f, // max value
-		0.5f)); // default value
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("ATTACK", "Attack", 0.1f, 1.0f, 0.1f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", 0.1f, 1.0f, 0.1f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("SUSTAIN", "Sustain", 0.1f, 1.0f, 1.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("RELEASE", "Release", 0.1f, 3.0f, 0.4f));
 
 	return { params.begin(), params.end() };
-
-	//return layout;
 }
