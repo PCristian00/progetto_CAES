@@ -13,16 +13,17 @@
 
 namespace utils
 {
-	void setSliderParams(juce::Slider& slider)
+	void setSliderParams(juce::Slider& slider, juce::Component* parent) noexcept
 	{
 		slider.setSliderStyle(juce::Slider::LinearBarVertical);
 		slider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 25);
+		//juce::Component::addAndMakeVisible(slider);
 
-		/*if (parent != nullptr)
-			parent->addAndMakeVisible(&slider);*/
+		if (parent != nullptr)
+			parent->addAndMakeVisible(&slider);
 	}
 
-	void setSliderBounds(juce::Slider& slider, int x, int y, int width, int height)
+	void setSliderBounds(juce::Slider& slider, int x, int y, int width, int height) noexcept
 	{
 		slider.setBounds(x, y, width, height);
 	}

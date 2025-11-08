@@ -13,6 +13,6 @@
 
 namespace utils
 {
-	void setSliderParams(juce::Slider& slider);
-	void setSliderBounds(juce::Slider& slider, int x, int y, int width, int height);
+	void setSliderParams(juce::Slider& slider, juce::Component* parent = nullptr) noexcept;
+	void setSliderBounds(juce::Slider& slider, int x, int y, int width, int height) noexcept;
 }

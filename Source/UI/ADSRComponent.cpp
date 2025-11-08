@@ -25,11 +25,10 @@ ADSRComponent::ADSRComponent(juce::AudioProcessorValueTreeState& apvts)
 
 	//using namespace utils;
 
-	setSliderParams(attackSlider);
-	setSliderParams(decaySlider);
-	setSliderParams(sustainSlider);
-	setSliderParams(releaseSlider);
-
+	setSliderParams(attackSlider, this);
+	setSliderParams(decaySlider, this);
+	setSliderParams(sustainSlider, this);
+	setSliderParams(releaseSlider, this);
 }
 
 ADSRComponent::~ADSRComponent()
