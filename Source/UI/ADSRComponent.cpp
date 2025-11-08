@@ -8,12 +8,9 @@
   ==============================================================================
 */
 
-// #include <JuceHeader.h>
-#include "ADSRComponent.h"
-//#include "Utils.h"
 
-//using namespace utils;
-// #include "UI/Utils.h"
+#include "ADSRComponent.h"
+
 
 //==============================================================================
 ADSRComponent::ADSRComponent(juce::AudioProcessorValueTreeState& apvts)
@@ -52,7 +49,6 @@ void ADSRComponent::resized()
 	const auto sliderXstart = padding;
 	const auto sliderYstart = padding;
 
-	//	using namespace utils;
 	setSliderBounds(attackSlider, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
 	setSliderBounds(decaySlider, attackSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
 	setSliderBounds(sustainSlider, decaySlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
