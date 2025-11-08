@@ -12,12 +12,12 @@
 
 SynthVoice::SynthVoice()
 {
-	
+
 }
 
 SynthVoice::~SynthVoice()
 {
-	
+
 }
 
 bool SynthVoice::canPlaySound(juce::SynthesiserSound* sound)
@@ -55,30 +55,73 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outpu
 	spec.sampleRate = sampleRate;
 	spec.maximumBlockSize = samplesPerBlock;
 	spec.numChannels = static_cast<juce::uint32> (outputChannels);
-	
+
 	osc.prepare(spec);
 	gain.prepare(spec);
 
-	
+	// In futuro, vedere come collegare il gain al parametro del plugin
 	gain.setGainLinear(0.1f);
 
 	isPrepared = true;
 }
+
+void SynthVoice::updateADSR(const float attack, const float decay, const float sustain, const float release)
+{
+	adsrParams.attack = attack;
+	adsrParams.decay = decay;
+	adsrParams.sustain = sustain;
+	adsrParams.release = release;
+	adsr.setParameters(adsrParams);
+}
+
+void SynthVoice::updateGain(const float gainValue)
+{
+	gain.setGainLinear(gainValue);
+}
+
 
 // part 2
 void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 	int startSample,
 	int numSamples)
 {
-	// Implementation for rendering the next audio block
-	jassert(isPrepared);
+	// Safety: assicurarsi che la voce sia pronta
+	if (!isPrepared)
+		return;
 
-	juce::dsp::AudioBlock<float> audioBlock{ outputBuffer };
-	osc.process(juce::dsp::ProcessContextReplacing<float>{ audioBlock });
-	gain.process(juce::dsp::ProcessContextReplacing<float>{ audioBlock });
+	// Non modificare i parametri in ingresso; usare copie locali
+	int writePos = startSample;
+	// int samplesToWrite = numSamples;
 
-	adsr.applyEnvelopeToBuffer(outputBuffer, startSample, numSamples);
+	for (int i = 0; i < numSamples; ++i)
+	{
+		// genera un sample mono, applica ADSR
+		const float sample = osc.processSample(0.0f) * adsr.getNextSample() * gain.getGainLinear();
+
+		for (int channel = 0; channel < outputBuffer.getNumChannels(); ++channel)
+		{
+			outputBuffer.addSample(channel, writePos, sample);
+		}
+		++writePos;
+	}
+
+	// Non richiamare nuovamente osc.process(...) o adsr.applyEnvelopeToBuffer qui
+	// se hai già generato ed applicato l'inviluppo manualmente.
 }
+
+//void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
+//	int startSample,
+//	int numSamples)
+//{
+//	// Implementation for rendering the next audio block
+//	jassert(isPrepared);
+//
+//	juce::dsp::AudioBlock<float> audioBlock{ outputBuffer };
+//	osc.process(juce::dsp::ProcessContextReplacing<float>{ audioBlock });
+//	gain.process(juce::dsp::ProcessContextReplacing<float>{ audioBlock });
+//
+//	adsr.applyEnvelopeToBuffer(outputBuffer, startSample, numSamples);
+//}
 
 void SynthVoice::pitchWheelMoved(int newPitchWheelValue)
 {
