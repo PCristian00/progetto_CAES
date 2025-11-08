@@ -8,7 +8,6 @@
  ==============================================================================
 */
 
-// #include <JuceHeader.h>
 #include "Utils.h"
 
 namespace utils
@@ -17,7 +16,6 @@ namespace utils
 	{
 		slider.setSliderStyle(juce::Slider::LinearBarVertical);
 		slider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 25);
-		//juce::Component::addAndMakeVisible(slider);
 
 		if (parent != nullptr)
 			parent->addAndMakeVisible(&slider);

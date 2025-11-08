@@ -13,6 +13,7 @@
 
 namespace utils
 {
+	// Impostazioni Slider (GUI)
 	void setSliderParams(juce::Slider& slider, juce::Component* parent = nullptr) noexcept;
 	void setSliderBounds(juce::Slider& slider, int x, int y, int width, int height) noexcept;
 }

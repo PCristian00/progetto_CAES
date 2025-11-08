@@ -20,8 +20,6 @@ ADSRComponent::ADSRComponent(juce::AudioProcessorValueTreeState& apvts)
 	sustainSliderAttachment = std::make_unique<SliderAttachment>(apvts, "SUSTAIN", sustainSlider);
 	releaseSliderAttachment = std::make_unique<SliderAttachment>(apvts, "RELEASE", releaseSlider);
 
-	//using namespace utils;
-
 	setSliderParams(attackSlider, this);
 	setSliderParams(decaySlider, this);
 	setSliderParams(sustainSlider, this);
