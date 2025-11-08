@@ -12,12 +12,12 @@
 
 SynthVoice::SynthVoice()
 {
-	
+
 }
 
 SynthVoice::~SynthVoice()
 {
-	
+
 }
 
 bool SynthVoice::canPlaySound(juce::SynthesiserSound* sound)
@@ -55,7 +55,7 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outpu
 	spec.sampleRate = sampleRate;
 	spec.maximumBlockSize = samplesPerBlock;
 	spec.numChannels = static_cast<juce::uint32> (outputChannels);
-	
+
 	osc.prepare(spec);
 	gain.prepare(spec);
 
@@ -91,12 +91,12 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 
 	// Non modificare i parametri in ingresso; usare copie locali
 	int writePos = startSample;
-	int samplesToWrite = numSamples;
+	// int samplesToWrite = numSamples;
 
-	for (int i = 0; i < samplesToWrite; ++i)
+	for (int i = 0; i < numSamples; ++i)
 	{
 		// genera un sample mono, applica ADSR
-		const float sample = osc.processSample(0.0f) * adsr.getNextSample();
+		const float sample = osc.processSample(0.0f) * adsr.getNextSample() * gain.getGainLinear();
 
 		for (int channel = 0; channel < outputBuffer.getNumChannels(); ++channel)
 		{
@@ -108,6 +108,20 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 	// Non richiamare nuovamente osc.process(...) o adsr.applyEnvelopeToBuffer qui
 	// se hai già generato ed applicato l'inviluppo manualmente.
 }
+
+//void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
+//	int startSample,
+//	int numSamples)
+//{
+//	// Implementation for rendering the next audio block
+//	jassert(isPrepared);
+//
+//	juce::dsp::AudioBlock<float> audioBlock{ outputBuffer };
+//	osc.process(juce::dsp::ProcessContextReplacing<float>{ audioBlock });
+//	gain.process(juce::dsp::ProcessContextReplacing<float>{ audioBlock });
+//
+//	adsr.applyEnvelopeToBuffer(outputBuffer, startSample, numSamples);
+//}
 
 void SynthVoice::pitchWheelMoved(int newPitchWheelValue)
 {
