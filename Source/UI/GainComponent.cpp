@@ -27,22 +27,7 @@ GainComponent::~GainComponent()
 
 void GainComponent::paint(juce::Graphics& g)
 {
-	/* This demo code just fills the component's background and
-	   draws some placeholder text to get you started.
-
-	   You should replace everything in this method with your own
-	   drawing code..
-	*/
-
-	g.fillAll(juce::Colours::black);   // clear the background
-
-	//g.fillAll(juce::Colours::darkred);
-	//g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
-
-	//g.setColour(juce::Colours::white);
-	//g.setFont(juce::FontOptions(14.0f));
-	//g.drawText("GainComponent", getLocalBounds(),
-	//	juce::Justification::centred, true);   // draw some placeholder text
+	g.fillAll(juce::Colours::black);
 }
 
 void GainComponent::resized()
@@ -50,7 +35,7 @@ void GainComponent::resized()
 	// This method is where you should set the bounds of any child
 	// components that your component contains..
 
-	// MODIFICARE IN FUTURO
+	// MODIFICARE IN FUTURO: forse pezzi inutili (quali numSliders...)
 	const auto bounds = getLocalBounds().reduced(10);
 	const auto padding = 10;
 	const int numSliders = 1;

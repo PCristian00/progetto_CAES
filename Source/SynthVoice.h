@@ -12,6 +12,7 @@
 #include <JuceHeader.h>
 #include "SynthSound.h"
 #include "Data/ADSRData.h"
+#include "Data/GainData.h"
 
 class SynthVoice : public juce::SynthesiserVoice
 {
@@ -32,10 +33,13 @@ private:
 
 	bool isPrepared{ false };
 	ADSRData adsr;
+	GainData gain;
 
 	// 200 indica la LUT (controllare dopo)
 	juce::dsp::Oscillator<float> osc{ [](float x) { return std::sin(x); 200;} };  //sin
-	juce::dsp::Gain<float> gain;	
+	
+	// Vecchia implementazione diretta del gain (senza GainData)
+	//juce::dsp::Gain<float> gain;	
 
 	// juce::dsp::Oscillator<float> osc{ [](float x) { return x / juce::MathConstants<float>::pi; } }; // saw
 	// juce::dsp::Oscillator<float> osc{ [](float x) { return x < 0.0f ? -1.0f : 1.0f; } }; // square

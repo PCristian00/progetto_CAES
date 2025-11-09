@@ -63,7 +63,15 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outpu
 
 void SynthVoice::update(const float attack, const float decay, const float sustain, const float release, const float gainValue) {
 	adsr.updateADSR(attack, decay, sustain, release);
-	gain.setGainLinear(gainValue);
+
+	// Nuova implementazione con GainData
+	// NOTA: equivalente a gain.setGainLinear(gainValue);
+	// Per ereditarietà, anche gain.setGainLinear funziona
+
+	gain.setGain(gainValue);
+
+	// Vecchia implementazione diretta del gain (senza GainData)
+	// gain.setGainLinear(gainValue);
 }
 
 void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
