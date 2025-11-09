@@ -66,7 +66,7 @@ void SynthVoice::update(const float attack, const float decay, const float susta
 {
 	adsr.updateADSR(attack, decay, sustain, release);
 
-	// Imposta il target del gain; GainData user‡ SmoothedValue internamente
+	// Imposta il target del gain; GainData user√† SmoothedValue internamente
 	gain.setGainLinear(gainValue);
 }
 

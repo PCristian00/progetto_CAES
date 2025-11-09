@@ -27,7 +27,7 @@ void GainData::prepare(const juce::dsp::ProcessSpec& spec)
     smoothedGain.setCurrentAndTargetValue(initial);
 }
 
-// Compatibilit‡: prepara costruendo un ProcessSpec e inoltrando
+// Compatibilit√†: prepara costruendo un ProcessSpec e inoltrando
 void GainData::prepare(double sampleRate, int samplesPerBlock)
 {
     juce::dsp::ProcessSpec spec;
@@ -38,7 +38,7 @@ void GainData::prepare(double sampleRate, int samplesPerBlock)
     prepare(spec);
 }
 
-// Imposta il target; SmoothedValue effettuer‡ il ramp internamente
+// Imposta il target; SmoothedValue effettuer√† il ramp internamente
 void GainData::setGainLinear(const float newGain)
 {
     // Aggiorna il target smussato

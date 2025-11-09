@@ -17,10 +17,10 @@ public:
     // Preparazione: overload che accetta il ProcessSpec (usato da juce::dsp)
     void prepare(const juce::dsp::ProcessSpec& spec);
 
-    // Compatibilit‡: overload che accetta sampleRate e samplesPerBlock
+    // Compatibilit√†: overload che accetta sampleRate e samplesPerBlock
     void prepare(double sampleRate, int samplesPerBlock);
 
-    // Imposta il target gain (verr‡ applicato con smoothing)
+    // Imposta il target gain (verr√† applicato con smoothing)
     void setGainLinear(const float newGain);
 
     // Restituisce il valore smussato per il prossimo sample
