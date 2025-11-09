@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "UI/ADSRComponent.h"
+#include "UI/GainComponent.h"
 
 //==============================================================================
 /**
@@ -32,11 +33,11 @@ private:
 	SubSynthAudioProcessor& audioProcessor;
 
 	ADSRComponent adsr;
-	juce::Slider gainSlider;
+	GainComponent gain;
+	
 	juce::ComboBox oscSelector;
 
-	using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
-	std::unique_ptr<SliderAttachment> gainSliderAttachment;
+	
 
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> oscSelectorAttachment;
 
