@@ -10,12 +10,9 @@
 
 #include "OscData.h"
 
-// Forse dopo rinominare in prepare (come in GainData) per fare estensione del metodo originario
-// VALE PER TUTTI I METODI SOTTOSTANTI
-
-void OscData::prepareToPlay(juce::dsp::ProcessSpec& spec)
+void OscData::prepare(juce::dsp::ProcessSpec& spec)
 {
-	prepare(spec);
+	juce::dsp::Oscillator<float>::prepare(spec);
 }
 
 void OscData::setWaveType(const int choice)
@@ -37,16 +34,18 @@ void OscData::setWaveType(const int choice)
 	}
 }
 
-void OscData::setWaveFrequency(const int midiNoteNumber)
+void OscData::setFrequency(const int midiNoteNumber)
 {
-	setFrequency(juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber));
+	juce::dsp::Oscillator<float>::setFrequency(juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber));
+}
+
+float OscData::processSample(float input) {
+	return juce::dsp::Oscillator<float>::processSample(input);
 }
 
 // ATTENZIONE: Fatto così nel tutorial, ma nel codice attuale non viene utilizzato (uso i sample e non gli AudioBlock)
 // Forse dopo rinominare in process (come in GainData) per fare estensione del metodo originario
-void OscData::getNextAudioBlock(juce::dsp::AudioBlock<float>& block)
-{
-	process(juce::dsp::ProcessContextReplacing<float>(block));
-}
-
-// Forse rifare funzione custom anche per sample
+//void OscData::getNextAudioBlock(juce::dsp::AudioBlock<float>& block)
+//{
+//	process(juce::dsp::ProcessContextReplacing<float>(block));
+//}

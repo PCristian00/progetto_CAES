@@ -17,11 +17,13 @@ public:
 	/* OscData() : juce::dsp::Oscillator<float>([](float x) { return std::sin(x); })
 	 {
 	 }*/
-	void prepareToPlay(juce::dsp::ProcessSpec& spec);
+	void prepare(juce::dsp::ProcessSpec& spec);
 	void setWaveType(const int choice);
 	
-	void setWaveFrequency(const int midiNoteNumber);
+	void setFrequency(const int midiNoteNumber);
 
 	// Forse rimuovere?
-	void OscData::getNextAudioBlock(juce::dsp::AudioBlock<float>& block);
+	// void getNextAudioBlock(juce::dsp::AudioBlock<float>& block);
+
+	float processSample(float input);
 };

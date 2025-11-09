@@ -31,7 +31,7 @@ void SynthVoice::startNote(int midiNoteNumber,
 	juce::SynthesiserSound* sound,
 	int currentPitchWheelPosition)
 {
-	osc.setWaveFrequency(midiNoteNumber);
+	osc.setFrequency(midiNoteNumber);
 	adsr.noteOn();
 }
 
@@ -54,7 +54,7 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outpu
 	spec.maximumBlockSize = samplesPerBlock;
 	spec.numChannels = static_cast<juce::uint32> (outputChannels);
 
-	osc.prepareToPlay(spec);
+	osc.prepare(spec);
 
 	// Chiama l'overload che accetta ProcessSpec (definito in GainData)
 	gain.prepare(spec);
