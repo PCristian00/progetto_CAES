@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    This file contains the basic framework code for a JUCE plugin editor.
+	This file contains the basic framework code for a JUCE plugin editor.
 
   ==============================================================================
 */
@@ -10,24 +10,36 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "UI/ADSRComponent.h"
+#include "UI/GainComponent.h"
 
 //==============================================================================
 /**
 */
-class SubSynthAudioProcessorEditor  : public juce::AudioProcessorEditor
+class SubSynthAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
-    SubSynthAudioProcessorEditor (SubSynthAudioProcessor&);
-    ~SubSynthAudioProcessorEditor() override;
+	SubSynthAudioProcessorEditor(SubSynthAudioProcessor&);
+	~SubSynthAudioProcessorEditor() override;
 
-    //==============================================================================
-    void paint (juce::Graphics&) override;
-    void resized() override;
+	//==============================================================================
+	void paint(juce::Graphics&) override;
+	void resized() override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
-    SubSynthAudioProcessor& audioProcessor;
+	// This reference is provided as a quick way for your editor to
+	// access the processor object that created it.
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SubSynthAudioProcessorEditor)
+	SubSynthAudioProcessor& audioProcessor;
+
+	ADSRComponent adsr;
+	GainComponent gain;
+	
+	juce::ComboBox oscSelector;
+
+	
+
+	std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> oscSelectorAttachment;
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SubSynthAudioProcessorEditor)
 };

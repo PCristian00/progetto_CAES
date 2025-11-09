@@ -9,12 +9,13 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "SynthVoice.h"
+#include "SynthSound.h"
 
 //==============================================================================
 /**
 */
 
-//part 0 del tutorial
 class SubSynthAudioProcessor : public juce::AudioProcessor
 {
 public:
@@ -55,17 +56,13 @@ public:
 	void getStateInformation(juce::MemoryBlock& destData) override;
 	void setStateInformation(const void* data, int sizeInBytes) override;
 
-private:
+	juce::AudioProcessorValueTreeState apvts;
 
-	// 200 indica la LUT (controllare dopo)
-	juce::dsp::Oscillator<float> osc{ [](float x) { return std::sin(x); 200;} };  //sin
+private:	
 
-	// juce::dsp::Oscillator<float> osc{ [](float x) { return x / juce::MathConstants<float>::pi; } }; // saw
-	// juce::dsp::Oscillator<float> osc{ [](float x) { return x < 0.0f ? -1.0f : 1.0f; } }; // square
+	juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
 
-
-
-	juce::dsp::Gain<float> gain;
+	juce::Synthesiser synth;
 
 	//==============================================================================
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SubSynthAudioProcessor)

@@ -19,9 +19,18 @@ SubSynthAudioProcessor::SubSynthAudioProcessor()
 #endif
 		.withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
-	)
+	), apvts(*this, nullptr, "Parameters", createParameters())
 #endif
 {
+	synth.addSound(new SynthSound());
+
+	synth.addVoice(new SynthVoice());
+
+	// Testate più voci, funzionanti
+	// una voce per tasto in contemporanea
+	/*synth.addVoice(new SynthVoice());
+	synth.addVoice(new SynthVoice());
+	synth.addVoice(new SynthVoice());*/
 }
 
 SubSynthAudioProcessor::~SubSynthAudioProcessor()
@@ -94,17 +103,18 @@ void SubSynthAudioProcessor::changeProgramName(int index, const juce::String& ne
 // part 0 del tutorial
 void SubSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-	juce::dsp::ProcessSpec spec;
-	spec.sampleRate = sampleRate;
-	spec.maximumBlockSize = samplesPerBlock;
-	spec.numChannels = getTotalNumOutputChannels();
-	
-	osc.prepare(spec);
-	
-	gain.prepare(spec);
 
-	osc.setFrequency(220.0f);
-	gain.setGainLinear(0.1f);
+
+	// part 1 del tutorial
+	synth.setCurrentPlaybackSampleRate(sampleRate);
+
+	for (int i = 0; i < synth.getNumVoices(); i++)
+	{
+		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
+		{
+			voice->prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
+		}
+	}
 }
 
 void SubSynthAudioProcessor::releaseResources()
@@ -139,7 +149,6 @@ bool SubSynthAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) 
 }
 #endif
 
-// part 0 del tutorial
 void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	juce::ScopedNoDenormals noDenormals;
@@ -149,9 +158,15 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
 		buffer.clear(i, 0, buffer.getNumSamples());
 
-	juce::dsp::AudioBlock<float> audioBlock{ buffer };
-	osc.process(juce::dsp::ProcessContextReplacing<float>{ audioBlock });	
-	gain.process(juce::dsp::ProcessContextReplacing<float>{ audioBlock });
+	for (int i = 0; i < synth.getNumVoices(); i++)
+	{
+		if (auto voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
+		{		
+			voice->update(apvts.getRawParameterValue("ATTACK")->load(), apvts.getRawParameterValue("DECAY")->load(), apvts.getRawParameterValue("SUSTAIN")->load(), apvts.getRawParameterValue("RELEASE")->load(), apvts.getRawParameterValue("GAIN")->load());
+		}
+	}
+
+	synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 }
 
 //==============================================================================
@@ -184,4 +199,22 @@ void SubSynthAudioProcessor::setStateInformation(const void* data, int sizeInByt
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
 	return new SubSynthAudioProcessor();
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout SubSynthAudioProcessor::createParameters()
+{
+
+	std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
+
+	// Combobox: switch oscillator
+	params.push_back(std::make_unique<juce::AudioParameterChoice>("OSC", "Oscillator", juce::StringArray{ "Sine", "Saw", "Square" }, 0));
+
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("GAIN", "Gain", 0.0f, 1.0f, 0.5f));
+
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("ATTACK", "Attack", 0.1f, 1.0f, 0.1f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", 0.1f, 1.0f, 0.1f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("SUSTAIN", "Sustain", 0.1f, 1.0f, 1.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("RELEASE", "Release", 0.1f, 3.0f, 0.4f));
+
+	return { params.begin(), params.end() };
 }

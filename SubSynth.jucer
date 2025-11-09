@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="IN6TnE" name="SubSynth" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
+              companyName="univpm" version="1.0.1">
   <MAINGROUP id="nUzka3" name="SubSynth">
     <GROUP id="{5EA7C0B8-CE74-4FC6-ACF3-1AEF8689B221}" name="Source">
+      <GROUP id="{7C32DD4C-AE0D-B14E-70AC-FDF565B05F9C}" name="Data">
+        <FILE id="KBwWoF" name="ADSRData.cpp" compile="1" resource="0" file="Source/Data/ADSRData.cpp"/>
+        <FILE id="cUskYo" name="ADSRData.h" compile="0" resource="0" file="Source/Data/ADSRData.h"/>
+        <FILE id="axpW90" name="GainData.cpp" compile="1" resource="0" file="Source/Data/GainData.cpp"/>
+        <FILE id="h0b9R0" name="GainData.h" compile="0" resource="0" file="Source/Data/GainData.h"/>
+      </GROUP>
+      <GROUP id="{44B03D67-D4FE-28C8-B1E5-1DEFA5966612}" name="UI">
+        <FILE id="sNacgy" name="GainComponent.cpp" compile="1" resource="0"
+              file="Source/UI/GainComponent.cpp"/>
+        <FILE id="JCGdIU" name="GainComponent.h" compile="0" resource="0" file="Source/UI/GainComponent.h"/>
+        <FILE id="f2zH1L" name="Utils.h" compile="0" resource="0" file="Source/UI/Utils.h"/>
+        <FILE id="HdJFh0" name="Utils.cpp" compile="1" resource="0" file="Source/UI/Utils.cpp"/>
+        <FILE id="tNeWsy" name="ADSRComponent.cpp" compile="1" resource="0"
+              file="Source/UI/ADSRComponent.cpp"/>
+        <FILE id="GkHhDp" name="ADSRComponent.h" compile="0" resource="0" file="Source/UI/ADSRComponent.h"/>
+      </GROUP>
       <FILE id="Oh3b7h" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="wF8Oh8" name="PluginProcessor.h" compile="0" resource="0"
@@ -11,6 +28,9 @@
       <FILE id="GaIsDK" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="PCs4hU" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="X6Iy4f" name="SynthVoice.cpp" compile="1" resource="0" file="Source/SynthVoice.cpp"/>
+      <FILE id="a3Azs6" name="SynthVoice.h" compile="0" resource="0" file="Source/SynthVoice.h"/>
+      <FILE id="Zlo4sn" name="SynthSound.h" compile="0" resource="0" file="Source/SynthSound.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>
