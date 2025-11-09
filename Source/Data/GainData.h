@@ -11,14 +11,26 @@
 #pragma once
 #include <JuceHeader.h>
 
-
-
-// GainData forse non è utile, ma lo creo per coerenza con ADSRData
-// Update di gain in precedenza era direttamente eseguito in SynthVoice.cpp
-// Lascerò commentato il codice precedente in SynthVoice.cpp per riferimento futuro
-
 class GainData : public juce::dsp::Gain<float>
 {
 public:
+    // Preparazione: overload che accetta il ProcessSpec (usato da juce::dsp)
+    void prepare(const juce::dsp::ProcessSpec& spec);
+
+    // Compatibilità: overload che accetta sampleRate e samplesPerBlock
+    void prepare(double sampleRate, int samplesPerBlock);
+
+    // Imposta il target gain (verrà applicato con smoothing)
     void setGainLinear(const float newGain);
+
+    // Restituisce il valore smussato per il prossimo sample
+    float getNextSmoothedGain();
+
+    // Opzionale: cambia il tempo di smoothing (in secondi)
+    void setSmoothingTimeSeconds(double seconds) { smoothingTimeSeconds = seconds; }
+
+private:
+    juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear> smoothedGain;
+    double currentSampleRate{ 44100.0 };
+    double smoothingTimeSeconds{ 0.02 }; // default 20 ms
 };

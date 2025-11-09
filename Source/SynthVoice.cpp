@@ -6,6 +6,7 @@
 	Author:  crist
 
   ==============================================================================
+
 */
 
 #include "SynthVoice.h"
@@ -30,25 +31,23 @@ void SynthVoice::startNote(int midiNoteNumber,
 	juce::SynthesiserSound* sound,
 	int currentPitchWheelPosition)
 {
-	// Implementation for starting a note
 	osc.setFrequency(juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber));
 	adsr.noteOn();
 }
+
 void SynthVoice::stopNote(float velocity, bool allowTailOff)
 {
-	// Implementation for stopping a note
 	adsr.noteOff();
 }
+
 void SynthVoice::controllerMoved(int controllerNumber, int newControllerValue)
 {
-	// Implementation for handling controller movements
+	// gestione controller (se necessaria)
 }
 
 void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outputChannels)
 {
-
 	adsr.setSampleRate(sampleRate);
-
 
 	juce::dsp::ProcessSpec spec;
 	spec.sampleRate = sampleRate;
@@ -56,22 +55,19 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outpu
 	spec.numChannels = static_cast<juce::uint32> (outputChannels);
 
 	osc.prepare(spec);
+
+	// Chiama l'overload che accetta ProcessSpec (definito in GainData)
 	gain.prepare(spec);
 
 	isPrepared = true;
 }
 
-void SynthVoice::update(const float attack, const float decay, const float sustain, const float release, const float gainValue) {
+void SynthVoice::update(const float attack, const float decay, const float sustain, const float release, const float gainValue)
+{
 	adsr.updateADSR(attack, decay, sustain, release);
 
-	// Nuova implementazione con GainData
-	// NOTA: equivalente a gain.setGainLinear(gainValue);
-	// Per ereditarietà, anche gain.setGainLinear funziona
-
+	// Imposta il target del gain; GainData userà SmoothedValue internamente
 	gain.setGainLinear(gainValue);
-
-	// Vecchia implementazione diretta del gain (senza GainData)
-	// gain.setGainLinear(gainValue);
 }
 
 void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
@@ -81,14 +77,16 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 	if (!isPrepared)
 		return;
 
-	// int writePos = startSample;
+	const int numChannels = outputBuffer.getNumChannels();
 
 	for (int i = 0; i < numSamples; ++i)
 	{
-		// genera un sample mono, applica ADSR e gain
-		const float sample = osc.processSample(0.0f) * adsr.getNextSample() * gain.getGainLinear();
+		// ottieni il gain smussato per questo sample
+		const float smoothedGain = gain.getNextSmoothedGain();
 
-		for (int channel = 0; channel < outputBuffer.getNumChannels(); ++channel)
+		const float sample = osc.processSample(0.0f) * adsr.getNextSample() * smoothedGain;
+
+		for (int channel = 0; channel < numChannels; ++channel)
 		{
 			outputBuffer.addSample(channel, startSample, sample);
 		}
@@ -98,6 +96,6 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 
 void SynthVoice::pitchWheelMoved(int newPitchWheelValue)
 {
-	// Implementation for handling pitch wheel movements
+	// gestione pitch wheel
 }
 
