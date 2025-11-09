@@ -68,7 +68,7 @@ void SynthVoice::update(const float attack, const float decay, const float susta
 	// NOTA: equivalente a gain.setGainLinear(gainValue);
 	// Per ereditarietà, anche gain.setGainLinear funziona
 
-	gain.setGain(gainValue);
+	gain.setGainLinear(gainValue);
 
 	// Vecchia implementazione diretta del gain (senza GainData)
 	// gain.setGainLinear(gainValue);

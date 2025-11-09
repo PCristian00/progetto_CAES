@@ -10,9 +10,10 @@
 
 #include "GainData.h"
 
-// Probabilmente superfluo
-// Valutare ovverride piuttosto, o NON USARE DEL TUTTO GainData
-void GainData::setGain(const float newGain) noexcept
+// estensione di juce::dsp::Gain<float>::setGainLinear
+void GainData::setGainLinear(const float newGain)
 {
-    setGainLinear(newGain);
+    juce::dsp::Gain<float>::setGainLinear(newGain);
+
+    // Aggiungere eventuali funzioni aggiuntive
 }

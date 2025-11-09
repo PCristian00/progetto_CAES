@@ -20,5 +20,5 @@
 class GainData : public juce::dsp::Gain<float>
 {
 public:
-    void setGain(const float newGain) noexcept;
+    void setGainLinear(const float newGain);
 };
