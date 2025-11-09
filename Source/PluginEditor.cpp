@@ -48,6 +48,4 @@ void SubSynthAudioProcessorEditor::resized()
 	gain.setBounds(adsr.getRight(), 0, getWidth() / 3, getHeight());
 	osc.setBounds(gain.getRight(), 0, getWidth() / 3, getHeight());
 
-	// Temporaneo: creare file .cpp e .h anche per gain
-
 }

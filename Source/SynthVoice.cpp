@@ -31,7 +31,7 @@ void SynthVoice::startNote(int midiNoteNumber,
 	juce::SynthesiserSound* sound,
 	int currentPitchWheelPosition)
 {
-	osc.setFrequency(juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber));
+	osc.setWaveFrequency(midiNoteNumber);
 	adsr.noteOn();
 }
 
@@ -54,7 +54,7 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outpu
 	spec.maximumBlockSize = samplesPerBlock;
 	spec.numChannels = static_cast<juce::uint32> (outputChannels);
 
-	osc.prepare(spec);
+	osc.prepareToPlay(spec);
 
 	// Chiama l'overload che accetta ProcessSpec (definito in GainData)
 	gain.prepare(spec);
@@ -83,6 +83,8 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 	{
 		// ottieni il gain smussato per questo sample
 		const float smoothedGain = gain.getNextSmoothedGain();
+
+		// osc.getNextAudioBlock(block); // vecchia implementazione per blocchi
 
 		const float sample = osc.processSample(0.0f) * adsr.getNextSample() * smoothedGain;
 
