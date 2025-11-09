@@ -15,5 +15,5 @@ void GainData::setGainLinear(const float newGain)
 {
     juce::dsp::Gain<float>::setGainLinear(newGain);
 
-    // Aggiungere eventuali funzioni aggiuntive
+    // Aggiungere eventuali funzioni aggiuntive OPPURE RIMUOVERE DEL TUTTO (già implementata per ereditarietà)
 }
