@@ -12,6 +12,7 @@
 
 void OscData::prepare(juce::dsp::ProcessSpec& spec)
 {
+	// fmOsc.prepare(spec);
 	juce::dsp::Oscillator<float>::prepare(spec);
 }
 
@@ -36,11 +37,22 @@ void OscData::setWaveType(const int choice)
 
 void OscData::setFrequency(const int midiNoteNumber)
 {
-	juce::dsp::Oscillator<float>::setFrequency(juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber));
+	juce::dsp::Oscillator<float>::setFrequency(juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber) + fmMod);
+	lastMidiNote = midiNoteNumber;
 }
 
+// Aggiunta modulazione FM.
+// ATTENZIONE: metodo diverso dal tutorial, che usa AudioBlock invece di singoli sample
 float OscData::processSample(float input) {
+
+	// fmMod = fmOsc.processSample(input) * fmDepth; // Modulation depth
 	return juce::dsp::Oscillator<float>::processSample(input);
+}
+
+void OscData::setFmParams(const float depth, const float freq) {
+	// fmOsc.setFrequency(freq);
+	fmDepth = depth;
+	setFrequency(lastMidiNote);
 }
 
 // ATTENZIONE: Fatto così nel tutorial, ma nel codice attuale non viene utilizzato (uso i sample e non gli AudioBlock)

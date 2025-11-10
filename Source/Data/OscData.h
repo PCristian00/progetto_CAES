@@ -14,16 +14,21 @@
 class OscData :public juce::dsp::Oscillator<float>
 {
 public:
-	/* OscData() : juce::dsp::Oscillator<float>([](float x) { return std::sin(x); })
-	 {
-	 }*/
 	void prepare(juce::dsp::ProcessSpec& spec);
 	void setWaveType(const int choice);
-	
+
 	void setFrequency(const int midiNoteNumber);
 
 	// Forse rimuovere?
 	// void getNextAudioBlock(juce::dsp::AudioBlock<float>& block);
 
 	float processSample(float input);
+
+	void setFmParams(const float depth, const float freq);
+
+private:
+	// juce::dsp::Oscillator<float> fmOsc{ [](float x) { return std::sin(x); } };
+	float fmMod{ 0.0f };
+	float fmDepth{ 0.0f };
+	int lastMidiNote{ 0 };
 };

@@ -161,16 +161,20 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	for (int i = 0; i < synth.getNumVoices(); i++)
 	{
 		if (auto voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
-		{		
+		{
 			float attack = apvts.getRawParameterValue("ATTACK")->load();
 			float decay = apvts.getRawParameterValue("DECAY")->load();
 			float sustain = apvts.getRawParameterValue("SUSTAIN")->load();
 			float release = apvts.getRawParameterValue("RELEASE")->load();
+
 			float gain = apvts.getRawParameterValue("GAIN")->load();
 			int oscChoice = apvts.getRawParameterValue("OSC")->load();
+			/*float fmFreq = apvts.getRawParameterValue("FMFREQ")->load();
+			float fmDepth = apvts.getRawParameterValue("FMDEPTH")->load();*/
 
 			voice->update(attack, decay, sustain, release, gain);
 			voice->getOscillator().setWaveType(oscChoice);
+			// voice->getOscillator().setFmParams(fmDepth, fmFreq);
 		}
 	}
 
@@ -217,7 +221,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout SubSynthAudioProcessor::crea
 	// Combobox: switch oscillator
 	params.push_back(std::make_unique<juce::AudioParameterChoice>("OSC", "Oscillator", juce::StringArray{ "Sine", "Saw", "Square" }, 0));
 
+	/*params.push_back(std::make_unique<juce::AudioParameterFloat>("FMFREQ", "FM Frequency", juce::NormalisableRange<float>{0.0f, 1000.0f}, 5.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("FMDEPTH", "FM Depth", juce::NormalisableRange<float>{0.0f, 1000.0f}, 500.0f));*/
+
 	params.push_back(std::make_unique<juce::AudioParameterFloat>("GAIN", "Gain", 0.0f, 1.0f, 0.5f));
+
 
 	params.push_back(std::make_unique<juce::AudioParameterFloat>("ATTACK", "Attack", 0.1f, 1.0f, 0.1f));
 	params.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", 0.1f, 1.0f, 0.1f));
