@@ -162,7 +162,15 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	{
 		if (auto voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
 		{		
-			voice->update(apvts.getRawParameterValue("ATTACK")->load(), apvts.getRawParameterValue("DECAY")->load(), apvts.getRawParameterValue("SUSTAIN")->load(), apvts.getRawParameterValue("RELEASE")->load(), apvts.getRawParameterValue("GAIN")->load());
+			float attack = apvts.getRawParameterValue("ATTACK")->load();
+			float decay = apvts.getRawParameterValue("DECAY")->load();
+			float sustain = apvts.getRawParameterValue("SUSTAIN")->load();
+			float release = apvts.getRawParameterValue("RELEASE")->load();
+			float gain = apvts.getRawParameterValue("GAIN")->load();
+			int oscChoice = apvts.getRawParameterValue("OSC")->load();
+
+			voice->update(attack, decay, sustain, release, gain);
+			voice->getOscillator().setWaveType(oscChoice);
 		}
 	}
 

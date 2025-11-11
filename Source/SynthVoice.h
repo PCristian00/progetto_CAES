@@ -13,6 +13,7 @@
 #include "SynthSound.h"
 #include "Data/ADSRData.h"
 #include "Data/GainData.h"
+#include "Data/OscData.h"
 
 class SynthVoice : public juce::SynthesiserVoice
 {
@@ -27,6 +28,7 @@ public:
 	void controllerMoved(int controllerNumber, int newControllerValue) override;
 	void prepareToPlay(double sampleRate, int samplesPerBlock, int outputChannels);
 	void update(const float attack, const float decay, const float sustain, const float release, const float gainValue);
+	OscData& getOscillator() { return osc; }
 	void renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override;
 
 private:
@@ -34,10 +36,11 @@ private:
 	bool isPrepared{ false };
 	ADSRData adsr;
 	GainData gain;
+	OscData osc;
 
 	// 200 indica la LUT (controllare dopo)
-	juce::dsp::Oscillator<float> osc{ [](float x) { return std::sin(x); 200;} };  //sin
-	
+	// juce::dsp::Oscillator<float> osc{ [](float x) { return std::sin(x); 200;} };  //sin
+
 	// Vecchia implementazione diretta del gain (senza GainData)
 	//juce::dsp::Gain<float> gain;	
 

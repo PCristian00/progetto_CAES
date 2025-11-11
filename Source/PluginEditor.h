@@ -12,6 +12,7 @@
 #include "PluginProcessor.h"
 #include "UI/ADSRComponent.h"
 #include "UI/GainComponent.h"
+#include "UI/OscComponent.h"
 
 //==============================================================================
 /**
@@ -34,12 +35,7 @@ private:
 
 	ADSRComponent adsr;
 	GainComponent gain;
-	
-	juce::ComboBox oscSelector;
-
-	
-
-	std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> oscSelectorAttachment;
+	OscComponent osc;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SubSynthAudioProcessorEditor)
 };
