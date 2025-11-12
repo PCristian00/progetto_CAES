@@ -39,13 +39,13 @@ void ADSRComponent::resized()
 {
 	// This method is where you should set the bounds of any child
 	// components that your component contains..
-	const auto bounds = getLocalBounds().reduced(10);
-	const auto padding = 10;
+	const juce::Rectangle<int> bounds = getLocalBounds().reduced(10);
+	const int padding = 10;
 	const int numSliders = 4;
-	const auto sliderWidth = bounds.getWidth() / numSliders - padding;
-	const auto sliderHeight = bounds.getHeight();
-	const auto sliderXstart = padding;
-	const auto sliderYstart = padding;
+	const int sliderWidth = bounds.getWidth() / numSliders - padding;
+	const int sliderHeight = bounds.getHeight();
+	const int sliderXstart = padding;
+	const int sliderYstart = padding;
 
 	setSliderBounds(attackSlider, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
 	setSliderBounds(decaySlider, attackSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);

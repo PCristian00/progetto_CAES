@@ -11,6 +11,8 @@
 #pragma once
 #include <JuceHeader.h>
 
+// CONTROLLARE SE SI PUò GESTIRE QUI PADDING Etc.
+
 namespace utils
 {
 	// Impostazioni Slider (GUI)

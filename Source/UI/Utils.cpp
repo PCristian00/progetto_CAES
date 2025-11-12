@@ -12,6 +12,9 @@
 
 namespace utils
 {
+
+	// AGGIUNGERE LABEL COME PARAMETRO
+
 	void setSliderParams(juce::Slider& slider, juce::Component* parent) noexcept
 	{
 		slider.setSliderStyle(juce::Slider::LinearBarVertical);
@@ -21,6 +24,7 @@ namespace utils
 			parent->addAndMakeVisible(&slider);
 	}
 
+	// AGGIUNGERE LABEL COME PARAMETRO?
 	void setSliderBounds(juce::Slider& slider, int x, int y, int width, int height) noexcept
 	{
 		slider.setBounds(x, y, width, height);

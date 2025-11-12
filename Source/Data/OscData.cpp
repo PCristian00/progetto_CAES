@@ -55,7 +55,7 @@ void OscData::setFmParams(const float depth, const float freq) {
 	setFrequency(lastMidiNote);
 }
 
-// ATTENZIONE: Fatto così nel tutorial, ma nel codice attuale non viene utilizzato (uso i sample e non gli AudioBlock)
+// ATTENZIONE: Fatto cos nel tutorial, ma nel codice attuale non viene utilizzato (uso i sample e non gli AudioBlock)
 // Forse dopo rinominare in process (come in GainData) per fare estensione del metodo originario
 //void OscData::getNextAudioBlock(juce::dsp::AudioBlock<float>& block)
 //{
