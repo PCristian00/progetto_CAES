@@ -24,15 +24,15 @@ OscComponent::OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::Stri
 
 	oscWaveSelectorAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, waveSelectorId, oscWaveSelector);
 
-	fmFreqSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, "FMFREQ", fmFreqSlider);
+	// fmFreqSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, "FMFREQ", fmFreqSlider);
 
-	setSliderParams(fmFreqSlider, this);
+	setSliderParams(fmFreqSlider, fmFreqSliderAttachment, apvts, "FMFREQ", fmFreqLabel, this);
 
 	// AGGIUNGERE A UTILS
-	fmFreqLabel.setColour(juce::Label::ColourIds::textColourId, juce::Colours::white);
+	/*fmFreqLabel.setColour(juce::Label::ColourIds::textColourId, juce::Colours::white);
 	fmFreqLabel.setFont(15.0f);
 	fmFreqLabel.setJustificationType(juce::Justification::centred);
-	addAndMakeVisible(fmFreqLabel);
+	addAndMakeVisible(fmFreqLabel);*/
 }
 
 OscComponent::~OscComponent()
@@ -51,6 +51,6 @@ void OscComponent::resized()
 {
 	oscWaveSelector.setBounds(10, 10, getWidth() - 20, 30);
 	// fmFreqSlider.setBounds(0, 80, 100, 90);
-	setSliderBounds(fmFreqSlider, 10, 80, 100, 90);
-	fmFreqLabel.setBounds(fmFreqSlider.getX(), fmFreqSlider.getY() - 20, fmFreqSlider.getWidth(), 20);
+	setSliderBounds(fmFreqSlider, fmFreqLabel, 10, 80, 100, 90);
+	// fmFreqLabel.setBounds(fmFreqSlider.getX(), fmFreqSlider.getY() - 20, fmFreqSlider.getWidth(), 20);
 }
