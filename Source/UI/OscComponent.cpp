@@ -38,6 +38,12 @@ void OscComponent::paint(juce::Graphics& g)
 
 void OscComponent::resized()
 {
-	oscWaveSelector.setBounds(padding, padding, getWidth() - (2 * padding), (3 * padding));
-	setSliderBounds(fmFreqSlider, fmFreqLabel, padding, 80, 100, 90);
+	const int numSliders = 2;
+	const int sliderWidth = getBoundsWithPadding(this).getWidth() / numSliders - padding;
+	const int sliderHeight = getBoundsWithPadding(this).getHeight() / numSliders - padding;
+	const int sliderXstart = padding;
+	const int sliderYstart = padding;
+
+	oscWaveSelector.setBounds(padding, padding, getWidth() - (2 * padding), (2 * padding));
+	setSliderBounds(fmFreqSlider, fmFreqLabel, sliderXstart, oscWaveSelector.getBottom() + padding, sliderWidth, sliderHeight);
 }

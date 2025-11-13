@@ -32,10 +32,10 @@ void ADSRComponent::paint(juce::Graphics& g)
 
 void ADSRComponent::resized()
 {
-	const juce::Rectangle<int> bounds = getLocalBounds().reduced(padding);
+	// const juce::Rectangle<int> bounds = getLocalBounds().reduced(padding);
 	const int numSliders = 4;
-	const int sliderWidth = bounds.getWidth() / numSliders - padding;
-	const int sliderHeight = bounds.getHeight() - padding;
+	const int sliderWidth = getBoundsWithPadding(this).getWidth() / numSliders - padding;
+	const int sliderHeight = getBoundsWithPadding(this).getHeight() - padding;
 	const int sliderXstart = padding;
 	const int sliderYstart = padding;
 

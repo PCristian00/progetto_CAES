@@ -38,4 +38,9 @@ namespace utils
 		slider.setBounds(x, y, width, height);
 		label.setBounds(x, y + 20, width, 20);
 	}
+	juce::Rectangle<int>& getBoundsWithPadding(juce::Component* parent) noexcept
+	{
+		// TODO: inserire l'istruzione return qui
+		return parent->getLocalBounds().reduced(padding);
+	}
 }
