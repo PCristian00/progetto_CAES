@@ -169,12 +169,12 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 
 			float gain = apvts.getRawParameterValue("GAIN")->load();
 			int oscChoice = apvts.getRawParameterValue("OSC")->load();
-			/*float fmFreq = apvts.getRawParameterValue("FMFREQ")->load();
-			float fmDepth = apvts.getRawParameterValue("FMDEPTH")->load();*/
+			float fmFreq = apvts.getRawParameterValue("FMFREQ")->load();
+			float fmDepth = apvts.getRawParameterValue("FMDEPTH")->load();
 
 			voice->update(attack, decay, sustain, release, gain);
 			voice->getOscillator().setWaveType(oscChoice);
-			// voice->getOscillator().setFmParams(fmDepth, fmFreq);
+			voice->getOscillator().setFmParams(fmDepth, fmFreq);
 		}
 	}
 

@@ -17,8 +17,6 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 	// editor's size to whatever you need it to be.
 
 	setSize(800, 600);
-		
-	// oscSelectorAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "OSC", oscSelector);
 
 	addAndMakeVisible(adsr);
 	addAndMakeVisible(gain);

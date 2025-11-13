@@ -27,7 +27,7 @@ public:
 	void setFmParams(const float depth, const float freq);
 
 private:
-	// juce::dsp::Oscillator<float> fmOsc{ [](float x) { return std::sin(x); } };
+	juce::dsp::Oscillator<float> fmOsc{ [](float x) { return std::sin(x); } };
 	float fmMod{ 0.0f };
 	float fmDepth{ 0.0f };
 	int lastMidiNote{ 0 };

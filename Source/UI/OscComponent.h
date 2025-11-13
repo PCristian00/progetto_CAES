@@ -35,7 +35,6 @@ private:
 	juce::Slider fmDepthSlider;
 
 	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> fmFreqSliderAttachment;
-
 	juce::Label fmFreqLabel{ "FM Freq", "FM Freq"};
 
 	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> fmDepthSliderAttachment;

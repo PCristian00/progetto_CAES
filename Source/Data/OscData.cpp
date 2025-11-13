@@ -12,7 +12,7 @@
 
 void OscData::prepare(juce::dsp::ProcessSpec& spec)
 {
-	// fmOsc.prepare(spec);
+	fmOsc.prepare(spec);
 	juce::dsp::Oscillator<float>::prepare(spec);
 }
 
@@ -37,7 +37,8 @@ void OscData::setWaveType(const int choice)
 
 void OscData::setFrequency(const int midiNoteNumber)
 {
-	juce::dsp::Oscillator<float>::setFrequency(juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber) + fmMod);
+	auto currentFreq = juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber) + fmMod;
+	juce::dsp::Oscillator<float>::setFrequency(currentFreq >= 0 ? currentFreq : -currentFreq);
 	lastMidiNote = midiNoteNumber;
 }
 
@@ -45,12 +46,12 @@ void OscData::setFrequency(const int midiNoteNumber)
 // ATTENZIONE: metodo diverso dal tutorial, che usa AudioBlock invece di singoli sample
 float OscData::processSample(float input) {
 
-	// fmMod = fmOsc.processSample(input) * fmDepth; // Modulation depth
+	fmMod = fmOsc.processSample(input) * fmDepth; // Modulation depth
 	return juce::dsp::Oscillator<float>::processSample(input);
 }
 
 void OscData::setFmParams(const float depth, const float freq) {
-	// fmOsc.setFrequency(freq);
+	fmOsc.setFrequency(freq);
 	fmDepth = depth;
 	setFrequency(lastMidiNote);
 }
