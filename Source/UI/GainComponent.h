@@ -33,5 +33,7 @@ private:
 	using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 	std::unique_ptr<SliderAttachment> gainSliderAttachment;
 
+	juce::Label gainLabel{ "Gain", "Gain" };
+
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GainComponent)
 };

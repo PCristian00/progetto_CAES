@@ -11,6 +11,8 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "Utils.h"
+using namespace utils;
 
 //==============================================================================
 /*
@@ -28,6 +30,15 @@ private:
 
     juce::ComboBox oscWaveSelector;
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> oscWaveSelectorAttachment;
+
+	juce::Slider fmFreqSlider;
+	juce::Slider fmDepthSlider;
+
+	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> fmFreqSliderAttachment;
+	juce::Label fmFreqLabel{ "FM Freq", "FM Freq"};
+
+	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> fmDepthSliderAttachment;
+	juce::Label fmDepthLabel{ "FM Depth", "FM Depth" };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OscComponent)
 };

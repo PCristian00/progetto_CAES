@@ -17,8 +17,6 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 	// editor's size to whatever you need it to be.
 
 	setSize(800, 600);
-		
-	// oscSelectorAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "OSC", oscSelector);
 
 	addAndMakeVisible(adsr);
 	addAndMakeVisible(gain);
@@ -35,10 +33,6 @@ void SubSynthAudioProcessorEditor::paint(juce::Graphics& g)
 {
 	// (Our component is opaque, so we must completely fill the background with a solid colour)
 	g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
-
-	/*g.setColour(juce::Colours::white);
-	g.setFont(juce::FontOptions(15.0f));*/
-	// g.drawFittedText("Sub Synth", getLocalBounds(), juce::Justification::centred, 1);
 }
 
 void SubSynthAudioProcessorEditor::resized()

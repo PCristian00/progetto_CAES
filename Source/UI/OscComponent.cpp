@@ -8,20 +8,18 @@
   ==============================================================================
 */
 
-#include <JuceHeader.h>
 #include "OscComponent.h"
 
 //==============================================================================
+
+// In caso di più oscillatori, si deve passare un id diverso per ognuno dei fmFreq e fmDepth
 OscComponent::OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::String waveSelectorId)
 {
-	// In your constructor, you should add any child components, and
-	// initialise any special settings that your component needs.
-
 	juce::StringArray choices{ "Sine", "Saw", "Square" };
-	oscWaveSelector.addItemList(choices, 1);
-	addAndMakeVisible(oscWaveSelector);
+	setComboBoxParams(oscWaveSelector, oscWaveSelectorAttachment, apvts, waveSelectorId, choices, this);
 
-	oscWaveSelectorAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, waveSelectorId, oscWaveSelector);
+	setSliderParams(fmFreqSlider, fmFreqSliderAttachment, apvts, "FMFREQ", fmFreqLabel, this);
+	setSliderParams(fmDepthSlider, fmDepthSliderAttachment, apvts, "FMDEPTH", fmDepthLabel, this);
 }
 
 OscComponent::~OscComponent()
@@ -30,10 +28,21 @@ OscComponent::~OscComponent()
 
 void OscComponent::paint(juce::Graphics& g)
 {
-	g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));   // clear the background
+	g.fillAll(juce::Colours::black);   // clear the background
+
+	//g.setColour(juce::Colours::white);
+	//g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
 }
 
 void OscComponent::resized()
 {
-	oscWaveSelector.setBounds(10, 10, getWidth() - 20, 30);
+	const int numSliders = 2;
+	const int sliderWidth = getBoundsWithPadding(this).getWidth() / numSliders - padding;
+	const int sliderHeight = getBoundsWithPadding(this).getHeight() / numSliders - padding;
+	const int sliderXstart = padding;
+	const int sliderYstart = padding;
+
+	setComboBoxBounds(oscWaveSelector, padding, padding, getWidth() - (2 * padding), (2 * padding));
+	setSliderBounds(fmFreqSlider, fmFreqLabel, sliderXstart, oscWaveSelector.getBottom() + padding, sliderWidth, sliderHeight);
+	setSliderBounds(fmDepthSlider, fmDepthLabel, fmFreqSlider.getRight() + padding, oscWaveSelector.getBottom() + padding, sliderWidth, sliderHeight);
 }
