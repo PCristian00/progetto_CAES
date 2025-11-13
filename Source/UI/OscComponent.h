@@ -39,6 +39,7 @@ private:
 	juce::Label fmFreqLabel{ "FM Freq", "FM Freq"};
 
 	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> fmDepthSliderAttachment;
+	juce::Label fmDepthLabel{ "FM Depth", "FM Depth" };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OscComponent)
 };

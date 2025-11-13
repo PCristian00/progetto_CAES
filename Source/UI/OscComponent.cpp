@@ -19,6 +19,7 @@ OscComponent::OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::Stri
 	setComboBoxParams(oscWaveSelector, oscWaveSelectorAttachment, apvts, waveSelectorId, choices, this);
 
 	setSliderParams(fmFreqSlider, fmFreqSliderAttachment, apvts, "FMFREQ", fmFreqLabel, this);
+	setSliderParams(fmDepthSlider, fmDepthSliderAttachment, apvts, "FMDEPTH", fmDepthLabel, this);
 }
 
 OscComponent::~OscComponent()
@@ -43,4 +44,5 @@ void OscComponent::resized()
 
 	setComboBoxBounds(oscWaveSelector, padding, padding, getWidth() - (2 * padding), (2 * padding));
 	setSliderBounds(fmFreqSlider, fmFreqLabel, sliderXstart, oscWaveSelector.getBottom() + padding, sliderWidth, sliderHeight);
+	setSliderBounds(fmDepthSlider, fmDepthLabel, fmFreqSlider.getRight() + padding, oscWaveSelector.getBottom() + padding, sliderWidth, sliderHeight);
 }
