@@ -40,6 +40,7 @@ namespace utils
 		slider.setBounds(x, y, width, height);
 		label.setBounds(x, y + 20, width, 20);
 	}
+
 	void setComboBoxParams(juce::ComboBox& comboBox, std::unique_ptr<ComboBoxAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::StringArray choices, juce::Component* parent) noexcept
 	{
 		comboBox.addItemList(choices, 1);
@@ -51,10 +52,11 @@ namespace utils
 	}
 	void setComboBoxBounds(juce::ComboBox& comboBox, int x, int y, int width, int height) noexcept
 	{
+		comboBox.setBounds(x, y, width, height);
 	}
+
 	juce::Rectangle<int>& getBoundsWithPadding(juce::Component* parent) noexcept
 	{
-		// TODO: inserire l'istruzione return qui
 		return parent->getLocalBounds().reduced(padding);
 	}
 }

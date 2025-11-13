@@ -16,12 +16,6 @@
 OscComponent::OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::String waveSelectorId)
 {
 	juce::StringArray choices{ "Sine", "Saw", "Square" };
-	/*oscWaveSelector.addItemList(choices, 1);
-	addAndMakeVisible(oscWaveSelector);*/
-
-
-
-	// oscWaveSelectorAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, waveSelectorId, oscWaveSelector);
 	setComboBoxParams(oscWaveSelector, oscWaveSelectorAttachment, apvts, waveSelectorId, choices, this);
 
 	setSliderParams(fmFreqSlider, fmFreqSliderAttachment, apvts, "FMFREQ", fmFreqLabel, this);
@@ -47,7 +41,7 @@ void OscComponent::resized()
 	const int sliderXstart = padding;
 	const int sliderYstart = padding;
 
-	oscWaveSelector.setBounds(padding, padding, getWidth() - (2 * padding), (2 * padding));
-
+	// oscWaveSelector.setBounds(padding, padding, getWidth() - (2 * padding), (2 * padding));
+	setComboBoxBounds(oscWaveSelector, padding, padding, getWidth() - (2 * padding), (2 * padding));
 	setSliderBounds(fmFreqSlider, fmFreqLabel, sliderXstart, oscWaveSelector.getBottom() + padding, sliderWidth, sliderHeight);
 }
