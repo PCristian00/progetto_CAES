@@ -36,5 +36,4 @@ void GainComponent::resized()
 	const auto sliderYstart = padding;
 
 	setSliderBounds(gainSlider, gainLabel, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
-
 }
