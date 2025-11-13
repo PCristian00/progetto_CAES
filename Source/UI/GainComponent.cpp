@@ -28,12 +28,11 @@ void GainComponent::paint(juce::Graphics& g)
 
 void GainComponent::resized()
 {
-	// const auto bounds = getLocalBounds().reduced(padding);
 	const int numSliders = 1;
-	const auto sliderWidth = getBoundsWithPadding(this).getWidth() / numSliders - padding;
-	const auto sliderHeight = getBoundsWithPadding(this).getHeight() - padding;
-	const auto sliderXstart = padding;
-	const auto sliderYstart = padding;
+	const int sliderWidth = getBoundsWithPadding(this).getWidth() / numSliders - padding;
+	const int sliderHeight = getBoundsWithPadding(this).getHeight() - padding;
+	const int sliderXstart = padding;
+	const int sliderYstart = padding;
 
 	setSliderBounds(gainSlider, gainLabel, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
 }

@@ -32,7 +32,6 @@ void ADSRComponent::paint(juce::Graphics& g)
 
 void ADSRComponent::resized()
 {
-	// const juce::Rectangle<int> bounds = getLocalBounds().reduced(padding);
 	const int numSliders = 4;
 	const int sliderWidth = getBoundsWithPadding(this).getWidth() / numSliders - padding;
 	const int sliderHeight = getBoundsWithPadding(this).getHeight() - padding;
