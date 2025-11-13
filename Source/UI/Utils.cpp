@@ -15,11 +15,9 @@ namespace utils
 
 	// MIGLIORARE (più parametri?) per modificare lo stile singolarmente (forse passare ad esempio Slider::LinearBarVertical etc.)
 
-	// AGGIUNGERE LABEL, apvts, sliderID COME PARAMETRO
-
-	void setSliderParams(juce::Slider& slider, std::unique_ptr<Attachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::Label& label, juce::Component* parent) noexcept
+	void setSliderParams(juce::Slider& slider, std::unique_ptr<Attachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::Label& label, juce::Component* parent, SliderStyle style) noexcept
 	{
-		slider.setSliderStyle(juce::Slider::LinearBarVertical);
+		slider.setSliderStyle(style);
 		slider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 25);
 
 		attachment = std::make_unique<Attachment>(apvts, paramID, slider);
@@ -35,10 +33,9 @@ namespace utils
 			parent->addAndMakeVisible(&label);
 	}
 
-	// AGGIUNGERE LABEL COME PARAMETRO?
 	void setSliderBounds(juce::Slider& slider, juce::Label& label, int x, int y, int width, int height) noexcept
 	{
 		slider.setBounds(x, y, width, height);
-		label.setBounds(x, y+20, width, 20);
+		label.setBounds(x, y + 20, width, 20);
 	}
 }

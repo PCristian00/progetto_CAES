@@ -15,11 +15,6 @@
 //==============================================================================
 ADSRComponent::ADSRComponent(juce::AudioProcessorValueTreeState& apvts)
 {
-	/*attackSliderAttachment = std::make_unique<SliderAttachment>(apvts, "ATTACK", attackSlider);
-	decaySliderAttachment = std::make_unique<SliderAttachment>(apvts, "DECAY", decaySlider);
-	sustainSliderAttachment = std::make_unique<SliderAttachment>(apvts, "SUSTAIN", sustainSlider);
-	releaseSliderAttachment = std::make_unique<SliderAttachment>(apvts, "RELEASE", releaseSlider);*/
-
 	setSliderParams(attackSlider, attackSliderAttachment, apvts, "ATTACK", attackLabel, this);
 	setSliderParams(decaySlider, decaySliderAttachment, apvts, "DECAY", decayLabel, this);
 	setSliderParams(sustainSlider, sustainSliderAttachment, apvts, "SUSTAIN", sustainLabel, this);
@@ -37,10 +32,7 @@ void ADSRComponent::paint(juce::Graphics& g)
 
 void ADSRComponent::resized()
 {
-	// This method is where you should set the bounds of any child
-	// components that your component contains..
-	const juce::Rectangle<int> bounds = getLocalBounds().reduced(10);
-	const int padding = 10;
+	const juce::Rectangle<int> bounds = getLocalBounds().reduced(padding);
 	const int numSliders = 4;
 	const int sliderWidth = bounds.getWidth() / numSliders - padding;
 	const int sliderHeight = bounds.getHeight() - padding;
