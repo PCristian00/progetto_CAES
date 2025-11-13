@@ -13,7 +13,7 @@
 namespace utils
 {
 
-	// MIGLIORARE (più parametri?) per modificare lo stile singolarmente (forse passare ad esempio Slider::LinearBarVertical etc.)
+	// MIGLIORARE (piÃ¹ parametri?) per modificare lo stile singolarmente (forse passare ad esempio Slider::LinearBarVertical etc.)
 
 	// AGGIUNGERE LABEL, apvts, sliderID COME PARAMETRO
 
@@ -39,6 +39,6 @@ namespace utils
 	void setSliderBounds(juce::Slider& slider, juce::Label& label, int x, int y, int width, int height) noexcept
 	{
 		slider.setBounds(x, y, width, height);
-		label.setBounds(slider.getX(), slider.getY() - 20, slider.getWidth(), 20);
+		label.setBounds(x, y+20, width, 20);
 	}
 }

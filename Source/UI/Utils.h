@@ -11,7 +11,7 @@
 #pragma once
 #include <JuceHeader.h>
 
-// CONTROLLARE SE SI PUò GESTIRE QUI PADDING Etc.
+// CONTROLLARE SE SI PU GESTIRE QUI PADDING Etc.
 // AGGIUNGERE ANCHE GESTIONE COMBOBOX (per ora solo in Osc)
 
 using Attachment = juce::AudioProcessorValueTreeState::SliderAttachment;

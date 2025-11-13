@@ -15,15 +15,15 @@
 //==============================================================================
 ADSRComponent::ADSRComponent(juce::AudioProcessorValueTreeState& apvts)
 {
-	attackSliderAttachment = std::make_unique<SliderAttachment>(apvts, "ATTACK", attackSlider);
+	/*attackSliderAttachment = std::make_unique<SliderAttachment>(apvts, "ATTACK", attackSlider);
 	decaySliderAttachment = std::make_unique<SliderAttachment>(apvts, "DECAY", decaySlider);
 	sustainSliderAttachment = std::make_unique<SliderAttachment>(apvts, "SUSTAIN", sustainSlider);
-	releaseSliderAttachment = std::make_unique<SliderAttachment>(apvts, "RELEASE", releaseSlider);
+	releaseSliderAttachment = std::make_unique<SliderAttachment>(apvts, "RELEASE", releaseSlider);*/
 
-	setSliderParams(attackSlider, this);
-	setSliderParams(decaySlider, this);
-	setSliderParams(sustainSlider, this);
-	setSliderParams(releaseSlider, this);
+	setSliderParams(attackSlider, attackSliderAttachment, apvts, "ATTACK", attackLabel, this);
+	setSliderParams(decaySlider, decaySliderAttachment, apvts, "DECAY", decayLabel, this);
+	setSliderParams(sustainSlider, sustainSliderAttachment, apvts, "SUSTAIN", sustainLabel, this);
+	setSliderParams(releaseSlider, releaseSliderAttachment, apvts, "RELEASE", releaseLabel, this);
 }
 
 ADSRComponent::~ADSRComponent()
@@ -43,12 +43,12 @@ void ADSRComponent::resized()
 	const int padding = 10;
 	const int numSliders = 4;
 	const int sliderWidth = bounds.getWidth() / numSliders - padding;
-	const int sliderHeight = bounds.getHeight();
+	const int sliderHeight = bounds.getHeight() - padding;
 	const int sliderXstart = padding;
 	const int sliderYstart = padding;
 
-	setSliderBounds(attackSlider, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
-	setSliderBounds(decaySlider, attackSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
-	setSliderBounds(sustainSlider, decaySlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
-	setSliderBounds(releaseSlider, sustainSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
+	setSliderBounds(attackSlider, attackLabel, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
+	setSliderBounds(decaySlider, decayLabel, attackSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
+	setSliderBounds(sustainSlider, sustainLabel, decaySlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
+	setSliderBounds(releaseSlider, releaseLabel, sustainSlider.getRight() + padding, sliderYstart, sliderWidth, sliderHeight);
 }

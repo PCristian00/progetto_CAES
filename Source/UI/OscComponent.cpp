@@ -12,7 +12,7 @@
 
 //==============================================================================
 
-// In caso di più oscillatori, si deve passare un id diverso per ognuno dei fmFreq e fmDepth
+// In caso di piÃ¹ oscillatori, si deve passare un id diverso per ognuno dei fmFreq e fmDepth
 OscComponent::OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::String waveSelectorId)
 {
 	// In your constructor, you should add any child components, and

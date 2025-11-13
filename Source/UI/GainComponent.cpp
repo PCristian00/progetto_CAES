@@ -16,9 +16,9 @@ GainComponent::GainComponent(juce::AudioProcessorValueTreeState& apvts)
 {
 	// In your constructor, you should add any child components, and
 	// initialise any special settings that your component needs.
-	gainSliderAttachment = std::make_unique<SliderAttachment>(apvts, "GAIN", gainSlider);
+	// gainSliderAttachment = std::make_unique<SliderAttachment>(apvts, "GAIN", gainSlider);
 
-	setSliderParams(gainSlider, this);
+	setSliderParams(gainSlider, gainSliderAttachment, apvts, "GAIN", gainLabel, this);
 }
 
 GainComponent::~GainComponent()
@@ -44,6 +44,6 @@ void GainComponent::resized()
 	const auto sliderXstart = padding;
 	const auto sliderYstart = padding;
 
-	setSliderBounds(gainSlider, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
+	setSliderBounds(gainSlider, gainLabel, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
 
 }
