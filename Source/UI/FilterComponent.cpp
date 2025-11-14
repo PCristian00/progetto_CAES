@@ -11,15 +11,15 @@
 #include "FilterComponent.h"
 
 //==============================================================================
-FilterComponent::FilterComponent(juce::AudioProcessorValueTreeState& apvts, juce::String filterTypeSelectorId)
+FilterComponent::FilterComponent(juce::AudioProcessorValueTreeState& apvts, juce::String filterTypeSelectorId, juce::String filterCutOffId, juce::String filterResonanceId)
 {
 	// In your constructor, you should add any child components, and
 	// initialise any special settings that your component needs.
-	juce::StringArray choices{ "Low-Pass", "High-Pass", "Band-Pass" };
+	juce::StringArray choices{ "Low-Pass", "Band-Pass", "High-Pass" };
 	setComboBoxParams(filterTypeSelector, filterTypeSelectorAttachment, apvts, filterTypeSelectorId, choices, this);
 
-	setSliderParams(filterCutOffSlider, filterCutOffSliderAttachment, apvts, "FILTERCUTOFF", filterFreqLabel, this);
-	setSliderParams(filterResonanceSlider, filterResonanceSliderAttachment, apvts, "FILTERRES", filterResonanceLabel, this);
+	setSliderParams(filterCutOffSlider, filterCutOffSliderAttachment, apvts, filterCutOffId, filterFreqLabel, this);
+	setSliderParams(filterResonanceSlider, filterResonanceSliderAttachment, apvts, filterResonanceId, filterResonanceLabel, this);
 }
 
 FilterComponent::~FilterComponent()

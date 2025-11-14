@@ -20,7 +20,7 @@ using namespace utils;
 class FilterComponent  : public juce::Component
 {
 public:
-    FilterComponent(juce::AudioProcessorValueTreeState& apvts, juce::String filterTyperSelectorId);
+    FilterComponent(juce::AudioProcessorValueTreeState& apvts, juce::String filterTyperSelectorId, juce::String filterCutOffId, juce::String filterResonanceId);
     ~FilterComponent() override;
 
     void paint (juce::Graphics&) override;
