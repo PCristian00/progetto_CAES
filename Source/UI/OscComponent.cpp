@@ -42,7 +42,7 @@ void OscComponent::resized()
 	const int sliderXstart = padding;
 	const int sliderYstart = padding;
 
-	setComboBoxBounds(oscWaveSelector, padding, padding, getWidth() - (2 * padding), (2 * padding));
+	setComboBoxBounds(oscWaveSelector, padding, padding, sliderWidth * numSliders + padding, (2 * padding));
 	setSliderBounds(fmFreqSlider, fmFreqLabel, sliderXstart, oscWaveSelector.getBottom() + padding, sliderWidth, sliderHeight);
 	setSliderBounds(fmDepthSlider, fmDepthLabel, fmFreqSlider.getRight() + padding, oscWaveSelector.getBottom() + padding, sliderWidth, sliderHeight);
 }
