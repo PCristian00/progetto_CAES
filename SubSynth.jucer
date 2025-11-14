@@ -8,6 +8,8 @@
       <GROUP id="{7C32DD4C-AE0D-B14E-70AC-FDF565B05F9C}" name="Data">
         <FILE id="KBwWoF" name="ADSRData.cpp" compile="1" resource="0" file="Source/Data/ADSRData.cpp"/>
         <FILE id="cUskYo" name="ADSRData.h" compile="0" resource="0" file="Source/Data/ADSRData.h"/>
+        <FILE id="yCmuI4" name="FilterData.cpp" compile="1" resource="0" file="Source/Data/FilterData.cpp"/>
+        <FILE id="bBK1vQ" name="FilterData.h" compile="0" resource="0" file="Source/Data/FilterData.h"/>
         <FILE id="axpW90" name="GainData.cpp" compile="1" resource="0" file="Source/Data/GainData.cpp"/>
         <FILE id="h0b9R0" name="GainData.h" compile="0" resource="0" file="Source/Data/GainData.h"/>
         <FILE id="NS82hx" name="OscData.cpp" compile="1" resource="0" file="Source/Data/OscData.cpp"/>
