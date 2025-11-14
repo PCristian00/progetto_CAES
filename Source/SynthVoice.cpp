@@ -33,11 +33,13 @@ void SynthVoice::startNote(int midiNoteNumber,
 {
 	osc.setFrequency(midiNoteNumber);
 	adsr.noteOn();
+	modAdsr.noteOn();
 }
 
 void SynthVoice::stopNote(float velocity, bool allowTailOff)
 {
 	adsr.noteOff();
+	modAdsr.noteOff();
 }
 
 void SynthVoice::controllerMoved(int controllerNumber, int newControllerValue)
@@ -47,7 +49,7 @@ void SynthVoice::controllerMoved(int controllerNumber, int newControllerValue)
 
 void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outputChannels)
 {
-	adsr.setSampleRate(sampleRate);
+
 
 	juce::dsp::ProcessSpec spec;
 	spec.sampleRate = sampleRate;
@@ -55,14 +57,17 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outpu
 	spec.numChannels = static_cast<juce::uint32> (outputChannels);
 
 	osc.prepare(spec);
-
+	adsr.setSampleRate(sampleRate);
+	filter.prepareToPlay(sampleRate, samplesPerBlock, outputChannels);
+	modAdsr.setSampleRate(sampleRate);
 	// Chiama l'overload che accetta ProcessSpec (definito in GainData)
 	gain.prepare(spec);
 
 	isPrepared = true;
 }
 
-void SynthVoice::update(const float attack, const float decay, const float sustain, const float release, const float gainValue)
+// Separare ADSR e GAIN ?
+void SynthVoice::updateADSR(const float attack, const float decay, const float sustain, const float release, const float gainValue)
 {
 	adsr.updateADSR(attack, decay, sustain, release);
 
@@ -70,14 +75,30 @@ void SynthVoice::update(const float attack, const float decay, const float susta
 	gain.setGainLinear(gainValue);
 }
 
+void SynthVoice::updateFilter(int filterType, float cutoff, float resonance)
+{
+	float modulator = modAdsr.getNextSample();
+	filter.updateParameters(filterType, cutoff, resonance, modulator);
+}
+
+void SynthVoice::updateModADSR(const float attack, const float decay, const float sustain, const float release)
+{
+	modAdsr.updateADSR(attack, decay, sustain, release);
+}
+
 void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 	int startSample,
 	int numSamples)
 {
-	if (!isPrepared)
-		return;
+	/*if (!isPrepared)
+		return;*/
+
+	jassert(isPrepared); // assicurati che la voce sia preparata prima del rendering
 
 	const int numChannels = outputBuffer.getNumChannels();
+
+	// CAPIRE COME METTERE ANCHE QUESTO
+	// filter.process(synthBuffer);
 
 	for (int i = 0; i < numSamples; ++i)
 	{
@@ -88,11 +109,22 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 
 		const float sample = osc.processSample(0.0f) * adsr.getNextSample() * smoothedGain;
 
+		// Capire come applicare al filtro
+		// modAdsr.applyEnvelopeToBuffer(synthBuffer, 0, numSamples);
+
 		for (int channel = 0; channel < numChannels; ++channel)
 		{
 			outputBuffer.addSample(channel, startSample, sample);
 		}
 		++startSample;
+
+		// da tutorial
+		// modAdsr.getNextSample();
+
+
+		// filter.updateParameters(filterType, filterCutOff, filterResonance);
+
+		
 	}
 }
 

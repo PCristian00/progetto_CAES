@@ -116,7 +116,7 @@ void SubSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 		}
 	}
 
-	filter.prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
+	
 }
 
 void SubSynthAudioProcessor::releaseResources()
@@ -164,32 +164,44 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	{
 		if (auto voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
 		{
+			// ADSR parameters
 			float attack = apvts.getRawParameterValue("ATTACK")->load();
 			float decay = apvts.getRawParameterValue("DECAY")->load();
 			float sustain = apvts.getRawParameterValue("SUSTAIN")->load();
 			float release = apvts.getRawParameterValue("RELEASE")->load();
 
+			// Gain parameter
 			float gain = apvts.getRawParameterValue("GAIN")->load();
-			int oscChoice = apvts.getRawParameterValue("OSC")->load();
-			float fmFreq = apvts.getRawParameterValue("FMFREQ")->load();
-			float fmDepth = apvts.getRawParameterValue("FMDEPTH")->load();
 
-			voice->update(attack, decay, sustain, release, gain);
+			// Oscillator parameters
+			int oscChoice = apvts.getRawParameterValue("OSC")->load();
+
+			// FM parameters
+			float fmFreq = apvts.getRawParameterValue("FMFREQ")->load();
+			float fmDepth = apvts.getRawParameterValue("FMDEPTH")->load();			
+
+			// Filter parameters
+			float filterType = apvts.getRawParameterValue("FILTER")->load();
+			float filterCutOff = apvts.getRawParameterValue("FILTERCUTOFF")->load();
+			float filterResonance = apvts.getRawParameterValue("FILTERRES")->load();
+
+			// Mod ADSR parameters
+			float modAttack = apvts.getRawParameterValue("MODATTACK")->load();
+			float modDecay = apvts.getRawParameterValue("MODDECAY")->load();
+			float modSustain = apvts.getRawParameterValue("MODSUSTAIN")->load();
+			float modRelease = apvts.getRawParameterValue("MODRELEASE")->load();
+
+			
 			voice->getOscillator().setWaveType(oscChoice);
 			voice->getOscillator().setFmParams(fmDepth, fmFreq);
+			voice->updateADSR(attack, decay, sustain, release, gain);
+			voice->updateFilter(filterType, filterCutOff, filterResonance);
+			voice->updateModADSR(modAttack, modDecay, modSustain, modRelease);
 		}
 	}
 
 	synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 
-
-	float filterType = apvts.getRawParameterValue("FILTER")->load();
-	float filterCutOff = apvts.getRawParameterValue("FILTERCUTOFF")->load();
-	float filterResonance = apvts.getRawParameterValue("FILTERRES")->load();
-
-	filter.updateParameters(filterType, filterCutOff, filterResonance);
-
-	filter.process(buffer);
 }
 
 //==============================================================================
@@ -245,6 +257,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout SubSynthAudioProcessor::crea
 	params.push_back(std::make_unique<juce::AudioParameterChoice>("FILTER", "Filter Type", juce::StringArray{ "Low-Pass", "Band-Pass", "High-Pass" }, 0));
 	params.push_back(std::make_unique<juce::AudioParameterFloat>("FILTERCUTOFF", "Filter Cutoff", juce::NormalisableRange<float>{20.0f, 20000.0f, 0.1f, 0.6f}, 200.0f));
 	params.push_back(std::make_unique<juce::AudioParameterFloat>("FILTERRES", "Filter Resonance", juce::NormalisableRange<float>{1.0f, 10.0f, 0.1f}, 1.0f));
+	// Filter ADSR parameters
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("MODATTACK", "Mod Attack", 0.1f, 1.0f, 0.1f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("MODDECAY", "Mod Decay", 0.1f, 1.0f, 0.1f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("MODSUSTAIN", "Mod Sustain", 0.1f, 1.0f, 1.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>("MODRELEASE", "Mod Release", 0.1f, 3.0f, 0.4f));
 
 	return { params.begin(), params.end() };
 }

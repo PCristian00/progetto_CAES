@@ -17,7 +17,7 @@ public:
 
 	void prepareToPlay(double sampleRate, int samplesPerBlock, int numChannels); // , int outputChannels);
 	void process(juce::AudioBuffer<float>& buffer);
-	void updateParameters(int filterType, float cutoffFreq, float resonance);
+	void updateParameters(int filterType, float cutoffFreq, float resonance, float modulator = 1.0f);
 	void reset();
 
 	/*enum FilterType
