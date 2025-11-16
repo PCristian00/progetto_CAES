@@ -13,7 +13,7 @@
 SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcessor& p)
 	: AudioProcessorEditor(&p),
 	audioProcessor(p),
-	adsr(audioProcessor.apvts),
+	adsr("Amp Envelope", audioProcessor.apvts, "ATTACK", "DECAY", "SUSTAIN", "RELEASE"),
 	gain(audioProcessor.apvts),
 	osc(audioProcessor.apvts, "OSC"),
 	filter(audioProcessor.apvts, "FILTER", "FILTERCUTOFF", "FILTERRES")
@@ -27,6 +27,7 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 	addAndMakeVisible(gain);
 	addAndMakeVisible(osc);
 	addAndMakeVisible(filter);
+	addAndMakeVisible(modAdsr);
 
 }
 
@@ -44,7 +45,8 @@ void SubSynthAudioProcessorEditor::paint(juce::Graphics& g)
 void SubSynthAudioProcessorEditor::resized()
 {
 
-	adsr.setBounds(0, 0, getWidth() / 3, getHeight());
+	adsr.setBounds(0, 0, getWidth() / 3, getHeight()/2);
+	modAdsr.setBounds(0, adsr.getBottom(), getWidth() / 3, getHeight() / 2);
 	gain.setBounds(adsr.getRight(), 0, getWidth() / 3, getHeight());
 	osc.setBounds(gain.getRight(), 0, getWidth() / 3, getHeight() / 2);
 	filter.setBounds(osc.getX(), osc.getBottom(), getWidth() / 3, getHeight() / 2);
