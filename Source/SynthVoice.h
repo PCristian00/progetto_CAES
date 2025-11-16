@@ -35,17 +35,18 @@ public:
 	void renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override;
 
 private:
+
 	bool isPrepared{ false };
 	
 	GainData gain;
 	OscData osc;
 
-	ADSRData adsr;     // Amp envelope
+	ADSRData adsr;     // amp envelope
 	FilterData filter;
-	ADSRData modAdsr;  // Filter envelope
+	ADSRData modAdsr;  // filter envelope
 
-	// Parametri base del filtro (senza modulazione)
+	// Parametri base del filtro (aggiornati dall'UI)
 	int   filterType { 0 };
-	float filterCutoff { 2000.0f };
-	float filterResonance { 1.0f };
+	float filterCutoff { 20000.0f };
+	float filterResonance { 0.7f };
 };

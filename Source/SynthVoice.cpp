@@ -10,8 +10,13 @@
 
 #include "SynthVoice.h"
 
-SynthVoice::SynthVoice() {}
-SynthVoice::~SynthVoice() {}
+SynthVoice::SynthVoice()
+{
+}
+
+SynthVoice::~SynthVoice()
+{
+}
 
 bool SynthVoice::canPlaySound(juce::SynthesiserSound* sound)
 {
@@ -26,7 +31,6 @@ void SynthVoice::startNote(int midiNoteNumber,
 	osc.setFrequency(midiNoteNumber);
 	adsr.noteOn();
 	modAdsr.noteOn();
-	filter.reset(); // importante per evitare stato sporco tra note
 }
 
 void SynthVoice::stopNote(float velocity, bool allowTailOff)
@@ -37,6 +41,7 @@ void SynthVoice::stopNote(float velocity, bool allowTailOff)
 
 void SynthVoice::controllerMoved(int controllerNumber, int newControllerValue)
 {
+	// gestione controller (se necessaria)
 }
 
 void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outputChannels)
@@ -55,6 +60,7 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outpu
 	isPrepared = true;
 }
 
+// Separare ADSR e GAIN ?
 void SynthVoice::updateADSR(const float attack, const float decay, const float sustain, const float release, const float gainValue)
 {
 	adsr.updateADSR(attack, decay, sustain, release);
@@ -63,12 +69,12 @@ void SynthVoice::updateADSR(const float attack, const float decay, const float s
 
 void SynthVoice::updateFilter(int type, float cutoff, float resonance)
 {
-	// Memorizza parametri base (nessun consumo della mod envelope qui!)
+	// Memorizza i parametri base del filtro (senza consumare la mod envelope)
 	filterType = type;
 	filterCutoff = cutoff;
 	filterResonance = resonance;
 
-	// Aggiorna tipo e risonanza subito; cutoff base senza modulazione
+	// Aggiorna immediatamente tipo e risonanza (cutoff senza modulazione qui)
 	filter.updateParameters(filterType, filterCutoff, filterResonance, 1.0f);
 }
 
@@ -81,38 +87,42 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 	int startSample,
 	int numSamples)
 {
-	jassert(isPrepared);
+	jassert(isPrepared); // assicurati che la voce sia preparata prima del rendering
 
 	const int numChannels = outputBuffer.getNumChannels();
 
 	for (int i = 0; i < numSamples; ++i)
 	{
+		// Envelope amp e gain smussato
 		const float envAmp = adsr.getNextSample();
 		const float smoothedGain = gain.getNextSmoothedGain();
 
+		// Oscillatore (mono) -> verrà duplicato sui canali
 		const float oscSample = osc.processSample(0.0f);
+
+		// Applica inviluppo di ampiezza
 		float sample = oscSample * envAmp * smoothedGain;
 
 		// Envelope di modulazione per il filtro (per-sample)
-		const float envMod = modAdsr.getNextSample(); // ~[0..1]
+		const float mod = modAdsr.getNextSample(); // tipicamente [0..1]
 
-		// Mappa la cutoff: evita di azzerarla quando envMod è 0
-		// esempio semplice: 10%..100% della cutoff base
-		const float cutoffEff = juce::jlimit(20.0f, 20000.0f, filterCutoff * (0.1f + 0.9f * envMod));
+		// Aggiorna i parametri del filtro usando la modulazione
+		// Nota: qui mod scala la cutoff: cutoffEff = cutoffBase * mod
+		filter.updateParameters(filterType, filterCutoff, filterResonance, mod);
 
-		// Aggiorna SOLO la cutoff per-sample
-		filter.setCutoffFrequency(cutoffEff);
-
+		// Processa per canale con stato indipendente
 		for (int channel = 0; channel < numChannels; ++channel)
 		{
 			const float filtered = filter.processSample(channel, sample);
 			outputBuffer.addSample(channel, startSample, filtered);
 		}
+
 		++startSample;
 	}
 }
 
 void SynthVoice::pitchWheelMoved(int newPitchWheelValue)
 {
+	// gestione pitch wheel
 }
 

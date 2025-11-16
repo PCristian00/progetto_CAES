@@ -25,7 +25,7 @@ void FilterData::prepareToPlay(double sampleRate, int samplesPerBlock, int numCh
 
 void FilterData::process(juce::AudioBuffer<float>& buffer)
 {
-	jassert(isPrepared);
+	jassert(isPrepared); // make sure the filter is prepared before processing
 
 	juce::dsp::AudioBlock<float> block(buffer);
 	juce::dsp::ProcessContextReplacing<float> context(block);
@@ -38,18 +38,19 @@ float FilterData::processSample(int channel, float inputSample)
 	return filter.processSample(channel, inputSample);
 }
 
-void FilterData::setCutoffFrequency(float freq)
-{
-	filter.setCutoffFrequency(freq);
-}
-
 void FilterData::updateParameters(int filterType, float cutoffFreq, float resonance, float modulator)
 {
 	switch (filterType)
 	{
-	case 0: filter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);  break;
-	case 1: filter.setType(juce::dsp::StateVariableTPTFilterType::bandpass); break;
-	case 2: filter.setType(juce::dsp::StateVariableTPTFilterType::highpass); break;
+	case 0:
+		filter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
+		break;
+	case 1:
+		filter.setType(juce::dsp::StateVariableTPTFilterType::bandpass);
+		break;
+	case 2:
+		filter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
+		break;
 	}
 
 	float modFreq = cutoffFreq * modulator;
