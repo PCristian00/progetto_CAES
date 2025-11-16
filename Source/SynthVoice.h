@@ -41,7 +41,12 @@ private:
 	GainData gain;
 	OscData osc;
 
-	ADSRData adsr;
+	ADSRData adsr;     // amp envelope
 	FilterData filter;
-	ADSRData modAdsr;
+	ADSRData modAdsr;  // filter envelope
+
+	// Parametri base del filtro (aggiornati dall'UI)
+	int   filterType { 0 };
+	float filterCutoff { 20000.0f };
+	float filterResonance { 0.7f };
 };

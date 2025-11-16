@@ -17,7 +17,7 @@ void FilterData::prepareToPlay(double sampleRate, int samplesPerBlock, int numCh
 	juce::dsp::ProcessSpec spec;
 	spec.sampleRate = sampleRate;
 	spec.maximumBlockSize = samplesPerBlock;
-	spec.numChannels = numChannels;
+	spec.numChannels = static_cast<juce::uint32>(numChannels);
 	filter.prepare(spec);
 
 	isPrepared = true;
@@ -30,6 +30,12 @@ void FilterData::process(juce::AudioBuffer<float>& buffer)
 	juce::dsp::AudioBlock<float> block(buffer);
 	juce::dsp::ProcessContextReplacing<float> context(block);
 	filter.process(context);
+}
+
+float FilterData::processSample(int channel, float inputSample)
+{
+	jassert(isPrepared);
+	return filter.processSample(channel, inputSample);
 }
 
 void FilterData::updateParameters(int filterType, float cutoffFreq, float resonance, float modulator)
@@ -45,15 +51,10 @@ void FilterData::updateParameters(int filterType, float cutoffFreq, float resona
 	case 2:
 		filter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
 		break;
-
-		/*default:
-			filter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
-			break;*/
 	}
 
 	float modFreq = cutoffFreq * modulator;
 	modFreq = std::fmin(std::fmax(modFreq, 20.0f), 20000.0f);
-
 
 	filter.setCutoffFrequency(modFreq);
 	filter.setResonance(resonance);

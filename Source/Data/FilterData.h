@@ -17,23 +17,14 @@ public:
 
 	void prepareToPlay(double sampleRate, int samplesPerBlock, int numChannels); // , int outputChannels);
 	void process(juce::AudioBuffer<float>& buffer);
+	// Elaborazione per-sample (consigliata per modulazione per-sample)
+	float processSample(int channel, float inputSample);
+
+	// modulator è tipicamente [0..1] e scala la cutoff
 	void updateParameters(int filterType, float cutoffFreq, float resonance, float modulator = 1.0f);
 	void reset();
 
-	/*enum FilterType
-	{
-		lowPass,
-		bandPass,
-		highPass
-	};
-	FilterData();
-	~FilterData();
-
-	void updateFilter(FilterType type, float cutoffFreq, float resonance);
-	;*/
 private:
-	/*juce::dsp::ProcessorChain<juce::dsp::StateVariableTPTFilter<float>, juce::dsp::Gain<float>> filterChain;
-	*/
 	bool isPrepared{ false };
 	juce::dsp::StateVariableTPTFilter<float> filter;
 };
