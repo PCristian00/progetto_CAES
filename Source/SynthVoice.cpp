@@ -30,7 +30,7 @@ void SynthVoice::startNote(int midiNoteNumber,
 	if (debugAmpEnvEnabled)
 		DBG("[AmpADSR] startNote MIDI=" << midiNoteNumber << " vel=" << velocity);
 	if (debugModEnvEnabled)
-		DBG("[ModADSR] startNote MIDI=" << midiNoteNumber << " vel=" << velocity);*/
+		DBG("[ModADSR] startNote MIDI=" << midiNoteNumber << " vel=" << velocity);
 }
 
 void SynthVoice::stopNote(float velocity, bool allowTailOff)
@@ -41,7 +41,7 @@ void SynthVoice::stopNote(float velocity, bool allowTailOff)
 	if (debugAmpEnvEnabled)
 		DBG("[AmpADSR] stopNote vel=" << velocity << " tailOff=" << (allowTailOff ? "true" : "false"));
 	if (debugModEnvEnabled)
-		DBG("[ModADSR] stopNote vel=" << velocity << " tailOff=" << (allowTailOff ? "true" : "false"));*/
+		DBG("[ModADSR] stopNote vel=" << velocity << " tailOff=" << (allowTailOff ? "true" : "false"));
 }
 
 void SynthVoice::controllerMoved(int, int) {}
@@ -73,7 +73,7 @@ void SynthVoice::updateADSR(const float attack, const float decay, const float s
 	gain.setGainLinear(gainValue);
 
 	if (debugAmpEnvEnabled)
-		DBG("[AmpADSR] updateADSR A=" << attack << " D=" << decay << " S=" << sustain << " R=" << release << " Gain=" << gainValue);*/
+		DBG("[AmpADSR] updateADSR A=" << attack << " D=" << decay << " S=" << sustain << " R=" << release << " Gain=" << gainValue);
 }
 
 void SynthVoice::updateFilter(int type, float cutoff, float resonance)
@@ -85,7 +85,7 @@ void SynthVoice::updateFilter(int type, float cutoff, float resonance)
 	filter.updateParameters(filterType, filterCutoff, filterResonance, 1.0f);
 
 	if (debugModEnvEnabled)
-		DBG("[ModADSR] BaseFilter type=" << filterType << " cutoff=" << filterCutoff << " res=" << filterResonance);*/
+		DBG("[ModADSR] BaseFilter type=" << filterType << " cutoff=" << filterCutoff << " res=" << filterResonance);
 }
 
 void SynthVoice::updateModADSR(const float attack, const float decay, const float sustain, const float release)
@@ -93,7 +93,7 @@ void SynthVoice::updateModADSR(const float attack, const float decay, const floa
 	modAdsr.updateADSR(attack, decay, sustain, release);
 
 	if (debugModEnvEnabled)
-		DBG("[ModADSR] updateModADSR A=" << attack << " D=" << decay << " S=" << sustain << " R=" << release);*/
+		DBG("[ModADSR] updateModADSR A=" << attack << " D=" << decay << " S=" << sustain << " R=" << release);
 }
 
 void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
