@@ -113,10 +113,13 @@ void SubSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
 		{
 			voice->prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
+			voice->setAmpEnvelopeDebug(true);
+			voice->setModEnvelopeDebug(true);
+			voice->setEnvelopeDebugRates(60, 120); // Amp ogni 60 blocchi, Mod ogni 120
 		}
 	}
 
-	
+
 }
 
 void SubSynthAudioProcessor::releaseResources()
@@ -178,7 +181,7 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 
 			// FM parameters
 			float fmFreq = apvts.getRawParameterValue("FMFREQ")->load();
-			float fmDepth = apvts.getRawParameterValue("FMDEPTH")->load();			
+			float fmDepth = apvts.getRawParameterValue("FMDEPTH")->load();
 
 			// Filter parameters
 			float filterType = apvts.getRawParameterValue("FILTER")->load();
@@ -191,7 +194,7 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 			float modSustain = apvts.getRawParameterValue("MODSUSTAIN")->load();
 			float modRelease = apvts.getRawParameterValue("MODRELEASE")->load();
 
-			
+
 			voice->getOscillator().setWaveType(oscChoice);
 			voice->getOscillator().setFmParams(fmDepth, fmFreq);
 			voice->updateADSR(attack, decay, sustain, release, gain);
