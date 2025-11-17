@@ -13,10 +13,10 @@
 SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcessor& p)
 	: AudioProcessorEditor(&p),
 	audioProcessor(p),
-	adsr("Amp Envelope", audioProcessor.apvts, "ATTACK", "DECAY", "SUSTAIN", "RELEASE"),
+	adsr("Amp Envelope", audioProcessor.apvts, ATTACK_PARAM_ID, DECAY_PARAM_ID, SUSTAIN_PARAM_ID, RELEASE_PARAM_ID),
 	gain(audioProcessor.apvts),
-	osc(audioProcessor.apvts, "OSC"),
-	filter(audioProcessor.apvts, "FILTER", "FILTERCUTOFF", "FILTERRES")
+	osc(audioProcessor.apvts, OSCILLATOR_PARAM_ID),
+	filter(audioProcessor.apvts, FILTER_TYPE_PARAM_ID, FILTER_CUTOFF_PARAM_ID, FILTER_RESONANCE_PARAM_ID)
 {
 	// Make sure that before the constructor has finished, you've set the
 	// editor's size to whatever you need it to be.

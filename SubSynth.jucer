@@ -5,6 +5,8 @@
               companyName="univpm" version="1.0.5">
   <MAINGROUP id="nUzka3" name="SubSynth">
     <GROUP id="{5EA7C0B8-CE74-4FC6-ACF3-1AEF8689B221}" name="Source">
+      <FILE id="oQrCJL" name="Parameters.cpp" compile="1" resource="0" file="Source/Parameters.cpp"/>
+      <FILE id="N4zzNM" name="Parameters.h" compile="0" resource="0" file="Source/Parameters.h"/>
       <GROUP id="{7C32DD4C-AE0D-B14E-70AC-FDF565B05F9C}" name="Data">
         <FILE id="KBwWoF" name="ADSRData.cpp" compile="1" resource="0" file="Source/Data/ADSRData.cpp"/>
         <FILE id="cUskYo" name="ADSRData.h" compile="0" resource="0" file="Source/Data/ADSRData.h"/>

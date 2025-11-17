@@ -18,8 +18,8 @@ OscComponent::OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::Stri
 	juce::StringArray choices{ "Sine", "Saw", "Square" };
 	setComboBoxParams(oscWaveSelector, oscWaveSelectorAttachment, apvts, waveSelectorId, choices, this);
 
-	setSliderParams(fmFreqSlider, fmFreqSliderAttachment, apvts, "FMFREQ", fmFreqLabel, this);
-	setSliderParams(fmDepthSlider, fmDepthSliderAttachment, apvts, "FMDEPTH", fmDepthLabel, this);
+	setSliderParams(fmFreqSlider, fmFreqSliderAttachment, apvts, FM_FREQUENCY_PARAM_ID, fmFreqLabel, this);
+	setSliderParams(fmDepthSlider, fmDepthSliderAttachment, apvts, FM_DEPTH_PARAM_ID, fmDepthLabel, this);
 }
 
 OscComponent::~OscComponent()

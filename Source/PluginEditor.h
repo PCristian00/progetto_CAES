@@ -38,7 +38,8 @@ private:
 	ADSRComponent adsr;
 	GainComponent gain;
 	FilterComponent filter;
-	ADSRComponent modAdsr{ "Mod Envelope", audioProcessor.apvts, "MODATTACK", "MODDECAY", "MODSUSTAIN", "MODRELEASE" };
+	// Vedere se posso preimpostare i parametri qui anche per gli altri sopra
+	ADSRComponent modAdsr{ "Mod Envelope", audioProcessor.apvts, MOD_ATTACK_PARAM_ID, MOD_DECAY_PARAM_ID, MOD_SUSTAIN_PARAM_ID, MOD_RELEASE_PARAM_ID };
 
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SubSynthAudioProcessorEditor)
