@@ -13,6 +13,7 @@
 #include "UI/ADSRComponent.h"
 #include "UI/GainComponent.h"
 #include "UI/OscComponent.h"
+#include "UI/FilterComponent.h"
 
 //==============================================================================
 /**
@@ -36,6 +37,8 @@ private:
 	ADSRComponent adsr;
 	GainComponent gain;
 	OscComponent osc;
+	FilterComponent filter;
+
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SubSynthAudioProcessorEditor)
 };

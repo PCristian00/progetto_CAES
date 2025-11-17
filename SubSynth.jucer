@@ -2,29 +2,35 @@
 
 <JUCERPROJECT id="IN6TnE" name="SubSynth" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
-              companyName="univpm" version="1.0.4">
+              companyName="univpm" version="1.0.5">
   <MAINGROUP id="nUzka3" name="SubSynth">
     <GROUP id="{5EA7C0B8-CE74-4FC6-ACF3-1AEF8689B221}" name="Source">
       <GROUP id="{7C32DD4C-AE0D-B14E-70AC-FDF565B05F9C}" name="Data">
         <FILE id="KBwWoF" name="ADSRData.cpp" compile="1" resource="0" file="Source/Data/ADSRData.cpp"/>
         <FILE id="cUskYo" name="ADSRData.h" compile="0" resource="0" file="Source/Data/ADSRData.h"/>
+        <FILE id="yCmuI4" name="FilterData.cpp" compile="1" resource="0" file="Source/Data/FilterData.cpp"/>
+        <FILE id="bBK1vQ" name="FilterData.h" compile="0" resource="0" file="Source/Data/FilterData.h"/>
         <FILE id="axpW90" name="GainData.cpp" compile="1" resource="0" file="Source/Data/GainData.cpp"/>
         <FILE id="h0b9R0" name="GainData.h" compile="0" resource="0" file="Source/Data/GainData.h"/>
         <FILE id="NS82hx" name="OscData.cpp" compile="1" resource="0" file="Source/Data/OscData.cpp"/>
         <FILE id="HGArtF" name="OscData.h" compile="0" resource="0" file="Source/Data/OscData.h"/>
       </GROUP>
       <GROUP id="{44B03D67-D4FE-28C8-B1E5-1DEFA5966612}" name="UI">
-        <FILE id="ZyqEc5" name="OscComponent.cpp" compile="1" resource="0"
-              file="Source/UI/OscComponent.cpp"/>
-        <FILE id="oN2PGx" name="OscComponent.h" compile="0" resource="0" file="Source/UI/OscComponent.h"/>
-        <FILE id="sNacgy" name="GainComponent.cpp" compile="1" resource="0"
-              file="Source/UI/GainComponent.cpp"/>
-        <FILE id="JCGdIU" name="GainComponent.h" compile="0" resource="0" file="Source/UI/GainComponent.h"/>
-        <FILE id="f2zH1L" name="Utils.h" compile="0" resource="0" file="Source/UI/Utils.h"/>
-        <FILE id="HdJFh0" name="Utils.cpp" compile="1" resource="0" file="Source/UI/Utils.cpp"/>
         <FILE id="tNeWsy" name="ADSRComponent.cpp" compile="1" resource="0"
               file="Source/UI/ADSRComponent.cpp"/>
         <FILE id="GkHhDp" name="ADSRComponent.h" compile="0" resource="0" file="Source/UI/ADSRComponent.h"/>
+        <FILE id="TEDPhW" name="FilterComponent.cpp" compile="1" resource="0"
+              file="Source/UI/FilterComponent.cpp"/>
+        <FILE id="Jai3mj" name="FilterComponent.h" compile="0" resource="0"
+              file="Source/UI/FilterComponent.h"/>
+        <FILE id="sNacgy" name="GainComponent.cpp" compile="1" resource="0"
+              file="Source/UI/GainComponent.cpp"/>
+        <FILE id="JCGdIU" name="GainComponent.h" compile="0" resource="0" file="Source/UI/GainComponent.h"/>
+        <FILE id="ZyqEc5" name="OscComponent.cpp" compile="1" resource="0"
+              file="Source/UI/OscComponent.cpp"/>
+        <FILE id="oN2PGx" name="OscComponent.h" compile="0" resource="0" file="Source/UI/OscComponent.h"/>
+        <FILE id="HdJFh0" name="Utils.cpp" compile="1" resource="0" file="Source/UI/Utils.cpp"/>
+        <FILE id="f2zH1L" name="Utils.h" compile="0" resource="0" file="Source/UI/Utils.h"/>
       </GROUP>
       <FILE id="Oh3b7h" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
