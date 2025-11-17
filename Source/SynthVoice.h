@@ -14,6 +14,7 @@
 #include "Data/ADSRData.h"
 #include "Data/GainData.h"
 #include "Data/OscData.h"
+#include "Data/FilterData.h"
 
 class SynthVoice : public juce::SynthesiserVoice
 {
@@ -27,23 +28,25 @@ public:
 	void pitchWheelMoved(int newPitchWheelValue) override;
 	void controllerMoved(int controllerNumber, int newControllerValue) override;
 	void prepareToPlay(double sampleRate, int samplesPerBlock, int outputChannels);
-	void update(const float attack, const float decay, const float sustain, const float release, const float gainValue);
+	void updateADSR(const float attack, const float decay, const float sustain, const float release, const float gainValue);
+	void updateFilter(int filterType, float cutoff, float resonance);
+	void updateModADSR(const float attack, const float decay, const float sustain, const float release);
 	OscData& getOscillator() { return osc; }
 	void renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override;
 
 private:
 
 	bool isPrepared{ false };
-	ADSRData adsr;
+	
 	GainData gain;
 	OscData osc;
 
-	// 200 indica la LUT (controllare dopo)
-	// juce::dsp::Oscillator<float> osc{ [](float x) { return std::sin(x); 200;} };  //sin
+	ADSRData adsr;     // amp envelope
+	FilterData filter;
+	ADSRData modAdsr;  // filter envelope
 
-	// Vecchia implementazione diretta del gain (senza GainData)
-	//juce::dsp::Gain<float> gain;	
-
-	// juce::dsp::Oscillator<float> osc{ [](float x) { return x / juce::MathConstants<float>::pi; } }; // saw
-	// juce::dsp::Oscillator<float> osc{ [](float x) { return x < 0.0f ? -1.0f : 1.0f; } }; // square
+	// Parametri base del filtro (aggiornati dall'UI)
+	int   filterType { 0 };
+	float filterCutoff { 20000.0f };
+	float filterResonance { 0.7f };
 };

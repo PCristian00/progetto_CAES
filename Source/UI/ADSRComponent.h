@@ -20,7 +20,7 @@ using namespace utils;
 class ADSRComponent : public juce::Component
 {
 public:
-	ADSRComponent(juce::AudioProcessorValueTreeState& apvts);
+	ADSRComponent(juce::String name, juce::AudioProcessorValueTreeState& apvts, juce::String attackId, juce::String decayId, juce::String sustainId, juce::String releaseId);
 	~ADSRComponent() override;
 
 	void paint(juce::Graphics&) override;
@@ -44,6 +44,8 @@ private:
 	juce::Label decayLabel{ "Decay", "Decay" };
 	juce::Label sustainLabel{ "Sustain", "Sustain" };
 	juce::Label releaseLabel{ "Release", "Release" };
+
+	juce::String componentName{ "" };
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ADSRComponent)
 };
