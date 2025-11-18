@@ -18,7 +18,7 @@
 class GainComponent : public juce::Component
 {
 public:
-	GainComponent(juce::AudioProcessorValueTreeState& apvts);
+	GainComponent(juce::AudioProcessorValueTreeState& apvts, juce::String gainID);
 	~GainComponent() override;
 
 	void paint(juce::Graphics&) override;

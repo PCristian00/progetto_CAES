@@ -15,7 +15,7 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 	: AudioProcessorEditor(&p),
 	audioProcessor(p),
 	adsr("Amp Envelope", audioProcessor.apvts, parameters::ATTACK_PARAM_ID, parameters::DECAY_PARAM_ID, parameters::SUSTAIN_PARAM_ID, parameters::RELEASE_PARAM_ID),
-	gain(audioProcessor.apvts),
+	gain(audioProcessor.apvts, parameters::GAIN_PARAM_ID),
 	osc(audioProcessor.apvts, parameters::OSCILLATOR_PARAM_ID),
 	filter(audioProcessor.apvts, parameters::FILTER_TYPE_PARAM_ID, parameters::FILTER_CUTOFF_PARAM_ID, parameters::FILTER_RESONANCE_PARAM_ID),
 	modAdsr("Mod Envelope", audioProcessor.apvts, parameters::MOD_ATTACK_PARAM_ID, parameters::MOD_DECAY_PARAM_ID, parameters::MOD_SUSTAIN_PARAM_ID, parameters::MOD_RELEASE_PARAM_ID)

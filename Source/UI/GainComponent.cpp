@@ -14,9 +14,9 @@
 #include "../Parameters.h"
 
 //==============================================================================
-GainComponent::GainComponent(juce::AudioProcessorValueTreeState& apvts)
+GainComponent::GainComponent(juce::AudioProcessorValueTreeState& apvts, juce::String gainID)
 {
-	utils::setSliderParams(gainSlider, gainSliderAttachment, apvts, parameters::GAIN_PARAM_ID, gainLabel, this);
+	utils::setSliderParams(gainSlider, gainSliderAttachment, apvts, gainID, gainLabel, this);
 }
 
 GainComponent::~GainComponent() {}
@@ -28,7 +28,7 @@ void GainComponent::paint(juce::Graphics& g)
 
 void GainComponent::resized()
 {
-	const int numSliders =1;
+	const int numSliders = 1;
 	const int sliderWidth = utils::getBoundsWithPadding(this).getWidth() / numSliders - utils::padding;
 	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - utils::padding;
 	const int sliderXstart = utils::padding;
