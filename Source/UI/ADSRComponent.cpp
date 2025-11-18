@@ -27,26 +27,26 @@ ADSRComponent::~ADSRComponent() {}
 
 void ADSRComponent::paint(juce::Graphics& g)
 {
-	auto bounds = utils::getBoundsWithPadding(this);
-	auto labelSpace = bounds.removeFromTop(2 * utils::padding);
+
 
 	g.fillAll(juce::Colours::black);
-	g.setColour(juce::Colours::darkcyan);
-	g.setFont(15.0f);
-	g.drawText(componentName, labelSpace.withX(utils::padding), juce::Justification::left);
-	g.drawRoundedRectangle(bounds.toFloat(), 5.0f, 2.0f);
+	utils::drawBorders(g, this, juce::Colours::white, componentName);
+
 }
 
 void ADSRComponent::resized()
 {
 	const int numSliders = 4;
-	const int sliderWidth = utils::getBoundsWithPadding(this).getWidth() / numSliders - utils::padding;
-	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - (numSliders * utils::padding);
-	const int sliderXstart = utils::padding + 5;
-	const int sliderYstart = utils::padding * numSliders;
 
-	utils::setSliderBounds(attackSlider, attackLabel, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
-	utils::setSliderBounds(decaySlider, decayLabel, attackSlider.getRight() + utils::padding, sliderYstart, sliderWidth, sliderHeight);
-	utils::setSliderBounds(sustainSlider, sustainLabel, decaySlider.getRight() + utils::padding, sliderYstart, sliderWidth, sliderHeight);
-	utils::setSliderBounds(releaseSlider, releaseLabel, sustainSlider.getRight() + utils::padding, sliderYstart, sliderWidth, sliderHeight);
+	/*const int sliderXstart = utils::padding + 5;
+	const int sliderYstart = utils::padding * 4;*/
+
+	const int sliderWidth = utils::getBoundsWithPadding(this).getWidth() / numSliders - utils::padding;
+	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - (utils::Ystart);
+
+
+	utils::setSliderBounds(attackSlider, utils::Xstart, utils::Ystart, sliderWidth, sliderHeight, attackLabel);
+	utils::setSliderBounds(decaySlider, attackSlider.getRight() + utils::padding, utils::Ystart, sliderWidth, sliderHeight, decayLabel);
+	utils::setSliderBounds(sustainSlider, decaySlider.getRight() + utils::padding, utils::Ystart, sliderWidth, sliderHeight, sustainLabel);
+	utils::setSliderBounds(releaseSlider, sustainSlider.getRight() + utils::padding, utils::Ystart, sliderWidth, sliderHeight, releaseLabel);
 }

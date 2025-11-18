@@ -127,11 +127,11 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 			float modSustain = apvts.getRawParameterValue(parameters::MOD_SUSTAIN_PARAM_ID)->load();
 			float modRelease = apvts.getRawParameterValue(parameters::MOD_RELEASE_PARAM_ID)->load();
 
-			voice->getOscillator().setWaveType(oscChoice);
-			voice->getOscillator().setFmParams(fmDepth, fmFreq);
-			voice->updateADSR(attack, decay, sustain, release, gain);
-			voice->updateFilter((int)filterType, filterCutOff, filterResonance);
-			voice->updateModADSR(modAttack, modDecay, modSustain, modRelease);
+			voice->getOscillator().setWaveType(oscChoice); // impostazione tipo di onda
+			voice->getOscillator().setFmParams(fmDepth, fmFreq); // impostazione FM (frequenza e profondità)
+			voice->updateADSR(attack, decay, sustain, release, gain); // aggiornamento inviluppo ampiezza
+			voice->updateFilter((int)filterType, filterCutOff, filterResonance); // aggiornamento filtro
+			voice->updateModADSR(modAttack, modDecay, modSustain, modRelease); // aggiornamento inviluppo modulazione
 		}
 	}
 

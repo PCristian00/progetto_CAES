@@ -16,7 +16,7 @@
 //==============================================================================
 GainComponent::GainComponent(juce::AudioProcessorValueTreeState& apvts, juce::String gainID)
 {
-	utils::setSliderParams(gainSlider, gainSliderAttachment, apvts, gainID, gainLabel, this);
+	utils::setSliderParams(gainSlider, gainSliderAttachment, apvts, gainID, nullptr, this, SliderStyle::LinearBar);
 }
 
 GainComponent::~GainComponent() {}
@@ -24,15 +24,18 @@ GainComponent::~GainComponent() {}
 void GainComponent::paint(juce::Graphics& g)
 {
 	g.fillAll(juce::Colours::black);
+	utils::drawBorders(g, this, juce::Colours::darkolivegreen, "Gain");
 }
 
 void GainComponent::resized()
 {
 	const int numSliders = 1;
-	const int sliderWidth = utils::getBoundsWithPadding(this).getWidth() / numSliders - utils::padding;
-	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - utils::padding;
-	const int sliderXstart = utils::padding;
-	const int sliderYstart = utils::padding;
+	/*const int sliderXstart = utils::padding + 5;
+	const int sliderYstart = utils::padding * 4;*/
 
-	utils::setSliderBounds(gainSlider, gainLabel, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
+	const int sliderWidth = utils::getBoundsWithPadding(this).getWidth() / numSliders - utils::padding;
+	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - utils::Ystart;
+
+
+	utils::setSliderBounds(gainSlider, utils::Xstart, utils::Ystart, sliderWidth, sliderHeight);
 }

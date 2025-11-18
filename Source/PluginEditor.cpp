@@ -37,9 +37,10 @@ void SubSynthAudioProcessorEditor::paint(juce::Graphics& g)
 
 void SubSynthAudioProcessorEditor::resized()
 {
-	adsr.setBounds(0, 0, getWidth() / 3, getHeight() / 2);
-	modAdsr.setBounds(0, adsr.getBottom(), getWidth() / 3, getHeight() / 2);
-	gain.setBounds(adsr.getRight(), 0, getWidth() / 3, getHeight());
-	osc.setBounds(gain.getRight(), 0, getWidth() / 3, getHeight() / 2);
-	filter.setBounds(osc.getX(), osc.getBottom(), getWidth() / 3, getHeight() / 2);
+	adsr.setBounds(0, 0, getWidth() / 2, getHeight() / 5 * 2);
+	gain.setBounds(0, adsr.getBottom(), getWidth() / 2, getHeight() / 5);
+	modAdsr.setBounds(0, gain.getBottom(), getWidth() / 2, getHeight() / 5 * 2);
+
+	osc.setBounds(gain.getRight(), 0, getWidth() / 2, getHeight() / 2);
+	filter.setBounds(osc.getX(), osc.getBottom(), getWidth() / 2, getHeight() / 2);
 }
