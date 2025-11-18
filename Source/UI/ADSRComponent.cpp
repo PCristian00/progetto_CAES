@@ -40,10 +40,11 @@ void ADSRComponent::paint(juce::Graphics& g)
 void ADSRComponent::resized()
 {
 	const int numSliders = 4;
-	const int sliderWidth = utils::getBoundsWithPadding(this).getWidth() / numSliders - utils::padding;
-	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - (numSliders * utils::padding);
 	const int sliderXstart = utils::padding + 5;
-	const int sliderYstart = utils::padding * numSliders;
+	const int sliderYstart = utils::padding * 4;
+	const int sliderWidth = utils::getBoundsWithPadding(this).getWidth() / numSliders - utils::padding;
+	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - (sliderYstart);
+
 
 	utils::setSliderBounds(attackSlider, attackLabel, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
 	utils::setSliderBounds(decaySlider, decayLabel, attackSlider.getRight() + utils::padding, sliderYstart, sliderWidth, sliderHeight);

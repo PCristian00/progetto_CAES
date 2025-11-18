@@ -26,17 +26,32 @@ FilterComponent::~FilterComponent() {}
 
 void FilterComponent::paint(juce::Graphics& g)
 {
+	auto bounds = utils::getBoundsWithPadding(this);
+	auto labelSpace = bounds.removeFromTop(2 * utils::padding);
+
 	g.fillAll(juce::Colours::black);
+	g.setColour(juce::Colours::white);
+	g.setFont(15.0f);
+	g.drawText("Filter", labelSpace.withX(utils::padding), juce::Justification::left);
+	g.drawRoundedRectangle(bounds.toFloat(), 5.0f, 2.0f);
+
 }
 
 void FilterComponent::resized()
 {
 	const int numSliders = 2;
-	const int sliderWidth = utils::getBoundsWithPadding(this).getWidth() / numSliders - utils::padding;
-	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() / numSliders - utils::padding;
-	const int sliderXstart = utils::padding;
 
-	utils::setComboBoxBounds(filterTypeSelector, utils::padding, utils::padding, sliderWidth * numSliders + utils::padding, (2 * utils::padding));
-	utils::setSliderBounds(filterCutOffSlider, filterFreqLabel, sliderXstart, filterTypeSelector.getBottom() + utils::padding, sliderWidth, sliderHeight);
-	utils::setSliderBounds(filterResonanceSlider, filterResonanceLabel, filterCutOffSlider.getRight() + utils::padding, filterTypeSelector.getBottom() + utils::padding, sliderWidth, sliderHeight);
+	const int sliderXstart = utils::padding + 5;
+	const int sliderYstart = utils::padding * 4;
+
+	const int comboBoxWidth = utils::getBoundsWithPadding(this).getWidth() - utils::padding;
+	const int comboBoxHeight = utils::getBoundsWithPadding(this).getHeight() / 6 - utils::padding;
+
+	const int sliderWidth = (comboBoxWidth / numSliders) - utils::padding;
+	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - (sliderYstart + comboBoxHeight + utils::padding); // +(utils::padding * 5); // numSliders; // / numSliders - utils::padding;
+
+
+	utils::setComboBoxBounds(filterTypeSelector, sliderXstart, sliderYstart, comboBoxWidth, comboBoxHeight);
+	utils::setSliderBounds(filterCutOffSlider, filterFreqLabel, sliderXstart + (utils::padding / 2), filterTypeSelector.getBottom() + utils::padding, sliderWidth, sliderHeight);
+	utils::setSliderBounds(filterResonanceSlider, filterResonanceLabel, filterCutOffSlider.getRight() + utils::padding, filterCutOffSlider.getY(), sliderWidth, sliderHeight);
 }
