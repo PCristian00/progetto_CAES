@@ -11,8 +11,6 @@
 #pragma once
 #include <JuceHeader.h>
 
-// AGGIUNGERE ANCHE GESTIONE COMBOBOX (per ora solo in Osc)
-
 using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 using ComboBoxAttachment = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
 using SliderStyle = juce::Slider::SliderStyle;
@@ -25,7 +23,7 @@ namespace utils
 	// Impostazioni ComboBox (GUI)
 	void setComboBoxParams(juce::ComboBox& comboBox, std::unique_ptr<ComboBoxAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::StringArray choices, juce::Component* parent = nullptr) noexcept;
 	void setComboBoxBounds(juce::ComboBox& comboBox, int x, int y, int width, int height) noexcept;
-	
+
 	juce::Rectangle<int>& getBoundsWithPadding(juce::Component* parent = nullptr) noexcept;
 
 	const int padding = 10;

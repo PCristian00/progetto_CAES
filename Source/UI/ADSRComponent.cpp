@@ -34,15 +34,15 @@ void ADSRComponent::paint(juce::Graphics& g)
 	g.setColour(juce::Colours::darkcyan);
 	g.setFont(15.0f);
 	g.drawText(componentName, labelSpace.withX(utils::padding), juce::Justification::left);
-	g.drawRoundedRectangle(bounds.toFloat(),5.0f,2.0f);
+	g.drawRoundedRectangle(bounds.toFloat(), 5.0f, 2.0f);
 }
 
 void ADSRComponent::resized()
 {
-	const int numSliders =4;
+	const int numSliders = 4;
 	const int sliderWidth = utils::getBoundsWithPadding(this).getWidth() / numSliders - utils::padding;
 	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - (numSliders * utils::padding);
-	const int sliderXstart = utils::padding +5;
+	const int sliderXstart = utils::padding + 5;
 	const int sliderYstart = utils::padding * numSliders;
 
 	utils::setSliderBounds(attackSlider, attackLabel, sliderXstart, sliderYstart, sliderWidth, sliderHeight);

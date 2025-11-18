@@ -15,7 +15,7 @@
 //==============================================================================
 FilterComponent::FilterComponent(juce::AudioProcessorValueTreeState& apvts, juce::String filterTypeSelectorId, juce::String filterCutOffId, juce::String filterResonanceId)
 {
-	juce::StringArray choices{"Low-Pass","Band-Pass","High-Pass"};
+	juce::StringArray choices{ "Low-Pass","Band-Pass","High-Pass" };
 	utils::setComboBoxParams(filterTypeSelector, filterTypeSelectorAttachment, apvts, filterTypeSelectorId, choices, this);
 
 	utils::setSliderParams(filterCutOffSlider, filterCutOffSliderAttachment, apvts, filterCutOffId, filterFreqLabel, this);
@@ -31,7 +31,7 @@ void FilterComponent::paint(juce::Graphics& g)
 
 void FilterComponent::resized()
 {
-	const int numSliders =2;
+	const int numSliders = 2;
 	const int sliderWidth = utils::getBoundsWithPadding(this).getWidth() / numSliders - utils::padding;
 	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() / numSliders - utils::padding;
 	const int sliderXstart = utils::padding;

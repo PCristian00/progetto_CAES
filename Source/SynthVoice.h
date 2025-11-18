@@ -48,7 +48,7 @@ public:
 private:
 
 	bool isPrepared{ false };
-	
+
 	GainData gain;
 	OscData osc;
 
@@ -56,23 +56,23 @@ private:
 	FilterData filter;
 	ADSRData modAdsr;  // filter envelope
 
-	int   filterType { 0 };
-	float filterCutoff { 20000.0f };
-	float filterResonance { 0.7f };
+	int   filterType{ 0 };
+	float filterCutoff{ 20000.0f };
+	float filterResonance{ 0.7f };
 
 	// Debug Mod Envelope
-	bool  debugModEnvEnabled { false };
-	float lastBlockModMin { 1.0f };
-	float lastBlockModMax { 0.0f };
-	float lastEffectiveCutoff { 0.0f };
-	int   modBlockCounter { 0 };
-	int   modPrintEvery { 30 }; // stampa ogni 30 blocchi (configurabile)
+	bool  debugModEnvEnabled{ false };
+	float lastBlockModMin{ 1.0f };
+	float lastBlockModMax{ 0.0f };
+	float lastEffectiveCutoff{ 0.0f };
+	int   modBlockCounter{ 0 };
+	int   modPrintEvery{ 30 }; // stampa ogni 30 blocchi (configurabile)
 
 	// Debug Amp Envelope
-	bool  debugAmpEnvEnabled { false };
-	float lastBlockAmpMin { 1.0f };
-	float lastBlockAmpMax { 0.0f };
-	float lastAppliedAmpPeak { 0.0f };
-	int   ampBlockCounter { 0 };
-	int   ampPrintEvery { 30 }; // stampa ogni 30 blocchi (configurabile)
+	bool  debugAmpEnvEnabled{ false };
+	float lastBlockAmpMin{ 1.0f };
+	float lastBlockAmpMax{ 0.0f };
+	float lastAppliedAmpPeak{ 0.0f };
+	int   ampBlockCounter{ 0 };
+	int   ampPrintEvery{ 30 }; // stampa ogni 30 blocchi (configurabile)
 };
