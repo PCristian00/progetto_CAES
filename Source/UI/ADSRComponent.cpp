@@ -45,8 +45,8 @@ void ADSRComponent::resized()
 	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - (utils::Ystart);
 
 
-	utils::setSliderBounds(attackSlider, attackLabel, utils::Xstart, utils::Ystart, sliderWidth, sliderHeight);
-	utils::setSliderBounds(decaySlider, decayLabel, attackSlider.getRight() + utils::padding, utils::Ystart, sliderWidth, sliderHeight);
-	utils::setSliderBounds(sustainSlider, sustainLabel, decaySlider.getRight() + utils::padding, utils::Ystart, sliderWidth, sliderHeight);
-	utils::setSliderBounds(releaseSlider, releaseLabel, sustainSlider.getRight() + utils::padding, utils::Ystart, sliderWidth, sliderHeight);
+	utils::setSliderBounds(attackSlider, utils::Xstart, utils::Ystart, sliderWidth, sliderHeight, attackLabel);
+	utils::setSliderBounds(decaySlider, attackSlider.getRight() + utils::padding, utils::Ystart, sliderWidth, sliderHeight, decayLabel);
+	utils::setSliderBounds(sustainSlider, decaySlider.getRight() + utils::padding, utils::Ystart, sliderWidth, sliderHeight, sustainLabel);
+	utils::setSliderBounds(releaseSlider, sustainSlider.getRight() + utils::padding, utils::Ystart, sliderWidth, sliderHeight, releaseLabel);
 }

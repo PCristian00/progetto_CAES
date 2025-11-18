@@ -46,6 +46,6 @@ void FilterComponent::resized()
 
 
 	utils::setComboBoxBounds(filterTypeSelector, utils::Xstart, utils::Ystart, comboBoxWidth, comboBoxHeight);
-	utils::setSliderBounds(filterCutOffSlider, filterFreqLabel, utils::Xstart, filterTypeSelector.getBottom() + utils::padding, sliderWidth, sliderHeight);
-	utils::setSliderBounds(filterResonanceSlider, filterResonanceLabel, filterCutOffSlider.getRight() + utils::padding, filterCutOffSlider.getY(), sliderWidth, sliderHeight);
+	utils::setSliderBounds(filterCutOffSlider, utils::Xstart, filterTypeSelector.getBottom() + utils::padding, sliderWidth, sliderHeight, filterFreqLabel);
+	utils::setSliderBounds(filterResonanceSlider, filterCutOffSlider.getRight() + utils::padding, filterCutOffSlider.getY(), sliderWidth, sliderHeight, filterResonanceLabel);
 }

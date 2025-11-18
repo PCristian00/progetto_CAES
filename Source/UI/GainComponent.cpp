@@ -16,7 +16,7 @@
 //==============================================================================
 GainComponent::GainComponent(juce::AudioProcessorValueTreeState& apvts, juce::String gainID)
 {
-	utils::setSliderParams(gainSlider, gainSliderAttachment, apvts, gainID, gainLabel, this, SliderStyle::LinearBar);
+	utils::setSliderParams(gainSlider, gainSliderAttachment, apvts, gainID, nullptr, this, SliderStyle::LinearBar);
 }
 
 GainComponent::~GainComponent() {}
@@ -37,5 +37,5 @@ void GainComponent::resized()
 	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - utils::Ystart;
 
 
-	utils::setSliderBounds(gainSlider, gainLabel, utils::Xstart, utils::Ystart, sliderWidth, sliderHeight);
+	utils::setSliderBounds(gainSlider, utils::Xstart, utils::Ystart, sliderWidth, sliderHeight);
 }

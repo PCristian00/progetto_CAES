@@ -30,7 +30,7 @@ private:
 	using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 	std::unique_ptr<SliderAttachment> gainSliderAttachment;
 
-	juce::Label gainLabel{ "Gain", "Gain" };
+	// juce::Label gainLabel{ "Gain", "Gain" }; Non usata per GainSlider: usa direttamente il titolo di utils::drawBorders
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GainComponent)
 };
