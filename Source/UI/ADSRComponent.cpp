@@ -31,7 +31,7 @@ void ADSRComponent::paint(juce::Graphics& g)
 	auto labelSpace = bounds.removeFromTop(2 * utils::padding);
 
 	g.fillAll(juce::Colours::black);
-	g.setColour(juce::Colours::darkcyan);
+	g.setColour(juce::Colours::white);
 	g.setFont(15.0f);
 	g.drawText(componentName, labelSpace.withX(utils::padding), juce::Justification::left);
 	g.drawRoundedRectangle(bounds.toFloat(), 5.0f, 2.0f);
