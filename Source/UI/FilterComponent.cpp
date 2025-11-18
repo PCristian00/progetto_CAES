@@ -8,41 +8,35 @@
   ==============================================================================
 */
 
+#include <JuceHeader.h>
 #include "FilterComponent.h"
+#include "Utils.h"
 
 //==============================================================================
 FilterComponent::FilterComponent(juce::AudioProcessorValueTreeState& apvts, juce::String filterTypeSelectorId, juce::String filterCutOffId, juce::String filterResonanceId)
 {
-	// In your constructor, you should add any child components, and
-	// initialise any special settings that your component needs.
-	juce::StringArray choices{ "Low-Pass", "Band-Pass", "High-Pass" };
-	setComboBoxParams(filterTypeSelector, filterTypeSelectorAttachment, apvts, filterTypeSelectorId, choices, this);
+	juce::StringArray choices{ "Low-Pass","Band-Pass","High-Pass" };
+	utils::setComboBoxParams(filterTypeSelector, filterTypeSelectorAttachment, apvts, filterTypeSelectorId, choices, this);
 
-	setSliderParams(filterCutOffSlider, filterCutOffSliderAttachment, apvts, filterCutOffId, filterFreqLabel, this);
-	setSliderParams(filterResonanceSlider, filterResonanceSliderAttachment, apvts, filterResonanceId, filterResonanceLabel, this);
+	utils::setSliderParams(filterCutOffSlider, filterCutOffSliderAttachment, apvts, filterCutOffId, filterFreqLabel, this);
+	utils::setSliderParams(filterResonanceSlider, filterResonanceSliderAttachment, apvts, filterResonanceId, filterResonanceLabel, this);
 }
 
-FilterComponent::~FilterComponent()
-{
-}
+FilterComponent::~FilterComponent() {}
 
 void FilterComponent::paint(juce::Graphics& g)
 {
-	g.fillAll(juce::Colours::black);   // clear the background
+	g.fillAll(juce::Colours::black);
 }
 
 void FilterComponent::resized()
 {
-	// This method is where you should set the bounds of any child
-	// components that your component contains..
 	const int numSliders = 2;
-	const int sliderWidth = getBoundsWithPadding(this).getWidth() / numSliders - padding;
-	const int sliderHeight = getBoundsWithPadding(this).getHeight() / numSliders - padding;
-	const int sliderXstart = padding;
-	const int sliderYstart = padding;
+	const int sliderWidth = utils::getBoundsWithPadding(this).getWidth() / numSliders - utils::padding;
+	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() / numSliders - utils::padding;
+	const int sliderXstart = utils::padding;
 
-	setComboBoxBounds(filterTypeSelector, padding, padding, sliderWidth * numSliders + padding, (2 * padding));
-	setSliderBounds(filterCutOffSlider, filterFreqLabel, sliderXstart, filterTypeSelector.getBottom() + padding, sliderWidth, sliderHeight);
-	setSliderBounds(filterResonanceSlider, filterResonanceLabel, filterCutOffSlider.getRight() + padding, filterTypeSelector.getBottom() + padding, sliderWidth, sliderHeight);
-
+	utils::setComboBoxBounds(filterTypeSelector, utils::padding, utils::padding, sliderWidth * numSliders + utils::padding, (2 * utils::padding));
+	utils::setSliderBounds(filterCutOffSlider, filterFreqLabel, sliderXstart, filterTypeSelector.getBottom() + utils::padding, sliderWidth, sliderHeight);
+	utils::setSliderBounds(filterResonanceSlider, filterResonanceLabel, filterCutOffSlider.getRight() + utils::padding, filterTypeSelector.getBottom() + utils::padding, sliderWidth, sliderHeight);
 }

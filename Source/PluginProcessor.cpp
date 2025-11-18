@@ -8,8 +8,8 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "Parameters.h"
 
-//==============================================================================
 SubSynthAudioProcessor::SubSynthAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
 	: AudioProcessor(BusesProperties()
@@ -19,32 +19,18 @@ SubSynthAudioProcessor::SubSynthAudioProcessor()
 #endif
 		.withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
-	), apvts(*this, nullptr, "Parameters", createParameters())
+	), apvts(*this, nullptr, "Parameters", parameters::createParameters())
 #endif
 {
 	synth.addSound(new SynthSound());
-
 	synth.addVoice(new SynthVoice());
-
-	// Testate più voci, funzionanti
-	// una voce per tasto in contemporanea
-	/*synth.addVoice(new SynthVoice());
-	synth.addVoice(new SynthVoice());
-	synth.addVoice(new SynthVoice());*/
 }
 
-SubSynthAudioProcessor::~SubSynthAudioProcessor()
-{
-}
+SubSynthAudioProcessor::~SubSynthAudioProcessor() {}
 
-//==============================================================================
-const juce::String SubSynthAudioProcessor::getName() const
-{
-	return JucePlugin_Name;
-}
+const juce::String SubSynthAudioProcessor::getName() const { return JucePlugin_Name; }
 
-bool SubSynthAudioProcessor::acceptsMidi() const
-{
+bool SubSynthAudioProcessor::acceptsMidi() const {
 #if JucePlugin_WantsMidiInput
 	return true;
 #else
@@ -52,8 +38,7 @@ bool SubSynthAudioProcessor::acceptsMidi() const
 #endif
 }
 
-bool SubSynthAudioProcessor::producesMidi() const
-{
+bool SubSynthAudioProcessor::producesMidi() const {
 #if JucePlugin_ProducesMidiOutput
 	return true;
 #else
@@ -61,8 +46,7 @@ bool SubSynthAudioProcessor::producesMidi() const
 #endif
 }
 
-bool SubSynthAudioProcessor::isMidiEffect() const
-{
+bool SubSynthAudioProcessor::isMidiEffect() const {
 #if JucePlugin_IsMidiEffect
 	return true;
 #else
@@ -70,63 +54,30 @@ bool SubSynthAudioProcessor::isMidiEffect() const
 #endif
 }
 
-double SubSynthAudioProcessor::getTailLengthSeconds() const
-{
-	return 0.0;
-}
+double SubSynthAudioProcessor::getTailLengthSeconds() const { return 0.0; }
 
-int SubSynthAudioProcessor::getNumPrograms()
-{
-	return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
-	// so this should be at least 1, even if you're not really implementing programs.
-}
+int SubSynthAudioProcessor::getNumPrograms() { return 1; }
+int SubSynthAudioProcessor::getCurrentProgram() { return 0; }
+void SubSynthAudioProcessor::setCurrentProgram(int) {}
+const juce::String SubSynthAudioProcessor::getProgramName(int) { return {}; }
+void SubSynthAudioProcessor::changeProgramName(int, const juce::String&) {}
 
-int SubSynthAudioProcessor::getCurrentProgram()
-{
-	return 0;
-}
-
-void SubSynthAudioProcessor::setCurrentProgram(int index)
-{
-}
-
-const juce::String SubSynthAudioProcessor::getProgramName(int index)
-{
-	return {};
-}
-
-void SubSynthAudioProcessor::changeProgramName(int index, const juce::String& newName)
-{
-}
-
-//==============================================================================
-// part 0 del tutorial
 void SubSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-
-
-	// part 1 del tutorial
 	synth.setCurrentPlaybackSampleRate(sampleRate);
-
-	for (int i = 0; i < synth.getNumVoices(); i++)
+	for (int i = 0; i < synth.getNumVoices(); ++i)
 	{
 		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
 		{
 			voice->prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
 			voice->setAmpEnvelopeDebug(true);
 			voice->setModEnvelopeDebug(true);
-			voice->setEnvelopeDebugRates(60, 120); // Amp ogni 60 blocchi, Mod ogni 120
+			voice->setEnvelopeDebugRates(60, 120);
 		}
 	}
-
-
 }
 
-void SubSynthAudioProcessor::releaseResources()
-{
-	// When playback stops, you can use this as an opportunity to free up any
-	// spare memory, etc.
-}
+void SubSynthAudioProcessor::releaseResources() {}
 
 #ifndef JucePlugin_PreferredChannelConfigurations
 bool SubSynthAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
@@ -135,20 +86,13 @@ bool SubSynthAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) 
 	juce::ignoreUnused(layouts);
 	return true;
 #else
-	// This is the place where you check if the layout is supported.
-	// In this template code we only support mono or stereo.
-	// Some plugin hosts, such as certain GarageBand versions, will only
-	// load plugins that support stereo bus layouts.
-	if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
-		&& layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
+	if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono() &&
+		layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
 		return false;
-
-	// This checks if the input layout matches the output layout
 #if ! JucePlugin_IsSynth
 	if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
 		return false;
 #endif
-
 	return true;
 #endif
 }
@@ -163,108 +107,42 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
 		buffer.clear(i, 0, buffer.getNumSamples());
 
-	for (int i = 0; i < synth.getNumVoices(); i++)
+	for (int i = 0; i < synth.getNumVoices(); ++i)
 	{
-		if (auto voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
+		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
 		{
-			// ADSR parameters
-			float attack = apvts.getRawParameterValue("ATTACK")->load();
-			float decay = apvts.getRawParameterValue("DECAY")->load();
-			float sustain = apvts.getRawParameterValue("SUSTAIN")->load();
-			float release = apvts.getRawParameterValue("RELEASE")->load();
-
-			// Gain parameter
-			float gain = apvts.getRawParameterValue("GAIN")->load();
-
-			// Oscillator parameters
-			int oscChoice = apvts.getRawParameterValue("OSC")->load();
-
-			// FM parameters
-			float fmFreq = apvts.getRawParameterValue("FMFREQ")->load();
-			float fmDepth = apvts.getRawParameterValue("FMDEPTH")->load();
-
-			// Filter parameters
-			float filterType = apvts.getRawParameterValue("FILTER")->load();
-			float filterCutOff = apvts.getRawParameterValue("FILTERCUTOFF")->load();
-			float filterResonance = apvts.getRawParameterValue("FILTERRES")->load();
-
-			// Mod ADSR parameters
-			float modAttack = apvts.getRawParameterValue("MODATTACK")->load();
-			float modDecay = apvts.getRawParameterValue("MODDECAY")->load();
-			float modSustain = apvts.getRawParameterValue("MODSUSTAIN")->load();
-			float modRelease = apvts.getRawParameterValue("MODRELEASE")->load();
-
+			float attack = apvts.getRawParameterValue(parameters::ATTACK_PARAM_ID)->load();
+			float decay = apvts.getRawParameterValue(parameters::DECAY_PARAM_ID)->load();
+			float sustain = apvts.getRawParameterValue(parameters::SUSTAIN_PARAM_ID)->load();
+			float release = apvts.getRawParameterValue(parameters::RELEASE_PARAM_ID)->load();
+			float gain = apvts.getRawParameterValue(parameters::GAIN_PARAM_ID)->load();
+			int oscChoice = apvts.getRawParameterValue(parameters::OSCILLATOR_PARAM_ID)->load();
+			float fmFreq = apvts.getRawParameterValue(parameters::FM_FREQUENCY_PARAM_ID)->load();
+			float fmDepth = apvts.getRawParameterValue(parameters::FM_DEPTH_PARAM_ID)->load();
+			float filterType = apvts.getRawParameterValue(parameters::FILTER_TYPE_PARAM_ID)->load();
+			float filterCutOff = apvts.getRawParameterValue(parameters::FILTER_CUTOFF_PARAM_ID)->load();
+			float filterResonance = apvts.getRawParameterValue(parameters::FILTER_RESONANCE_PARAM_ID)->load();
+			float modAttack = apvts.getRawParameterValue(parameters::MOD_ATTACK_PARAM_ID)->load();
+			float modDecay = apvts.getRawParameterValue(parameters::MOD_DECAY_PARAM_ID)->load();
+			float modSustain = apvts.getRawParameterValue(parameters::MOD_SUSTAIN_PARAM_ID)->load();
+			float modRelease = apvts.getRawParameterValue(parameters::MOD_RELEASE_PARAM_ID)->load();
 
 			voice->getOscillator().setWaveType(oscChoice);
 			voice->getOscillator().setFmParams(fmDepth, fmFreq);
 			voice->updateADSR(attack, decay, sustain, release, gain);
-			voice->updateFilter(filterType, filterCutOff, filterResonance);
+			voice->updateFilter((int)filterType, filterCutOff, filterResonance);
 			voice->updateModADSR(modAttack, modDecay, modSustain, modRelease);
 		}
 	}
 
 	synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
-
 }
 
-//==============================================================================
-bool SubSynthAudioProcessor::hasEditor() const
-{
-	return true; // (change this to false if you choose to not supply an editor)
-}
+bool SubSynthAudioProcessor::hasEditor() const { return true; }
 
-juce::AudioProcessorEditor* SubSynthAudioProcessor::createEditor()
-{
-	return new SubSynthAudioProcessorEditor(*this);
-}
+juce::AudioProcessorEditor* SubSynthAudioProcessor::createEditor() { return new SubSynthAudioProcessorEditor(*this); }
 
-//==============================================================================
-void SubSynthAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
-{
-	// You should use this method to store your parameters in the memory block.
-	// You could do that either as raw data, or use the XML or ValueTree classes
-	// as intermediaries to make it easy to save and load complex data.
-}
+void SubSynthAudioProcessor::getStateInformation(juce::MemoryBlock&) {}
+void SubSynthAudioProcessor::setStateInformation(const void*, int) {}
 
-void SubSynthAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
-{
-	// You should use this method to restore your parameters from this memory block,
-	// whose contents will have been created by the getStateInformation() call.
-}
-
-//==============================================================================
-// This creates new instances of the plugin..
-juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
-{
-	return new SubSynthAudioProcessor();
-}
-
-juce::AudioProcessorValueTreeState::ParameterLayout SubSynthAudioProcessor::createParameters()
-{
-
-	std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
-
-	// Combobox: switch oscillator
-	params.push_back(std::make_unique<juce::AudioParameterChoice>("OSC", "Oscillator", juce::StringArray{ "Sine", "Saw", "Square" }, 0));
-	// FM parameters
-	params.push_back(std::make_unique<juce::AudioParameterFloat>("FMFREQ", "FM Frequency", juce::NormalisableRange<float>{0.0f, 1000.0f, 0.01f, 0.3f}, 5.0f));
-	params.push_back(std::make_unique<juce::AudioParameterFloat>("FMDEPTH", "FM Depth", juce::NormalisableRange<float>{0.0f, 1000.0f, 0.01f, 0.3f}, 0.0f));
-	// Gain parameter
-	params.push_back(std::make_unique<juce::AudioParameterFloat>("GAIN", "Gain", 0.0f, 1.0f, 0.5f));
-	// ADSR parameters
-	params.push_back(std::make_unique<juce::AudioParameterFloat>("ATTACK", "Attack", 0.1f, 1.0f, 0.1f));
-	params.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", 0.1f, 1.0f, 0.1f));
-	params.push_back(std::make_unique<juce::AudioParameterFloat>("SUSTAIN", "Sustain", 0.1f, 1.0f, 1.0f));
-	params.push_back(std::make_unique<juce::AudioParameterFloat>("RELEASE", "Release", 0.1f, 3.0f, 0.4f));
-	// Filter parameters
-	params.push_back(std::make_unique<juce::AudioParameterChoice>("FILTER", "Filter Type", juce::StringArray{ "Low-Pass", "Band-Pass", "High-Pass" }, 0));
-	params.push_back(std::make_unique<juce::AudioParameterFloat>("FILTERCUTOFF", "Filter Cutoff", juce::NormalisableRange<float>{20.0f, 20000.0f, 0.1f, 0.6f}, 200.0f));
-	params.push_back(std::make_unique<juce::AudioParameterFloat>("FILTERRES", "Filter Resonance", juce::NormalisableRange<float>{1.0f, 10.0f, 0.1f}, 1.0f));
-	// Filter ADSR parameters
-	params.push_back(std::make_unique<juce::AudioParameterFloat>("MODATTACK", "Mod Attack", 0.1f, 1.0f, 0.1f));
-	params.push_back(std::make_unique<juce::AudioParameterFloat>("MODDECAY", "Mod Decay", 0.1f, 1.0f, 0.1f));
-	params.push_back(std::make_unique<juce::AudioParameterFloat>("MODSUSTAIN", "Mod Sustain", 0.1f, 1.0f, 1.0f));
-	params.push_back(std::make_unique<juce::AudioParameterFloat>("MODRELEASE", "Mod Release", 0.1f, 3.0f, 0.4f));
-
-	return { params.begin(), params.end() };
-}
+juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() { return new SubSynthAudioProcessor(); }

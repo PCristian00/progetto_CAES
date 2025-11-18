@@ -1,9 +1,9 @@
 /*
   ==============================================================================
 
-    ADSRData.cpp
-    Created: 8 Nov 2025 4:16:15pm
-    Author:  crist
+	ADSRData.cpp
+	Created: 8 Nov 2025 4:16:15pm
+	Author:  crist
 
   ==============================================================================
 */
@@ -18,4 +18,4 @@ void ADSRData::updateADSR(const float attack, const float decay, const float sus
 	adsrParams.sustain = sustain;
 	adsrParams.release = release;
 	setParameters(adsrParams);
-}	
+}

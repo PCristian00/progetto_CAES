@@ -13,8 +13,6 @@
 namespace utils
 {
 
-	// MIGLIORARE (più parametri?) per modificare lo stile singolarmente (forse passare ad esempio Slider::LinearBarVertical etc.)
-
 	void setSliderParams(juce::Slider& slider, std::unique_ptr<SliderAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::Label& label, juce::Component* parent, SliderStyle style) noexcept
 	{
 		slider.setSliderStyle(style);

@@ -11,7 +11,8 @@
 #include <JuceHeader.h>
 #include "SynthVoice.h"
 #include "SynthSound.h"
-// #include "Data/FilterData.h"
+
+#include "Parameters.h"
 
 //==============================================================================
 /**
@@ -61,8 +62,8 @@ public:
 
 private:
 
-	juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
-	
+	//juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
+
 	juce::Synthesiser synth;
 
 	//==============================================================================

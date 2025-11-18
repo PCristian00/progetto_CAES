@@ -38,7 +38,7 @@ private:
 	ADSRComponent adsr;
 	GainComponent gain;
 	FilterComponent filter;
-	ADSRComponent modAdsr{ "Mod Envelope", audioProcessor.apvts, "MODATTACK", "MODDECAY", "MODSUSTAIN", "MODRELEASE" };
+	ADSRComponent modAdsr;
 
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SubSynthAudioProcessorEditor)
