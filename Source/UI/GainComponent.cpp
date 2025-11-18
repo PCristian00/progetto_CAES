@@ -16,7 +16,7 @@
 //==============================================================================
 GainComponent::GainComponent(juce::AudioProcessorValueTreeState& apvts, juce::String gainID)
 {
-	utils::setSliderParams(gainSlider, gainSliderAttachment, apvts, gainID, gainLabel, this);
+	utils::setSliderParams(gainSlider, gainSliderAttachment, apvts, gainID, gainLabel, this, SliderStyle::LinearBar);
 }
 
 GainComponent::~GainComponent() {}
