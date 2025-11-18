@@ -8,6 +8,7 @@
   ==============================================================================
 */
 
+#include <JuceHeader.h>
 #include "OscComponent.h"
 #include "Utils.h"
 #include "../Parameters.h"
@@ -15,7 +16,7 @@
 //==============================================================================
 OscComponent::OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::String waveSelectorId)
 {
-	juce::StringArray choices{"Sine","Saw","Square"};
+	juce::StringArray choices{ "Sine","Saw","Square" };
 	utils::setComboBoxParams(oscWaveSelector, oscWaveSelectorAttachment, apvts, waveSelectorId, choices, this);
 
 	utils::setSliderParams(fmFreqSlider, fmFreqSliderAttachment, apvts, parameters::FM_FREQUENCY_PARAM_ID, fmFreqLabel, this);
@@ -31,7 +32,7 @@ void OscComponent::paint(juce::Graphics& g)
 
 void OscComponent::resized()
 {
-	const int numSliders =2;
+	const int numSliders = 2;
 	const int sliderWidth = utils::getBoundsWithPadding(this).getWidth() / numSliders - utils::padding;
 	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() / numSliders - utils::padding;
 	const int sliderXstart = utils::padding;

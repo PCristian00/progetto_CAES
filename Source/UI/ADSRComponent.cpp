@@ -8,6 +8,7 @@
   ==============================================================================
 */
 
+#include <JuceHeader.h>
 #include "ADSRComponent.h"
 #include "Utils.h"
 

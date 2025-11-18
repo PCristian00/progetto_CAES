@@ -13,13 +13,14 @@
 //==============================================================================
 SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcessor& p)
 	: AudioProcessorEditor(&p),
-	 audioProcessor(p),
-	 adsr("Amp Envelope", audioProcessor.apvts, parameters::ATTACK_PARAM_ID, parameters::DECAY_PARAM_ID, parameters::SUSTAIN_PARAM_ID, parameters::RELEASE_PARAM_ID),
-	 gain(audioProcessor.apvts),
-	 osc(audioProcessor.apvts, parameters::OSCILLATOR_PARAM_ID),
-	 filter(audioProcessor.apvts, parameters::FILTER_TYPE_PARAM_ID, parameters::FILTER_CUTOFF_PARAM_ID, parameters::FILTER_RESONANCE_PARAM_ID)
+	audioProcessor(p),
+	adsr("Amp Envelope", audioProcessor.apvts, parameters::ATTACK_PARAM_ID, parameters::DECAY_PARAM_ID, parameters::SUSTAIN_PARAM_ID, parameters::RELEASE_PARAM_ID),
+	gain(audioProcessor.apvts),
+	osc(audioProcessor.apvts, parameters::OSCILLATOR_PARAM_ID),
+	filter(audioProcessor.apvts, parameters::FILTER_TYPE_PARAM_ID, parameters::FILTER_CUTOFF_PARAM_ID, parameters::FILTER_RESONANCE_PARAM_ID),
+	modAdsr("Mod Envelope", audioProcessor.apvts, parameters::MOD_ATTACK_PARAM_ID, parameters::MOD_DECAY_PARAM_ID, parameters::MOD_SUSTAIN_PARAM_ID, parameters::MOD_RELEASE_PARAM_ID)
 {
-	setSize(800,600);
+	setSize(800, 600);
 	addAndMakeVisible(adsr);
 	addAndMakeVisible(gain);
 	addAndMakeVisible(osc);
@@ -36,9 +37,9 @@ void SubSynthAudioProcessorEditor::paint(juce::Graphics& g)
 
 void SubSynthAudioProcessorEditor::resized()
 {
-	adsr.setBounds(0,0, getWidth()/3, getHeight()/2);
-	modAdsr.setBounds(0, adsr.getBottom(), getWidth()/3, getHeight()/2);
-	gain.setBounds(adsr.getRight(),0, getWidth()/3, getHeight());
-	osc.setBounds(gain.getRight(),0, getWidth()/3, getHeight()/2);
-	filter.setBounds(osc.getX(), osc.getBottom(), getWidth()/3, getHeight()/2);
+	adsr.setBounds(0, 0, getWidth() / 3, getHeight() / 2);
+	modAdsr.setBounds(0, adsr.getBottom(), getWidth() / 3, getHeight() / 2);
+	gain.setBounds(adsr.getRight(), 0, getWidth() / 3, getHeight());
+	osc.setBounds(gain.getRight(), 0, getWidth() / 3, getHeight() / 2);
+	filter.setBounds(osc.getX(), osc.getBottom(), getWidth() / 3, getHeight() / 2);
 }

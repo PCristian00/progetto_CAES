@@ -8,6 +8,7 @@
   ==============================================================================
 */
 
+#include <JuceHeader.h>
 #include "FilterComponent.h"
 #include "Utils.h"
 

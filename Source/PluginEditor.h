@@ -14,7 +14,6 @@
 #include "UI/GainComponent.h"
 #include "UI/OscComponent.h"
 #include "UI/FilterComponent.h"
-#include "Parameters.h" // aggiunto include per parameters:: IDs
 
 //==============================================================================
 /**
@@ -39,7 +38,7 @@ private:
 	ADSRComponent adsr;
 	GainComponent gain;
 	FilterComponent filter;
-	ADSRComponent modAdsr{ "Mod Envelope", audioProcessor.apvts, parameters::MOD_ATTACK_PARAM_ID, parameters::MOD_DECAY_PARAM_ID, parameters::MOD_SUSTAIN_PARAM_ID, parameters::MOD_RELEASE_PARAM_ID };
+	ADSRComponent modAdsr; // { "Mod Envelope", audioProcessor.apvts, parameters::MOD_ATTACK_PARAM_ID, parameters::MOD_DECAY_PARAM_ID, parameters::MOD_SUSTAIN_PARAM_ID, parameters::MOD_RELEASE_PARAM_ID };
 
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SubSynthAudioProcessorEditor)

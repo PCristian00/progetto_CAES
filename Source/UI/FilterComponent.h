@@ -11,9 +11,9 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "Utils.h"
 
 //==============================================================================
+///
 /*
 */
 class FilterComponent  : public juce::Component
@@ -28,15 +28,15 @@ public:
 private:
 
     juce::ComboBox filterTypeSelector{"Filter Type"};
-    std::unique_ptr<ComboBoxAttachment> filterTypeSelectorAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> filterTypeSelectorAttachment;
 
     juce::Slider filterCutOffSlider;
     juce::Slider filterResonanceSlider;
 
-    std::unique_ptr<SliderAttachment> filterCutOffSliderAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> filterCutOffSliderAttachment;
     juce::Label filterFreqLabel{ "Filter Cutoff", "Filter Cutoff" };
 
-    std::unique_ptr<SliderAttachment> filterResonanceSliderAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> filterResonanceSliderAttachment;
     juce::Label filterResonanceLabel{ "Filter Resonance", "Filter Resonance" };
 
 
