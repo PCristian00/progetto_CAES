@@ -17,6 +17,9 @@ using SliderStyle = juce::Slider::SliderStyle;
 
 namespace utils
 {
+
+	const int padding = 10;
+
 	// Impostazioni Slider (GUI)
 	void setSliderParams(juce::Slider& slider, std::unique_ptr<SliderAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::Label& label, juce::Component* parent = nullptr, SliderStyle style = SliderStyle::LinearBarVertical) noexcept;
 	void setSliderBounds(juce::Slider& slider, juce::Label& label, int x, int y, int width, int height) noexcept;
@@ -24,7 +27,10 @@ namespace utils
 	void setComboBoxParams(juce::ComboBox& comboBox, std::unique_ptr<ComboBoxAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::StringArray choices, juce::Component* parent = nullptr) noexcept;
 	void setComboBoxBounds(juce::ComboBox& comboBox, int x, int y, int width, int height) noexcept;
 
-	juce::Rectangle<int>& getBoundsWithPadding(juce::Component* parent = nullptr) noexcept;
 
-	const int padding = 10;
+
+	juce::Rectangle<int>& getBoundsWithPadding(juce::Component* parent = nullptr) noexcept;
+	void drawBorders(juce::Graphics& g, juce::Component* parent, juce::Colour colour, juce::String title = "") noexcept;
+
+
 }

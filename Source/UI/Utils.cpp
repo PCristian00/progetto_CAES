@@ -53,8 +53,21 @@ namespace utils
 		comboBox.setBounds(x, y, width, height);
 	}
 
+
+
 	juce::Rectangle<int>& getBoundsWithPadding(juce::Component* parent) noexcept
 	{
 		return parent->getLocalBounds().reduced(padding);
+	}
+
+	void drawBorders(juce::Graphics& g, juce::Component* parent, juce::Colour colour, juce::String title) noexcept
+	{
+		juce::Rectangle<int> bounds = getBoundsWithPadding(parent);
+		juce::Rectangle<int> labelSpace = bounds.removeFromTop(2 * padding);
+
+		g.setColour(colour);
+		g.setFont(15.0f);
+		g.drawText(title, labelSpace.withX(padding), juce::Justification::left);
+		g.drawRoundedRectangle(bounds.toFloat(), 5.0f, 2.0f);
 	}
 }
