@@ -27,18 +27,30 @@ OscComponent::~OscComponent() {}
 
 void OscComponent::paint(juce::Graphics& g)
 {
+	auto bounds = utils::getBoundsWithPadding(this);
+	auto labelSpace = bounds.removeFromTop(2 * utils::padding);
+
 	g.fillAll(juce::Colours::black);
+	g.setColour(juce::Colours::white);
+	g.setFont(15.0f);
+	g.drawText("Oscillator", labelSpace.withX(utils::padding), juce::Justification::left);
+	g.drawRoundedRectangle(bounds.toFloat(), 5.0f, 2.0f);
 }
 
 void OscComponent::resized()
 {
 	const int numSliders = 2;
-	const int sliderWidth = utils::getBoundsWithPadding(this).getWidth() / numSliders - utils::padding;
-	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() / numSliders - utils::padding;
-	const int sliderXstart = utils::padding;
-	const int sliderYstart = utils::padding;
 
-	utils::setComboBoxBounds(oscWaveSelector, sliderXstart, sliderYstart, sliderWidth * numSliders + utils::padding, (2 * utils::padding));
+	const int sliderXstart = utils::padding + 5;
+	const int sliderYstart = utils::padding * 4;
+
+	const int comboBoxWidth = utils::getBoundsWithPadding(this).getWidth() - utils::padding;
+	const int comboBoxHeight = utils::getBoundsWithPadding(this).getHeight() / 6 - utils::padding;
+
+	const int sliderWidth = (comboBoxWidth / numSliders) - (utils::padding / numSliders);
+	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - (sliderYstart + comboBoxHeight + utils::padding);
+
+	utils::setComboBoxBounds(oscWaveSelector, sliderXstart, sliderYstart, comboBoxWidth, comboBoxHeight);
 	utils::setSliderBounds(fmFreqSlider, fmFreqLabel, sliderXstart, oscWaveSelector.getBottom() + utils::padding, sliderWidth, sliderHeight);
-	utils::setSliderBounds(fmDepthSlider, fmDepthLabel, fmFreqSlider.getRight() + utils::padding, oscWaveSelector.getBottom() + utils::padding, sliderWidth, sliderHeight);
+	utils::setSliderBounds(fmDepthSlider, fmDepthLabel, fmFreqSlider.getRight() + utils::padding, fmFreqSlider.getY(), sliderWidth, sliderHeight);
 }

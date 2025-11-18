@@ -47,11 +47,11 @@ void FilterComponent::resized()
 	const int comboBoxWidth = utils::getBoundsWithPadding(this).getWidth() - utils::padding;
 	const int comboBoxHeight = utils::getBoundsWithPadding(this).getHeight() / 6 - utils::padding;
 
-	const int sliderWidth = (comboBoxWidth / numSliders) - utils::padding;
-	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - (sliderYstart + comboBoxHeight + utils::padding); // +(utils::padding * 5); // numSliders; // / numSliders - utils::padding;
+	const int sliderWidth = (comboBoxWidth / numSliders) - (utils::padding / numSliders);
+	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - (sliderYstart + comboBoxHeight + utils::padding);
 
 
 	utils::setComboBoxBounds(filterTypeSelector, sliderXstart, sliderYstart, comboBoxWidth, comboBoxHeight);
-	utils::setSliderBounds(filterCutOffSlider, filterFreqLabel, sliderXstart + (utils::padding / 2), filterTypeSelector.getBottom() + utils::padding, sliderWidth, sliderHeight);
+	utils::setSliderBounds(filterCutOffSlider, filterFreqLabel, sliderXstart, filterTypeSelector.getBottom() + utils::padding, sliderWidth, sliderHeight);
 	utils::setSliderBounds(filterResonanceSlider, filterResonanceLabel, filterCutOffSlider.getRight() + utils::padding, filterCutOffSlider.getY(), sliderWidth, sliderHeight);
 }
