@@ -10,16 +10,16 @@
 
 #include <JuceHeader.h>
 #include "GainComponent.h"
+#include "Utils.h"
+#include "../Parameters.h"
 
 //==============================================================================
 GainComponent::GainComponent(juce::AudioProcessorValueTreeState& apvts)
 {
-	setSliderParams(gainSlider, gainSliderAttachment, apvts, GAIN_PARAM_ID, gainLabel, this);
+	utils::setSliderParams(gainSlider, gainSliderAttachment, apvts, parameters::GAIN_PARAM_ID, gainLabel, this);
 }
 
-GainComponent::~GainComponent()
-{
-}
+GainComponent::~GainComponent() {}
 
 void GainComponent::paint(juce::Graphics& g)
 {
@@ -28,11 +28,11 @@ void GainComponent::paint(juce::Graphics& g)
 
 void GainComponent::resized()
 {
-	const int numSliders = 1;
-	const int sliderWidth = getBoundsWithPadding(this).getWidth() / numSliders - padding;
-	const int sliderHeight = getBoundsWithPadding(this).getHeight() - padding;
-	const int sliderXstart = padding;
-	const int sliderYstart = padding;
+	const int numSliders =1;
+	const int sliderWidth = utils::getBoundsWithPadding(this).getWidth() / numSliders - utils::padding;
+	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - utils::padding;
+	const int sliderXstart = utils::padding;
+	const int sliderYstart = utils::padding;
 
-	setSliderBounds(gainSlider, gainLabel, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
+	utils::setSliderBounds(gainSlider, gainLabel, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
 }

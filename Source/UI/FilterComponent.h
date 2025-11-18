@@ -12,7 +12,6 @@
 
 #include <JuceHeader.h>
 #include "Utils.h"
-using namespace utils;
 
 //==============================================================================
 /*

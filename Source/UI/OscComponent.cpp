@@ -9,40 +9,35 @@
 */
 
 #include "OscComponent.h"
+#include "Utils.h"
+#include "../Parameters.h"
 
 //==============================================================================
-
-// In caso di più oscillatori, si deve passare un id diverso per ognuno dei fmFreq e fmDepth
 OscComponent::OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::String waveSelectorId)
 {
-	juce::StringArray choices{ "Sine", "Saw", "Square" };
-	setComboBoxParams(oscWaveSelector, oscWaveSelectorAttachment, apvts, waveSelectorId, choices, this);
+	juce::StringArray choices{"Sine","Saw","Square"};
+	utils::setComboBoxParams(oscWaveSelector, oscWaveSelectorAttachment, apvts, waveSelectorId, choices, this);
 
-	setSliderParams(fmFreqSlider, fmFreqSliderAttachment, apvts, FM_FREQUENCY_PARAM_ID, fmFreqLabel, this);
-	setSliderParams(fmDepthSlider, fmDepthSliderAttachment, apvts, FM_DEPTH_PARAM_ID, fmDepthLabel, this);
+	utils::setSliderParams(fmFreqSlider, fmFreqSliderAttachment, apvts, parameters::FM_FREQUENCY_PARAM_ID, fmFreqLabel, this);
+	utils::setSliderParams(fmDepthSlider, fmDepthSliderAttachment, apvts, parameters::FM_DEPTH_PARAM_ID, fmDepthLabel, this);
 }
 
-OscComponent::~OscComponent()
-{
-}
+OscComponent::~OscComponent() {}
 
 void OscComponent::paint(juce::Graphics& g)
 {
-	g.fillAll(juce::Colours::black);   // clear the background
-
-	//g.setColour(juce::Colours::white);
-	//g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
+	g.fillAll(juce::Colours::black);
 }
 
 void OscComponent::resized()
 {
-	const int numSliders = 2;
-	const int sliderWidth = getBoundsWithPadding(this).getWidth() / numSliders - padding;
-	const int sliderHeight = getBoundsWithPadding(this).getHeight() / numSliders - padding;
-	const int sliderXstart = padding;
-	const int sliderYstart = padding;
+	const int numSliders =2;
+	const int sliderWidth = utils::getBoundsWithPadding(this).getWidth() / numSliders - utils::padding;
+	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() / numSliders - utils::padding;
+	const int sliderXstart = utils::padding;
+	// const int sliderYstart = utils::padding; // non usato direttamente
 
-	setComboBoxBounds(oscWaveSelector, padding, padding, sliderWidth * numSliders + padding, (2 * padding));
-	setSliderBounds(fmFreqSlider, fmFreqLabel, sliderXstart, oscWaveSelector.getBottom() + padding, sliderWidth, sliderHeight);
-	setSliderBounds(fmDepthSlider, fmDepthLabel, fmFreqSlider.getRight() + padding, oscWaveSelector.getBottom() + padding, sliderWidth, sliderHeight);
+	utils::setComboBoxBounds(oscWaveSelector, utils::padding, utils::padding, sliderWidth * numSliders + utils::padding, (2 * utils::padding));
+	utils::setSliderBounds(fmFreqSlider, fmFreqLabel, sliderXstart, oscWaveSelector.getBottom() + utils::padding, sliderWidth, sliderHeight);
+	utils::setSliderBounds(fmDepthSlider, fmDepthLabel, fmFreqSlider.getRight() + utils::padding, oscWaveSelector.getBottom() + utils::padding, sliderWidth, sliderHeight);
 }

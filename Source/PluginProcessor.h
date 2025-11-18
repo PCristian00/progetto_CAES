@@ -13,9 +13,6 @@
 #include "SynthSound.h"
 
 #include "Parameters.h"
-using namespace parameters;
-
-// #include "Data/FilterData.h"
 
 //==============================================================================
 /**
