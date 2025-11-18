@@ -29,7 +29,7 @@ namespace utils
 	juce::Rectangle<int>& getBoundsWithPadding(juce::Component* parent = nullptr) noexcept;
 	void drawBorders(juce::Graphics& g, juce::Component* parent, juce::Colour colour, juce::String title = "") noexcept;
 
-	const int padding = 10;
+	const int padding = 10;  // default = 10
 	const int Xstart = padding * 1.5f;
 	const int Ystart = padding * 4;
 

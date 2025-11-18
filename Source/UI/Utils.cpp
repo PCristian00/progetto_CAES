@@ -16,7 +16,7 @@ namespace utils
 	void setSliderParams(juce::Slider& slider, std::unique_ptr<SliderAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::Label& label, juce::Component* parent, SliderStyle style) noexcept
 	{
 		slider.setSliderStyle(style);
-		slider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 25);
+		slider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 5 * padding, 2.5f * padding);
 
 		attachment = std::make_unique<SliderAttachment>(apvts, paramID, slider);
 
@@ -31,12 +31,10 @@ namespace utils
 			parent->addAndMakeVisible(&label);
 	}
 
-	// VALUTARE DI GESTIRE QUI LE DIMENSIONI STANDARD DEI BOUNDS (vedi nota OneNote 40)
-
 	void setSliderBounds(juce::Slider& slider, juce::Label& label, int x, int y, int width, int height) noexcept
 	{
-		slider.setBounds(x, y, width, height);
-		label.setBounds(x, y + 20, width, 20);
+		slider.setBounds(x, y, width, height - (padding * 2));
+		label.setBounds(x, slider.getBottom(), width, (padding * 2));
 	}
 
 	void setComboBoxParams(juce::ComboBox& comboBox, std::unique_ptr<ComboBoxAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::StringArray choices, juce::Component* parent) noexcept
@@ -68,6 +66,6 @@ namespace utils
 		g.setColour(colour);
 		g.setFont(15.0f);
 		g.drawText(title, labelSpace.withX(padding), juce::Justification::left);
-		g.drawRoundedRectangle(bounds.toFloat(), 5.0f, 2.0f);
+		g.drawRoundedRectangle(bounds.toFloat(), static_cast<float>(padding) / 2, static_cast<float>(padding) / 5);
 	}
 }
