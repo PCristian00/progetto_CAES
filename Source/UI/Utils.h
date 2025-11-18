@@ -17,9 +17,6 @@ using SliderStyle = juce::Slider::SliderStyle;
 
 namespace utils
 {
-
-	const int padding = 10;
-
 	// Impostazioni Slider (GUI)
 	void setSliderParams(juce::Slider& slider, std::unique_ptr<SliderAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::Label& label, juce::Component* parent = nullptr, SliderStyle style = SliderStyle::LinearBarVertical) noexcept;
 	void setSliderBounds(juce::Slider& slider, juce::Label& label, int x, int y, int width, int height) noexcept;
@@ -31,6 +28,10 @@ namespace utils
 
 	juce::Rectangle<int>& getBoundsWithPadding(juce::Component* parent = nullptr) noexcept;
 	void drawBorders(juce::Graphics& g, juce::Component* parent, juce::Colour colour, juce::String title = "") noexcept;
+
+	const int padding = 10;
+	const int Xstart = padding * 1.5f;
+	const int Ystart = padding * 4;
 
 
 }

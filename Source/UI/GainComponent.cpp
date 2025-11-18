@@ -30,12 +30,12 @@ void GainComponent::paint(juce::Graphics& g)
 void GainComponent::resized()
 {
 	const int numSliders = 1;
-	const int sliderXstart = utils::padding + 5;
-	const int sliderYstart = utils::padding * 4;
+	/*const int sliderXstart = utils::padding + 5;
+	const int sliderYstart = utils::padding * 4;*/
 
 	const int sliderWidth = utils::getBoundsWithPadding(this).getWidth() / numSliders - utils::padding;
-	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - sliderYstart;
+	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - utils::Ystart;
 
 
-	utils::setSliderBounds(gainSlider, gainLabel, sliderXstart, sliderYstart, sliderWidth, sliderHeight);
+	utils::setSliderBounds(gainSlider, gainLabel, utils::Xstart, utils::Ystart, sliderWidth, sliderHeight);
 }
