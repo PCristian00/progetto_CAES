@@ -20,13 +20,13 @@ SubSynthAudioProcessor::SubSynthAudioProcessor()
 		.withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
 	), apvts(*this, nullptr, "Parameters", parameters::createParameters())
-
 #endif
 {
 	apvts.state.setProperty(Service::PresetManager::presetNameProperty, "", nullptr);
 	apvts.state.setProperty("version", ProjectInfo::versionString, nullptr);
 
 	presetManager = std::make_unique<Service::PresetManager>(apvts);
+
 	synth.addSound(new SynthSound());
 	synth.addVoice(new SynthVoice());
 }
@@ -147,7 +147,18 @@ bool SubSynthAudioProcessor::hasEditor() const { return true; }
 
 juce::AudioProcessorEditor* SubSynthAudioProcessor::createEditor() { return new SubSynthAudioProcessorEditor(*this); }
 
-void SubSynthAudioProcessor::getStateInformation(juce::MemoryBlock&) {}
-void SubSynthAudioProcessor::setStateInformation(const void*, int) {}
+void SubSynthAudioProcessor::getStateInformation(juce::MemoryBlock& destData) {
+	const auto state = apvts.copyState();
+	const auto xml(state.createXml());
+	copyXmlToBinary(*xml, destData);
+}
+
+void SubSynthAudioProcessor::setStateInformation(const void* data, int sizeInBytes) {
+	const auto xmlState = getXmlFromBinary(data, sizeInBytes);
+	if (xmlState == nullptr)
+		return;
+	const auto newTree = juce::ValueTree::fromXml(*xmlState);
+	apvts.replaceState(newTree);
+}
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() { return new SubSynthAudioProcessor(); }
