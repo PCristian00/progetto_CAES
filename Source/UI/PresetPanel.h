@@ -29,12 +29,8 @@ namespace Gui
 			addAndMakeVisible(presetList);
 			presetList.addListener(this);
 
-			auto allPresets = presetManager.getAllPresets();
-			const auto currentPreset = presetManager.getCurrentPreset();
+			loadPresetList();
 
-			presetList.addItemList(allPresets, 1);
-
-			presetList.setSelectedItemIndex(allPresets.indexOf(currentPreset), juce::dontSendNotification);
 		}
 
 		~PresetPanel() {
@@ -80,6 +76,16 @@ namespace Gui
 
 		// FORSE IN FUTURO SERVIRANNO ANCHE ALTROVE, SPOSTARE IN UTILS?
 
+		void loadPresetList() {
+
+			presetList.clear(juce::dontSendNotification);
+
+			auto allPresets = presetManager.getAllPresets();
+			const auto currentPreset = presetManager.getCurrentPreset();
+			presetList.addItemList(allPresets, 1);
+			presetList.setSelectedItemIndex(allPresets.indexOf(currentPreset), juce::dontSendNotification);
+		}
+
 		void buttonClicked(juce::Button* button) override {
 			if (button == &saveButton) {
 				// Handle save button click
@@ -89,6 +95,7 @@ namespace Gui
 
 					auto presetName = file.getFileNameWithoutExtension();
 					presetManager.savePreset(presetName);
+					loadPresetList();
 
 					/*if (file != juce::File()) {
 						auto presetName = file.getFileNameWithoutExtension();
@@ -101,12 +108,14 @@ namespace Gui
 				// AGGIUNGERE finestra di dialogo per CONFERMA
 
 				presetManager.deletePreset(presetManager.getCurrentPreset());
+				loadPresetList();
 			}
 			else if (button == &previousPresetButton) {
-				presetManager.loadPreviousPreset();
+				// const int index = presetManager.loadPreviousPreset();
+				presetList.setSelectedItemIndex(presetManager.loadPreviousPreset(), juce::dontSendNotification);
 			}
 			else if (button == &nextPresetButton) {
-				presetManager.loadNextPreset();
+				presetList.setSelectedItemIndex(presetManager.loadNextPreset(), juce::dontSendNotification);
 			}
 		}
 

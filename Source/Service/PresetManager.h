@@ -28,8 +28,8 @@ namespace Service {
 		void deletePreset(const String& presetName);
 		void loadPreset(const String& presetName);
 
-		void loadNextPreset();
-		void loadPreviousPreset();
+		int loadNextPreset();
+		int loadPreviousPreset();
 
 		juce::StringArray getAllPresets() const;
 		String getCurrentPreset() const;

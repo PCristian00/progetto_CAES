@@ -84,26 +84,28 @@ namespace Service {
 		valueTreeState.replaceState(valueTreeToLoad);
 		currentPreset = presetName;
 	}
-	void PresetManager::loadNextPreset()
+	int PresetManager::loadNextPreset()
 	{
 		const auto presets = getAllPresets();
 		if (presets.isEmpty())
-			return;
+			return -1;
 
 		const int currentIndex = presets.indexOf(currentPreset);
 		// const int nextIndex = (currentIndex + 1) % presets.size(); // Testa anche questo
 		const int nextIndex = (currentIndex + 1 > (presets.size() - 1)) ? 0 : currentIndex + 1;
 		loadPreset(presets.getReference(nextIndex));
+		return nextIndex;
 	}
-	void PresetManager::loadPreviousPreset()
+	int PresetManager::loadPreviousPreset()
 	{
 		const auto presets = getAllPresets();
 		if (presets.isEmpty())
-			return;
+			return -1;
 		const int currentIndex = presets.indexOf(currentPreset);
 		// const int previousIndex = (currentIndex - 1 + presets.size()) % presets.size(); // Testa anche questo
 		const int previousIndex = (currentIndex - 1 < 0) ? presets.size() - 1 : currentIndex - 1;
 		loadPreset(presets.getReference(previousIndex));
+		return previousIndex;
 	}
 	juce::StringArray PresetManager::getAllPresets() const
 	{
