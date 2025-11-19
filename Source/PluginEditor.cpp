@@ -14,6 +14,7 @@
 SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcessor& p)
 	: AudioProcessorEditor(&p),
 	audioProcessor(p),
+	presetPanel(p.getPresetManager()),
 	adsr("Amp Envelope", audioProcessor.apvts, parameters::ATTACK_PARAM_ID, parameters::DECAY_PARAM_ID, parameters::SUSTAIN_PARAM_ID, parameters::RELEASE_PARAM_ID),
 	gain(audioProcessor.apvts, parameters::GAIN_PARAM_ID),
 	osc(audioProcessor.apvts, parameters::OSCILLATOR_PARAM_ID),
