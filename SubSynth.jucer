@@ -2,8 +2,13 @@
 
 <JUCERPROJECT id="IN6TnE" name="SubSynth" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
-              companyName="univpm" version="1.0.6">
+              companyName="univpm" version="1.0.7">
   <MAINGROUP id="nUzka3" name="SubSynth">
+    <GROUP id="{CBF839B3-2299-6FFB-64EA-456657789D4B}" name="Service">
+      <FILE id="dNgxEq" name="PresetManager.cpp" compile="1" resource="0"
+            file="Source/Service/PresetManager.cpp"/>
+      <FILE id="TRUwTw" name="PresetManager.h" compile="0" resource="0" file="Source/Service/PresetManager.h"/>
+    </GROUP>
     <GROUP id="{5EA7C0B8-CE74-4FC6-ACF3-1AEF8689B221}" name="Source">
       <FILE id="N4zzNM" name="Parameters.h" compile="0" resource="0" file="Source/Parameters.h"/>
       <GROUP id="{7C32DD4C-AE0D-B14E-70AC-FDF565B05F9C}" name="Data">
