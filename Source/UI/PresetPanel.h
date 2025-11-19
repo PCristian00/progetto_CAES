@@ -44,19 +44,27 @@ namespace Gui
 
 		void resized() override {
 
-			auto container = getLocalBounds().reduced(4);
+			const auto container = getLocalBounds().reduced(4);
+			// const auto container = utils::getBoundsWithPadding(this, 4);
+			auto bounds = container;
 
-			setButtonBounds(saveButton, 0.2f);
-			// setButtonBounds(deleteButton, 0.2f);
-			deleteButton.setBounds(container.reduced(4));
-			setButtonBounds(previousPresetButton, 0.1f);
-			setButtonBounds(nextPresetButton, 0.1f);
+			// juce::Rectangle<int>
+
+			// auto buttonSize = (bounds.removeFromLeft(container.proportionOfWidth(0.2f)).reduced(4));
+
+			// Rendere migliori queste funzioni
+
+			setButtonBounds(saveButton, bounds.removeFromLeft(container.proportionOfWidth(0.2f)).reduced(4));
+			setButtonBounds(previousPresetButton, bounds.removeFromLeft(container.proportionOfWidth(0.1f)).reduced(4));
+			presetList.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.4f)).reduced(4));
+			setButtonBounds(nextPresetButton, bounds.removeFromLeft(container.proportionOfWidth(0.1f)).reduced(4));
+			setButtonBounds(deleteButton, bounds.reduced(4));
 			// Set bounds for presetList ComboBox
 
 			// FORSE RIUSARE quella di Utils?
-			auto comboBoxWidth = static_cast<int>(container.proportionOfWidth(0.2f));
+			/*auto comboBoxWidth = static_cast<int>(container.proportionOfWidth(0.2f));
 			auto comboBoxBounds = container.removeFromLeft(comboBoxWidth).reduced(4);
-			presetList.setBounds(comboBoxBounds);
+			presetList.setBounds(comboBoxBounds);*/
 
 
 
@@ -81,18 +89,11 @@ namespace Gui
 			button.addListener(this);
 		}
 
-		void setButtonBounds(juce::Button& button, float proportion) {
+		// PER ORA NON UTILIZZATA
+		void setButtonBounds(juce::Button& button, juce::Rectangle<int> size) {
 
-			// const auto container = utils::getBoundsWithPadding(this, 4);
-			/*const auto container = getLocalBounds().reduced(4);
-			const auto bounds = container;
-
-			button.setBounds(bounds.removeFromLeft(container.proportionOfWidth(proportion).reduced(4)));*/
-
-			auto container = getLocalBounds().reduced(4);
-			auto width = static_cast<int>(container.proportionOfWidth(proportion));
-			auto buttonBounds = container.removeFromLeft(width).reduced(4);
-			button.setBounds(buttonBounds);
+			// button.setBounds(x, y, size.getWidth(), size.getHeight());
+			button.setBounds(size);
 		}
 
 		juce::TextButton saveButton, deleteButton, previousPresetButton, nextPresetButton;

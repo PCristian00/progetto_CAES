@@ -39,9 +39,11 @@ void SubSynthAudioProcessorEditor::paint(juce::Graphics& g)
 
 void SubSynthAudioProcessorEditor::resized()
 {
-	auto height = getHeight() - presetPanel.getHeight();
+
 
 	presetPanel.setBounds(getLocalBounds().removeFromTop(proportionOfWidth(0.1f)));
+
+	auto height = getHeight() - presetPanel.getHeight();
 
 	adsr.setBounds(0, presetPanel.getBottom(), getWidth() / 2, height / 5 * 2);
 	gain.setBounds(0, adsr.getBottom(), getWidth() / 2, height / 5);
