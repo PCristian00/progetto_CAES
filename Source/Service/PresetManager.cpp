@@ -14,12 +14,13 @@ namespace Service {
 
 	const File PresetManager::defaultDirectory{ File::getSpecialLocation(File::SpecialLocationType::commonDocumentsDirectory).getChildFile(ProjectInfo::companyName).getChildFile(ProjectInfo::projectName) };
 
-	const String PresetManager::extension{ ".preset" }; // RICORDA IL PUNTO PRIMA DELL'ESTENSIONE
+	const String PresetManager::extension{ "preset" };
 
 	const String PresetManager::presetNameProperty{ "presetName" };
 
 	PresetManager::PresetManager(juce::AudioProcessorValueTreeState& apvts)
 		: valueTreeState(apvts) {
+
 		if (!defaultDirectory.exists()) {
 			const juce::Result result = defaultDirectory.createDirectory();
 			if (result.failed()) {
@@ -38,7 +39,7 @@ namespace Service {
 		currentPreset.setValue(presetName);
 
 		const auto xml = valueTreeState.copyState().createXml();
-		const auto presetFile = defaultDirectory.getChildFile(presetName + extension);
+		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
 
 		if (!xml->writeTo(presetFile))
 		{
@@ -52,7 +53,7 @@ namespace Service {
 		if (presetName.isEmpty())
 			return;
 
-		const auto presetFile = defaultDirectory.getChildFile(presetName + extension);
+		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
 
 		if (!presetFile.existsAsFile())
 		{
@@ -75,7 +76,7 @@ namespace Service {
 		if (presetName.isEmpty())
 			return;
 
-		const auto presetFile = defaultDirectory.getChildFile(presetName + extension);
+		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
 		if (!presetFile.existsAsFile())
 		{
 			DBG("Preset file does not exist: " + presetFile.getFullPathName());
@@ -83,7 +84,7 @@ namespace Service {
 			return;
 		}
 
-		juce::XmlDocument xmlDoc(presetFile);
+		juce::XmlDocument xmlDoc{ presetFile };
 		const auto valueTreeToLoad = juce::ValueTree::fromXml(*xmlDoc.getDocumentElement());
 
 		valueTreeState.replaceState(valueTreeToLoad);

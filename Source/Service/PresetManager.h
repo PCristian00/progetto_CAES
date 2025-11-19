@@ -20,11 +20,11 @@ namespace Service {
 	public:
 
 		static const File defaultDirectory;
-		static const String extension;
+		static const String extension; // non aggiungere .
 		static const String presetNameProperty;
 
 		PresetManager(juce::AudioProcessorValueTreeState& apvts);
-		~PresetManager() = default;
+		/*~PresetManager() = default;*/
 		void savePreset(const String& presetName);
 		void deletePreset(const String& presetName);
 		void loadPreset(const String& presetName);
@@ -36,10 +36,13 @@ namespace Service {
 		String getCurrentPreset() const;
 
 	private:
+
+		void valueTreeRedirected(juce::ValueTree& treeWhichHasBeenChanged) override;
+
 		juce::AudioProcessorValueTreeState& valueTreeState;
 		juce::Value currentPreset;
 
-		void valueTreeRedirected(juce::ValueTree& treeWhichHasBeenChanged) override;
+
 		/*juce::File presetsDirectory;
 		juce::StringArray presetNames;
 		int currentPresetIndex = -1;

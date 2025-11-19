@@ -80,7 +80,7 @@ namespace Gui
 
 			presetList.clear(juce::dontSendNotification);
 
-			auto allPresets = presetManager.getAllPresets();
+			const auto allPresets = presetManager.getAllPresets();
 			const auto currentPreset = presetManager.getCurrentPreset();
 			presetList.addItemList(allPresets, 1);
 			presetList.setSelectedItemIndex(allPresets.indexOf(currentPreset), juce::dontSendNotification);
@@ -89,10 +89,9 @@ namespace Gui
 		void buttonClicked(juce::Button* button) override {
 			if (button == &saveButton) {
 				// Handle save button click
-				fileChooser = std::make_unique<juce::FileChooser>("Save Preset", Service::PresetManager::defaultDirectory, Service::PresetManager::extension);
+				fileChooser = std::make_unique<juce::FileChooser>("Save Preset", Service::PresetManager::defaultDirectory, "*." + Service::PresetManager::extension);
 				fileChooser->launchAsync(juce::FileBrowserComponent::saveMode, [&](const juce::FileChooser& chooser) {
 					auto file = chooser.getResult();
-
 					auto presetName = file.getFileNameWithoutExtension();
 					presetManager.savePreset(presetName);
 					loadPresetList();
@@ -134,7 +133,7 @@ namespace Gui
 			button.addListener(this);
 		}
 
-		// PER ORA NON UTILIZZATA
+		// da migliorare, spostare in utils o rimuovere
 		void setButtonBounds(juce::Button& button, juce::Rectangle<int> size) {
 
 			// button.setBounds(x, y, size.getWidth(), size.getHeight());
@@ -145,6 +144,7 @@ namespace Gui
 		juce::TextButton saveButton, deleteButton, previousPresetButton, nextPresetButton;
 		juce::ComboBox presetList;
 		std::unique_ptr<juce::FileChooser> fileChooser;
+
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PresetPanel)
 	};
-} // namespace Gui forse da rimuovere?
+} // namespace Gui
