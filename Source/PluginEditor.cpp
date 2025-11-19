@@ -41,7 +41,7 @@ void SubSynthAudioProcessorEditor::resized()
 {
 
 
-	presetPanel.setBounds(getLocalBounds().removeFromTop(proportionOfWidth(0.1f)));
+	presetPanel.setBounds(getLocalBounds().removeFromTop(proportionOfHeight(0.1f)));
 
 	auto height = getHeight() - presetPanel.getHeight();
 
