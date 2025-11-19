@@ -21,6 +21,8 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 	modAdsr("Mod Envelope", audioProcessor.apvts, parameters::MOD_ATTACK_PARAM_ID, parameters::MOD_DECAY_PARAM_ID, parameters::MOD_SUSTAIN_PARAM_ID, parameters::MOD_RELEASE_PARAM_ID)
 {
 	setSize(800, 600);
+	addAndMakeVisible(presetPanel);
+
 	addAndMakeVisible(adsr);
 	addAndMakeVisible(gain);
 	addAndMakeVisible(osc);
@@ -37,10 +39,14 @@ void SubSynthAudioProcessorEditor::paint(juce::Graphics& g)
 
 void SubSynthAudioProcessorEditor::resized()
 {
-	adsr.setBounds(0, 0, getWidth() / 2, getHeight() / 5 * 2);
-	gain.setBounds(0, adsr.getBottom(), getWidth() / 2, getHeight() / 5);
-	modAdsr.setBounds(0, gain.getBottom(), getWidth() / 2, getHeight() / 5 * 2);
+	auto height = getHeight() - presetPanel.getHeight();
 
-	osc.setBounds(gain.getRight(), 0, getWidth() / 2, getHeight() / 2);
-	filter.setBounds(osc.getX(), osc.getBottom(), getWidth() / 2, getHeight() / 2);
+	presetPanel.setBounds(getLocalBounds().removeFromTop(proportionOfWidth(0.1f)));
+
+	adsr.setBounds(0, presetPanel.getBottom(), getWidth() / 2, height / 5 * 2);
+	gain.setBounds(0, adsr.getBottom(), getWidth() / 2, height / 5);
+	modAdsr.setBounds(0, gain.getBottom(), getWidth() / 2, height / 5 * 2);
+
+	osc.setBounds(gain.getRight(), presetPanel.getBottom(), getWidth() / 2, height / 2);
+	filter.setBounds(osc.getX(), osc.getBottom(), getWidth() / 2, height / 2);
 }

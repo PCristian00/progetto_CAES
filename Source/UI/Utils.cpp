@@ -77,8 +77,11 @@ namespace utils
 
 
 
-	juce::Rectangle<int>& getBoundsWithPadding(juce::Component* parent) noexcept
+	juce::Rectangle<int>& getBoundsWithPadding(juce::Component* parent, int padding) noexcept
 	{
+		if (padding == 0)
+			padding = utils::padding;
+
 		return parent->getLocalBounds().reduced(padding);
 	}
 

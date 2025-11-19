@@ -30,6 +30,7 @@
         <FILE id="ZyqEc5" name="OscComponent.cpp" compile="1" resource="0"
               file="Source/UI/OscComponent.cpp"/>
         <FILE id="oN2PGx" name="OscComponent.h" compile="0" resource="0" file="Source/UI/OscComponent.h"/>
+        <FILE id="JmTLRR" name="PresetPanel.h" compile="0" resource="0" file="Source/UI/PresetPanel.h"/>
         <FILE id="HdJFh0" name="Utils.cpp" compile="1" resource="0" file="Source/UI/Utils.cpp"/>
         <FILE id="f2zH1L" name="Utils.h" compile="0" resource="0" file="Source/UI/Utils.h"/>
       </GROUP>
