@@ -19,7 +19,8 @@ SubSynthAudioProcessor::SubSynthAudioProcessor()
 #endif
 		.withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
-	), apvts(*this, nullptr, "Parameters", parameters::createParameters())
+	), apvts(*this, nullptr, "Parameters", parameters::createParameters()),
+	presetManager(apvts)
 #endif
 {
 	synth.addSound(new SynthSound());
