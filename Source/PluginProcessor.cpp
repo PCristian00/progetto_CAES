@@ -19,10 +19,14 @@ SubSynthAudioProcessor::SubSynthAudioProcessor()
 #endif
 		.withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
-	), apvts(*this, nullptr, "Parameters", parameters::createParameters()),
-	presetManager(apvts)
+	), apvts(*this, nullptr, "Parameters", parameters::createParameters())
+
 #endif
 {
+	apvts.state.setProperty(Service::PresetManager::presetNameProperty, "", nullptr);
+	apvts.state.setProperty("version", ProjectInfo::versionString, nullptr);
+
+	presetManager = std::make_unique<Service::PresetManager>(apvts);
 	synth.addSound(new SynthSound());
 	synth.addVoice(new SynthVoice());
 }

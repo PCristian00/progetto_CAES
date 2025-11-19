@@ -59,7 +59,7 @@ public:
 	void getStateInformation(juce::MemoryBlock& destData) override;
 	void setStateInformation(const void* data, int sizeInBytes) override;
 
-	Service::PresetManager& getPresetManager() { return presetManager; }
+	Service::PresetManager& getPresetManager() { return *presetManager; }
 
 	juce::AudioProcessorValueTreeState apvts;
 
@@ -68,7 +68,7 @@ private:
 	//juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
 
 	juce::Synthesiser synth;
-	Service::PresetManager presetManager; // { apvts };
+	std::unique_ptr<Service::PresetManager> presetManager; // { apvts };
 
 	//==============================================================================
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SubSynthAudioProcessor)
