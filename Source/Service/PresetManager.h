@@ -24,7 +24,7 @@ namespace Service {
 		static const String presetNameProperty;
 
 		PresetManager(juce::AudioProcessorValueTreeState& apvts);
-		/*~PresetManager() = default;*/
+		~PresetManager();
 		void savePreset(const String& presetName);
 		void deletePreset(const String& presetName);
 		void loadPreset(const String& presetName);

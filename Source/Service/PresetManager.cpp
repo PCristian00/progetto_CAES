@@ -105,7 +105,20 @@ namespace Service {
 		juce::XmlDocument xmlDoc{ presetFile };
 		const auto valueTreeToLoad = juce::ValueTree::fromXml(*xmlDoc.getDocumentElement());
 
-		valueTreeState.replaceState(valueTreeToLoad);
+		// valueTreeState.replaceState(valueTreeToLoad);
+
+		for (int i = 0; i < valueTreeToLoad.getNumChildren(); i++)
+		{
+			const auto paramChildToLoad = valueTreeToLoad.getChild(i);
+			const auto paramID = paramChildToLoad.getProperty("id");
+			auto paramTree = valueTreeState.state.getChildWithProperty("id", paramID);
+
+			if (paramTree.isValid())
+			{
+				paramTree.copyPropertiesFrom(paramChildToLoad, nullptr);
+			}
+		}
+
 		currentPreset.setValue(presetName);
 	}
 
