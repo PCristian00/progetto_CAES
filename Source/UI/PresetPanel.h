@@ -102,25 +102,35 @@ namespace Gui
 					}*/
 					});
 			}
-			else if (button == &deleteButton) {
-				// Handle delete button
-				// AGGIUNGERE finestra di dialogo per CONFERMA
-				alertWindow = std::make_unique<juce::AlertWindow>("Delete Preset", "Are you sure you want to delete the preset \"" + presetManager.getCurrentPreset() + "\"?", juce::AlertWindow::WarningIcon);
-				/*alertWindow->addButton("Yes", 1);
-				alertWindow->addButton("No", 0);*/
+			else if (button == &deleteButton)
+			{
+				const auto currentPresetName = presetManager.getCurrentPreset();
 
-				juce::ModalComponentManager::Callback* callback = nullptr;
+				if (currentPresetName.isEmpty())
+					return;
 
-				alertWindow->showOkCancelBox(juce::AlertWindow::WarningIcon, "Delete Preset", "Are you sure you want to delete the preset \"" + presetManager.getCurrentPreset() + "\"?", "Yes", "No", this, callback);
+				// Comportamento pulsanti ok/cancel
+				const auto callback = juce::ModalCallbackFunction::create([this, currentPresetName](int result) {
+					if (result == 0) {
 
-				
-				presetManager.deletePreset(presetManager.getCurrentPreset());
+					}// result == 0 means you click Cancel
+					if (result == 1) {
+						presetManager.deletePreset(currentPresetName);
+						loadPresetList();
+					}// result == 1 means you click OK
+					});
 
-				// presetManager.deletePreset(presetManager.getCurrentPreset());
-				loadPresetList();
+				juce::AlertWindow::showOkCancelBox(
+					juce::AlertWindow::WarningIcon,                       // Icona
+					"Cancella Preset",                                      // Titolo finestra
+					"Cancellare preset \"" + currentPresetName + "\"?", // Messaggio
+					"Sì",                                                // Testo pulsante OK
+					"No",                                                 // Testo pulsante Cancel
+					this,												// Component associato (per modalità)
+					callback 										// Nessun callback: chiamata sincrona, ritorna subito il bool
+				);
 			}
 			else if (button == &previousPresetButton) {
-				// const int index = presetManager.loadPreviousPreset();
 				presetList.setSelectedItemIndex(presetManager.loadPreviousPreset(), juce::dontSendNotification);
 			}
 			else if (button == &nextPresetButton) {
@@ -136,7 +146,6 @@ namespace Gui
 		}
 
 		void configureButton(juce::Button& button, const juce::String& buttonText) {
-			// Configure buttons here
 			button.setButtonText(buttonText);
 			button.setMouseCursor(juce::MouseCursor::PointingHandCursor);
 			addAndMakeVisible(button);
@@ -145,8 +154,6 @@ namespace Gui
 
 		// da migliorare, spostare in utils o rimuovere
 		void setButtonBounds(juce::Button& button, juce::Rectangle<int> size) {
-
-			// button.setBounds(x, y, size.getWidth(), size.getHeight());
 			button.setBounds(size);
 		}
 
@@ -154,7 +161,6 @@ namespace Gui
 		juce::TextButton saveButton, deleteButton, previousPresetButton, nextPresetButton;
 		juce::ComboBox presetList;
 		std::unique_ptr<juce::FileChooser> fileChooser;
-		std::unique_ptr<juce::AlertWindow> alertWindow;
 
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PresetPanel)
 	};
