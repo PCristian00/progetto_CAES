@@ -11,6 +11,7 @@
 #pragma once
 #include <JuceHeader.h>
 #include "Utils.h"
+#include "DialogBox.h"
 
 namespace Gui
 {
@@ -22,6 +23,10 @@ namespace Gui
 			configureButton(deleteButton, "Delete");
 			configureButton(previousPresetButton, "<");
 			configureButton(nextPresetButton, ">");
+
+			// Pulsanti delete window
+			configureButton(confirmButton, "si");
+			configureButton(returnButton, "no");
 
 			// Configure presetList ComboBox here
 			presetList.setTextWhenNothingSelected("Select Preset");
@@ -109,26 +114,28 @@ namespace Gui
 				if (currentPresetName.isEmpty())
 					return;
 
-				// Comportamento pulsanti ok/cancel
-				const auto callback = juce::ModalCallbackFunction::create([this, currentPresetName](int result) {
-					if (result == 0) {
+				showDeleteWindow();
 
-					}// result == 0 means you click Cancel
-					if (result == 1) {
-						presetManager.deletePreset(currentPresetName);
-						loadPresetList();
-					}// result == 1 means you click OK
-					});
+				//// Comportamento pulsanti ok/cancel
+				//const auto callback = juce::ModalCallbackFunction::create([this, currentPresetName](int result) {
+				//	if (result == 0) {
 
-				juce::AlertWindow::showOkCancelBox(
-					juce::AlertWindow::WarningIcon,                       // Icona
-					"Cancella Preset",                                      // Titolo finestra
-					"Cancellare preset \"" + currentPresetName + "\"?", // Messaggio
-					"SÏ",                                                // Testo pulsante OK
-					"No",                                                 // Testo pulsante Cancel
-					this,												// Component associato (per modalit‡)
-					callback 										// Nessun callback: chiamata sincrona, ritorna subito il bool
-				);
+				//	}// result == 0 means you click Cancel
+				//	if (result == 1) {
+				//		presetManager.deletePreset(currentPresetName);
+				//		loadPresetList();
+				//	}// result == 1 means you click OK
+				//	});
+
+				//juce::AlertWindow::showOkCancelBox(
+				//	juce::AlertWindow::WarningIcon,                       // Icona
+				//	"Cancella Preset",                                      // Titolo finestra
+				//	"Cancellare preset \"" + currentPresetName + "\"?", // Messaggio
+				//	"S√¨",                                                // Testo pulsante OK
+				//	"No",                                                 // Testo pulsante Cancel
+				//	this,												// Component associato (per modalit√†)
+				//	callback 										// Nessun callback: chiamata sincrona, ritorna subito il bool
+				//);
 			}
 			else if (button == &previousPresetButton) {
 				presetList.setSelectedItemIndex(presetManager.loadPreviousPreset(), juce::dontSendNotification);
@@ -157,11 +164,21 @@ namespace Gui
 			button.setBounds(size);
 		}
 
+		// Creare componente esternO!!!
+		void showDeleteWindow() {
+			addAndMakeVisible(deleteDialog);
+			deleteDialog.setBounds(0, 0, getWidth(), getHeight());
+		}
+
 		Service::PresetManager& presetManager;
-		juce::TextButton saveButton, deleteButton, previousPresetButton, nextPresetButton;
+		DialogBox deleteDialog{ "Cancellare il preset selezionato?" };
+		juce::TextButton saveButton, deleteButton, previousPresetButton, nextPresetButton, confirmButton, returnButton;
 		juce::ComboBox presetList;
 		std::unique_ptr<juce::FileChooser> fileChooser;
 
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PresetPanel)
 	};
+
+
+
 } // namespace Gui
