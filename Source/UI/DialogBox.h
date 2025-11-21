@@ -18,7 +18,7 @@
 class DialogBox  : public juce::Component, public juce::Button::Listener
 {
 public:
-    DialogBox(juce::String message);
+    DialogBox(juce::String message, std::function <void()>& acceptFunction);
     ~DialogBox() override;
 
     void paint (juce::Graphics&) override;
@@ -26,13 +26,18 @@ public:
 
     void configureButton(juce::Button& button, const juce::String& buttonText);
 
+    void configureTextBox();
+
     void setButtonBounds(juce::Button& button, juce::Rectangle<int> size);
 
 	void buttonClicked(juce::Button* button) override;
 private:
 
-	juce::String message;
+	juce::Label message;
     juce::TextButton confirmButton, returnButton;
+
+	std::function <void()> onAccept;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DialogBox)		
 };

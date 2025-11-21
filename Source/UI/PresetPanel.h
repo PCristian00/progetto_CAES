@@ -114,6 +114,8 @@ namespace Gui
 				if (currentPresetName.isEmpty())
 					return;
 
+
+
 				showDeleteWindow();
 
 				//// Comportamento pulsanti ok/cancel
@@ -166,12 +168,23 @@ namespace Gui
 
 		// Creare componente esternO!!!
 		void showDeleteWindow() {
-			addAndMakeVisible(deleteDialog);
-			deleteDialog.setBounds(0, 0, getWidth(), getHeight());
+
+
+			std::function <void()> onAccept = [this]() {
+				presetManager.deletePreset(presetManager.getCurrentPreset());
+				loadPresetList();
+				deleteDialog.reset();
+				};
+
+			deleteDialog = std::make_unique<DialogBox>("Cancellare il preset " + presetManager.getCurrentPreset() + " ? ", onAccept);
+
+			addAndMakeVisible(*deleteDialog);
+			deleteDialog->setBounds(0, 0, getWidth(), getHeight());
+
 		}
 
 		Service::PresetManager& presetManager;
-		DialogBox deleteDialog{ "Cancellare il preset selezionato?" };
+		std::unique_ptr<DialogBox> deleteDialog;
 		juce::TextButton saveButton, deleteButton, previousPresetButton, nextPresetButton, confirmButton, returnButton;
 		juce::ComboBox presetList;
 		std::unique_ptr<juce::FileChooser> fileChooser;

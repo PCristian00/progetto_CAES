@@ -12,14 +12,19 @@
 #include "DialogBox.h"
 
 //==============================================================================
-DialogBox::DialogBox(juce::String message)
+DialogBox::DialogBox(juce::String messageText, std::function<void()>& acceptFunction)
 {
-	// In your constructor, you should add any child components, and
-	// initialise any special settings that your component needs.
+	// message = messageText;
+
+	// juce::Label textBox;
+	message.setText(messageText, juce::dontSendNotification);
+	addAndMakeVisible(message);
+
 
 	configureButton(confirmButton, "Confirm");
 	configureButton(returnButton, "Return");
 
+	onAccept = acceptFunction;
 }
 
 DialogBox::~DialogBox()
@@ -32,10 +37,11 @@ DialogBox::~DialogBox()
 void DialogBox::buttonClicked(juce::Button* button) {
 	if (button == &confirmButton) {
 		// Handle confirm button click
-
+		onAccept();
 	}
 	else if (button == &returnButton) {
 		// Handle return button click
+		this->setVisible(false);
 	}
 }
 
@@ -49,14 +55,6 @@ void DialogBox::paint(juce::Graphics& g)
 	*/
 
 	g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));   // clear the background
-
-	g.setColour(juce::Colours::grey);
-	g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
-
-	g.setColour(juce::Colours::white);
-	g.setFont(juce::FontOptions(14.0f));
-	g.drawText(message, getLocalBounds(),
-		juce::Justification::centred, true);   // draw some placeholder text
 }
 
 void DialogBox::resized()
@@ -67,12 +65,10 @@ void DialogBox::resized()
 	// const auto container = utils::getBoundsWithPadding(this, 4);
 	auto bounds = container;
 
-	// juce::Rectangle<int>
-
-	// auto buttonSize = (bounds.removeFromLeft(container.proportionOfWidth(0.2f)).reduced(4));
-
-	// Rendere migliori queste funzioni
-
+	
+	
+	
+	message.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.6f)).reduced(4));
 	setButtonBounds(confirmButton, bounds.removeFromLeft(container.proportionOfWidth(0.2f)).reduced(4));
 	setButtonBounds(returnButton, bounds.removeFromLeft(container.proportionOfWidth(0.1f)).reduced(4));
 
@@ -83,6 +79,10 @@ void DialogBox::configureButton(juce::Button& button, const juce::String& button
 	button.setMouseCursor(juce::MouseCursor::PointingHandCursor);
 	addAndMakeVisible(button);
 	button.addListener(this);
+}
+
+void DialogBox::configureTextBox() {
+	
 }
 
 // da migliorare, spostare in utils o rimuovere
