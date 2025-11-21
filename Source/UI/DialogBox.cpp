@@ -12,48 +12,49 @@
 #include "DialogBox.h"
 
 //==============================================================================
-DialogBox::DialogBox(juce::String messageText, std::function<void()>& acceptFunction)
-{
-	// message = messageText;
 
-	// juce::Label textBox;
+
+DialogBox::DialogBox(juce::String messageText, juce::String acceptButtonText, juce::String closeButtonText, std::function<void()>& acceptFunction)
+{
 	message.setText(messageText, juce::dontSendNotification);
 	addAndMakeVisible(message);
 
 
-	configureButton(confirmButton, "Confirm");
-	configureButton(returnButton, "Return");
+	configureButton(leftButton, acceptButtonText);
+	configureButton(rightButton, closeButtonText);
 
-	onAccept = acceptFunction;
+	this->leftFunction = acceptFunction;
+	this->rightFunction = closeFunction;
+}
+
+DialogBox::DialogBox(juce::String messageText, juce::String leftButtonText, juce::String rightButtonText, std::function<void()>& leftFunction, std::function<void()>& rightFunction)
+{
+	new DialogBox(messageText, leftButtonText, rightButtonText, leftFunction);
+	this->rightFunction = rightFunction;
 }
 
 DialogBox::~DialogBox()
 {
-	confirmButton.removeListener(this);
-	returnButton.removeListener(this);
+	leftButton.removeListener(this);
+	rightButton.removeListener(this);
 }
+
 
 // CAPIRE COME RESTITUIRE QUALE BUTTON E' STATO CLICCATO ALL'ESTERNO
 void DialogBox::buttonClicked(juce::Button* button) {
-	if (button == &confirmButton) {
-		// Handle confirm button click
-		onAccept();
+
+	if (button == &leftButton) {
+		// Handle left button click
+		leftFunction();
 	}
-	else if (button == &returnButton) {
-		// Handle return button click
-		this->setVisible(false);
+	else if (button == &rightButton) {
+		// Handle right button click
+		rightFunction();
 	}
 }
 
 void DialogBox::paint(juce::Graphics& g)
 {
-	/* This demo code just fills the component's background and
-	   draws some placeholder text to get you started.
-
-	   You should replace everything in this method with your own
-	   drawing code..
-	*/
-
 	g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));   // clear the background
 }
 
@@ -65,14 +66,15 @@ void DialogBox::resized()
 	// const auto container = utils::getBoundsWithPadding(this, 4);
 	auto bounds = container;
 
-	
-	
-	
+
 	message.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.6f)).reduced(4));
-	setButtonBounds(confirmButton, bounds.removeFromLeft(container.proportionOfWidth(0.2f)).reduced(4));
-	setButtonBounds(returnButton, bounds.removeFromLeft(container.proportionOfWidth(0.1f)).reduced(4));
+	setButtonBounds(rightButton, bounds.removeFromRight(container.proportionOfWidth(0.2f)).reduced(4));
+	setButtonBounds(leftButton, bounds.removeFromRight(container.proportionOfWidth(0.2f)).reduced(4));
+
 
 }
+
+// da migliorare, spostare in utils o rimuovere
 
 void DialogBox::configureButton(juce::Button& button, const juce::String& buttonText) {
 	button.setButtonText(buttonText);
@@ -81,11 +83,6 @@ void DialogBox::configureButton(juce::Button& button, const juce::String& button
 	button.addListener(this);
 }
 
-void DialogBox::configureTextBox() {
-	
-}
-
-// da migliorare, spostare in utils o rimuovere
 void DialogBox::setButtonBounds(juce::Button& button, juce::Rectangle<int> size) {
 	button.setBounds(size);
 }

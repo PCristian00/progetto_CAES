@@ -169,6 +169,7 @@ namespace Gui
 		// Creare componente esternO!!!
 		void showDeleteWindow() {
 
+			juce::String message = "Cancellare il preset '" + presetManager.getCurrentPreset() + "' ? ";
 
 			std::function <void()> onAccept = [this]() {
 				presetManager.deletePreset(presetManager.getCurrentPreset());
@@ -176,7 +177,7 @@ namespace Gui
 				deleteDialog.reset();
 				};
 
-			deleteDialog = std::make_unique<DialogBox>("Cancellare il preset " + presetManager.getCurrentPreset() + " ? ", onAccept);
+			deleteDialog = std::make_unique<DialogBox>(message, "Cancella", "Indietro", onAccept);
 
 			addAndMakeVisible(*deleteDialog);
 			deleteDialog->setBounds(0, 0, getWidth(), getHeight());
