@@ -55,7 +55,12 @@ namespace Service {
 
 		currentPreset.setValue(presetName);
 
-		const auto xml = valueTreeState.copyState().createXml();
+		auto vt = valueTreeState.copyState();
+		// Difensivo: rimetti versione se assente
+		if (!vt.hasProperty("version"))
+			vt.setProperty("version", ProjectInfo::versionString, nullptr);
+
+		auto xml = vt.createXml();
 		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
 
 		if (!xml->writeTo(presetFile))

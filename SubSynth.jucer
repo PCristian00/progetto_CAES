@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="IN6TnE" name="SubSynth" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
-              companyName="univpm" version="1.0.7">
+              companyName="univpm" version="1.0.9">
   <MAINGROUP id="nUzka3" name="SubSynth">
     <GROUP id="{CBF839B3-2299-6FFB-64EA-456657789D4B}" name="Service">
       <FILE id="dNgxEq" name="PresetManager.cpp" compile="1" resource="0"

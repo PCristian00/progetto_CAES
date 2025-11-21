@@ -41,11 +41,5 @@ namespace Service {
 
 		juce::AudioProcessorValueTreeState& valueTreeState;
 		juce::Value currentPreset;
-
-
-		/*juce::File presetsDirectory;
-		juce::StringArray presetNames;
-		int currentPresetIndex = -1;
-		void refreshPresetList();*/
 	};
 } // namespace Service
