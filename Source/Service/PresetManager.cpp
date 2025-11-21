@@ -12,33 +12,51 @@
 
 namespace Service {
 
-	const File PresetManager::defaultDirectory{ File::getSpecialLocation(File::SpecialLocationType::commonDocumentsDirectory).getChildFile(ProjectInfo::companyName).getChildFile(ProjectInfo::projectName) };
+	const File PresetManager::defaultDirectory{
+		File::getSpecialLocation(File::commonDocumentsDirectory)
+			.getChildFile(ProjectInfo::companyName)
+			.getChildFile(ProjectInfo::projectName)
+	};
 
-	const String PresetManager::extension{ ".preset" }; // RICORDA IL PUNTO PRIMA DELL'ESTENSIONE
-
+	const String PresetManager::extension{ "preset" };
 	const String PresetManager::presetNameProperty{ "presetName" };
 
 	PresetManager::PresetManager(juce::AudioProcessorValueTreeState& apvts)
-		: valueTreeState(apvts) {
-		if (!defaultDirectory.exists()) {
+		: valueTreeState(apvts)
+	{
+		if (!defaultDirectory.exists())
+		{
 			const juce::Result result = defaultDirectory.createDirectory();
-			if (result.failed()) {
+			if (result.failed())
+			{
 				DBG("Failed to create presets directory: " + result.getErrorMessage());
 				jassertfalse;
 			}
-
-			valueTreeState.state.addListener(this);
-			currentPreset.referTo(valueTreeState.state.getPropertyAsValue(presetNameProperty, nullptr));
 		}
+
+		valueTreeState.state.addListener(this);
+
+		// Garantisce che la property esista
+		if (!valueTreeState.state.hasProperty(presetNameProperty))
+			valueTreeState.state.setProperty(presetNameProperty, "", nullptr);
+
+		currentPreset.referTo(valueTreeState.state.getPropertyAsValue(presetNameProperty, nullptr));
 	}
-	void PresetManager::savePreset(const juce::String& presetName) {
+
+	PresetManager::~PresetManager()
+	{
+		valueTreeState.state.removeListener(this);
+	}
+
+	void PresetManager::savePreset(const juce::String& presetName)
+	{
 		if (presetName.isEmpty())
 			return;
 
 		currentPreset.setValue(presetName);
 
 		const auto xml = valueTreeState.copyState().createXml();
-		const auto presetFile = defaultDirectory.getChildFile(presetName + extension);
+		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
 
 		if (!xml->writeTo(presetFile))
 		{
@@ -52,7 +70,7 @@ namespace Service {
 		if (presetName.isEmpty())
 			return;
 
-		const auto presetFile = defaultDirectory.getChildFile(presetName + extension);
+		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
 
 		if (!presetFile.existsAsFile())
 		{
@@ -71,11 +89,12 @@ namespace Service {
 		currentPreset.setValue("");
 	}
 
-	void PresetManager::loadPreset(const juce::String& presetName) {
+	void PresetManager::loadPreset(const juce::String& presetName)
+	{
 		if (presetName.isEmpty())
 			return;
 
-		const auto presetFile = defaultDirectory.getChildFile(presetName + extension);
+		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
 		if (!presetFile.existsAsFile())
 		{
 			DBG("Preset file does not exist: " + presetFile.getFullPathName());
@@ -83,12 +102,26 @@ namespace Service {
 			return;
 		}
 
-		juce::XmlDocument xmlDoc(presetFile);
+		juce::XmlDocument xmlDoc{ presetFile };
 		const auto valueTreeToLoad = juce::ValueTree::fromXml(*xmlDoc.getDocumentElement());
 
-		valueTreeState.replaceState(valueTreeToLoad);
+		// valueTreeState.replaceState(valueTreeToLoad);
+
+		for (int i = 0; i < valueTreeToLoad.getNumChildren(); i++)
+		{
+			const auto paramChildToLoad = valueTreeToLoad.getChild(i);
+			const auto paramID = paramChildToLoad.getProperty("id");
+			auto paramTree = valueTreeState.state.getChildWithProperty("id", paramID);
+
+			if (paramTree.isValid())
+			{
+				paramTree.copyPropertiesFrom(paramChildToLoad, nullptr);
+			}
+		}
+
 		currentPreset.setValue(presetName);
 	}
+
 	int PresetManager::loadNextPreset()
 	{
 		const auto presets = getAllPresets();
@@ -96,40 +129,42 @@ namespace Service {
 			return -1;
 
 		const int currentIndex = presets.indexOf(currentPreset.toString());
-		// const int nextIndex = (currentIndex + 1) % presets.size(); // Testa anche questo
 		const int nextIndex = (currentIndex + 1 > (presets.size() - 1)) ? 0 : currentIndex + 1;
 		loadPreset(presets.getReference(nextIndex));
 		return nextIndex;
 	}
+
 	int PresetManager::loadPreviousPreset()
 	{
 		const auto presets = getAllPresets();
 		if (presets.isEmpty())
 			return -1;
+
 		const int currentIndex = presets.indexOf(currentPreset.toString());
-		// const int previousIndex = (currentIndex - 1 + presets.size()) % presets.size(); // Testa anche questo
 		const int previousIndex = (currentIndex - 1 < 0) ? presets.size() - 1 : currentIndex - 1;
 		loadPreset(presets.getReference(previousIndex));
 		return previousIndex;
 	}
+
 	juce::StringArray PresetManager::getAllPresets() const
 	{
 		juce::StringArray presets;
-		const auto fileArray = defaultDirectory.findChildFiles(juce::File::findFiles, false, "*" + extension);
+		// Aggiunto il punto prima dell'estensione
+		const auto fileArray = defaultDirectory.findChildFiles(juce::File::findFiles, false, "*." + extension);
 
 		for (const auto& file : fileArray)
-		{
 			presets.add(file.getFileNameWithoutExtension());
-		}
 
 		return presets;
 	}
+
 	juce::String PresetManager::getCurrentPreset() const
 	{
 		return currentPreset.toString();
 	}
+
 	void PresetManager::valueTreeRedirected(juce::ValueTree& treeWhichHasBeenChanged)
 	{
 		currentPreset.referTo(treeWhichHasBeenChanged.getPropertyAsValue(presetNameProperty, nullptr));
 	}
-}
+} // namespace Service

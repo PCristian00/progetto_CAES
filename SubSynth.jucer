@@ -25,6 +25,8 @@
         <FILE id="tNeWsy" name="ADSRComponent.cpp" compile="1" resource="0"
               file="Source/UI/ADSRComponent.cpp"/>
         <FILE id="GkHhDp" name="ADSRComponent.h" compile="0" resource="0" file="Source/UI/ADSRComponent.h"/>
+        <FILE id="qHNmN9" name="DialogBox.cpp" compile="1" resource="0" file="Source/UI/DialogBox.cpp"/>
+        <FILE id="w4WS1k" name="DialogBox.h" compile="0" resource="0" file="Source/UI/DialogBox.h"/>
         <FILE id="TEDPhW" name="FilterComponent.cpp" compile="1" resource="0"
               file="Source/UI/FilterComponent.cpp"/>
         <FILE id="Jai3mj" name="FilterComponent.h" compile="0" resource="0"
