@@ -14,6 +14,7 @@
 #include "UI/GainComponent.h"
 #include "UI/OscComponent.h"
 #include "UI/FilterComponent.h"
+#include "UI/PresetPanel.h"
 
 //==============================================================================
 /**
@@ -39,6 +40,7 @@ private:
 	GainComponent gain;
 	FilterComponent filter;
 	ADSRComponent modAdsr;
+	Gui::PresetPanel presetPanel;
 
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SubSynthAudioProcessorEditor)
