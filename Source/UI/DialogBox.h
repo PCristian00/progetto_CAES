@@ -15,10 +15,17 @@
 //==============================================================================
 /*
 */
+
+//==============================================================================
+// Semplice dialog con uno o due pulsanti.
+// Costruttore 1: messaggio + testo bottone sinistro (accept) + testo bottone destro (close) + callback sinistro.
+//                Il destro chiude la dialog (se presente).
+// Costruttore 2: messaggio + testi dei due bottoni + due callback separate.
+//
 class DialogBox : public juce::Component, public juce::Button::Listener
 {
 public:
-	
+
 	DialogBox(juce::String messageText, juce::String acceptButtonText, juce::String closeButtonText, std::function<void()>& acceptFunction);
 	DialogBox(juce::String messageText, juce::String leftButtonText, juce::String rightButtonText, std::function<void()>& leftFunction, std::function<void()>& rightFunction);
 

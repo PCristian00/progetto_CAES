@@ -24,14 +24,13 @@ DialogBox::DialogBox(juce::String messageText, juce::String acceptButtonText, ju
 	if (closeButtonText.isNotEmpty())
 		configureButton(rightButton, closeButtonText);
 
-	this->leftFunction = acceptFunction;
-	this->rightFunction = closeFunction;
+	leftFunction = std::move(acceptFunction);
+	rightFunction = std::move(closeFunction);
 }
 
-DialogBox::DialogBox(juce::String messageText, juce::String leftButtonText, juce::String rightButtonText, std::function<void()>& leftFunction, std::function<void()>& rightFunction)
+DialogBox::DialogBox(juce::String messageText, juce::String leftButtonText, juce::String rightButtonText, std::function<void()>& leftFunction, std::function<void()>& rightFunction) : DialogBox(messageText, leftButtonText, rightButtonText, leftFunction)
 {
-	new DialogBox(messageText, leftButtonText, rightButtonText, leftFunction);
-	this->rightFunction = rightFunction;
+	this->rightFunction = std::move(rightFunction);
 }
 
 DialogBox::~DialogBox()
@@ -44,11 +43,11 @@ DialogBox::~DialogBox()
 // CAPIRE COME RESTITUIRE QUALE BUTTON E' STATO CLICCATO ALL'ESTERNO
 void DialogBox::buttonClicked(juce::Button* button) {
 
-	if (button == &leftButton) {
+	if (button == &leftButton && leftFunction) {
 		// Handle left button click
 		leftFunction();
 	}
-	else if (button == &rightButton) {
+	else if (button == &rightButton && rightFunction) {
 		// Handle right button click
 		rightFunction();
 	}
@@ -61,18 +60,22 @@ void DialogBox::paint(juce::Graphics& g)
 
 void DialogBox::resized()
 {
-	// This method is where you should set the bounds of any child
-	// components that your component contains..
 	const auto container = getLocalBounds().reduced(4);
-	// const auto container = utils::getBoundsWithPadding(this, 4);
 	auto bounds = container;
 
+	auto buttonWidth = container.proportionOfWidth(0.2f);
+
+	if (rightButton.isVisible() == false || leftButton.isVisible() == false)
+	{
+		buttonWidth = buttonWidth * 2;
+	}
 
 	message.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.6f)).reduced(4));
-	setButtonBounds(rightButton, bounds.removeFromRight(container.proportionOfWidth(0.2f)).reduced(4));
-	setButtonBounds(leftButton, bounds.removeFromRight(container.proportionOfWidth(0.2f)).reduced(4));
 
-
+	if (rightButton.isVisible())
+		setButtonBounds(rightButton, bounds.removeFromRight(buttonWidth).reduced(4));
+	if (leftButton.isVisible())
+		setButtonBounds(leftButton, bounds.removeFromRight(buttonWidth).reduced(4));
 }
 
 // da migliorare, spostare in utils o rimuovere
