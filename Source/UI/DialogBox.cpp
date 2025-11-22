@@ -19,9 +19,10 @@ DialogBox::DialogBox(juce::String messageText, juce::String acceptButtonText, ju
 	message.setText(messageText, juce::dontSendNotification);
 	addAndMakeVisible(message);
 
-
-	configureButton(leftButton, acceptButtonText);
-	configureButton(rightButton, closeButtonText);
+	if (acceptButtonText.isNotEmpty())
+		configureButton(leftButton, acceptButtonText);
+	if (closeButtonText.isNotEmpty())
+		configureButton(rightButton, closeButtonText);
 
 	this->leftFunction = acceptFunction;
 	this->rightFunction = closeFunction;

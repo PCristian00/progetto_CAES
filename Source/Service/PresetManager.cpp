@@ -62,10 +62,23 @@ namespace Service {
 		}
 	}
 
-	void PresetManager::savePreset(const juce::String& presetName)
+	bool PresetManager::isValidUserPresetName(const String& presetName) const
 	{
 		if (presetName.isEmpty())
+			return false;
+		// Se esiste un embedded con lo stesso nome blocchiamo
+		if (isEmbeddedPreset(presetName))
+			return false;
+		return true;
+	}
+
+	void PresetManager::savePreset(const juce::String& presetName)
+	{
+		if (!isValidUserPresetName(presetName))
+		{
+			DBG("Nome preset non valido o riservato (factory): " + presetName);
 			return;
+		}
 
 		currentPreset.setValue(presetName);
 
@@ -160,16 +173,16 @@ namespace Service {
 		if (presetName.isEmpty())
 			return;
 
-		if (isEmbeddedPreset(presetName))
-		{
-			DBG("Cannot delete embedded (factory) preset: " + presetName);
-			return;
-		}
-
 		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
 		if (!presetFile.existsAsFile())
 		{
-			DBG("Preset file does not exist: " + presetFile.getFullPathName());
+			// Se esiste come factory, non è cancellabile
+			if (isEmbeddedPreset(presetName))
+			{
+				DBG("Cannot delete embedded (factory) preset: " + presetName);
+				return;
+			}
+			DBG("Preset file does not exist: " + presetName);
 			jassertfalse;
 			return;
 		}
