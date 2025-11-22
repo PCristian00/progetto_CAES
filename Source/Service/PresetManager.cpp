@@ -48,6 +48,20 @@ namespace Service {
 		valueTreeState.state.removeListener(this);
 	}
 
+	static void writeValueTreeToFile(const juce::ValueTree& vt, const File& file)
+	{
+		auto copy = vt;
+		if (!copy.hasProperty("version"))
+			copy.setProperty("version", ProjectInfo::versionString, nullptr);
+
+		auto xml = copy.createXml();
+		if (!xml->writeTo(file))
+		{
+			DBG("Failed to write preset: " + file.getFullPathName());
+			jassertfalse;
+		}
+	}
+
 	void PresetManager::savePreset(const juce::String& presetName)
 	{
 		if (presetName.isEmpty())
@@ -55,19 +69,90 @@ namespace Service {
 
 		currentPreset.setValue(presetName);
 
-		auto vt = valueTreeState.copyState();
-		// Difensivo: rimetti versione se assente
-		if (!vt.hasProperty("version"))
-			vt.setProperty("version", ProjectInfo::versionString, nullptr);
-
-		auto xml = vt.createXml();
 		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
+		writeValueTreeToFile(valueTreeState.copyState(), presetFile);
+	}
 
-		if (!xml->writeTo(presetFile))
+	bool PresetManager::isEmbeddedPreset(const String& presetName) const
+	{
+		if (presetName.isEmpty())
+			return false;
+
+		// Scorre risorse BinaryData e confronta nome (senza estensione)
+		for (int i = 0; i < BinaryData::namedResourceListSize; ++i)
 		{
-			DBG("Failed to save preset: " + presetFile.getFullPathName());
-			jassertfalse;
+			const String originalName = BinaryData::originalFilenames[i]; // JUCE >= 7
+			// Se versione precedente: BinaryData::namedResourceOriginalFilenames[i]
+			if (originalName.endsWith("." + extension))
+			{
+				auto base = originalName.dropLastCharacters(extension.length() + 1);
+				if (base == presetName)
+					return true;
+			}
 		}
+		return false;
+	}
+
+	juce::ValueTree PresetManager::valueTreeFromEmbeddedXml(const void* data, size_t size) const
+	{
+		if (data == nullptr || size == 0)
+			return {};
+
+		const juce::String xmlString = juce::String::fromUTF8(static_cast<const char*>(data), (int)size);
+		std::unique_ptr<juce::XmlElement> xml(juce::parseXML(xmlString));
+		if (!xml)
+		{
+			DBG("Embedded preset XML parse failed.");
+			return {};
+		}
+		return juce::ValueTree::fromXml(*xml);
+	}
+
+	void PresetManager::loadEmbeddedPreset(const String& presetName)
+	{
+		for (int i = 0; i < BinaryData::namedResourceListSize; ++i)
+		{
+			const String originalName = BinaryData::originalFilenames[i];
+			if (!originalName.endsWith("." + extension))
+				continue;
+
+			auto base = originalName.dropLastCharacters(extension.length() + 1);
+			if (base != presetName)
+				continue;
+
+			int dataSize = 0;
+			const char* data = BinaryData::getNamedResource(BinaryData::namedResourceList[i], dataSize);
+			if (data == nullptr || dataSize <= 0)
+			{
+				DBG("Embedded resource pointer invalid for preset: " + presetName);
+				jassertfalse;
+				return;
+			}
+
+			auto vt = valueTreeFromEmbeddedXml(data, (size_t)dataSize);
+			if (!vt.isValid())
+			{
+				DBG("Embedded preset ValueTree invalid: " + presetName);
+				jassertfalse;
+				return;
+			}
+
+			// Copia parametri come nel caricamento da file
+			for (int c = 0; c < vt.getNumChildren(); ++c)
+			{
+				const auto paramChild = vt.getChild(c);
+				const auto paramID = paramChild.getProperty("id");
+				auto paramTree = valueTreeState.state.getChildWithProperty("id", paramID);
+				if (paramTree.isValid())
+					paramTree.copyPropertiesFrom(paramChild, nullptr);
+			}
+
+			currentPreset.setValue(presetName);
+			return;
+		}
+
+		DBG("Embedded preset not found: " + presetName);
+		jassertfalse;
 	}
 
 	void PresetManager::deletePreset(const String& presetName)
@@ -75,8 +160,13 @@ namespace Service {
 		if (presetName.isEmpty())
 			return;
 
-		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
+		if (isEmbeddedPreset(presetName))
+		{
+			DBG("Cannot delete embedded (factory) preset: " + presetName);
+			return;
+		}
 
+		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
 		if (!presetFile.existsAsFile())
 		{
 			DBG("Preset file does not exist: " + presetFile.getFullPathName());
@@ -91,7 +181,8 @@ namespace Service {
 			return;
 		}
 
-		currentPreset.setValue("");
+		if (currentPreset.toString() == presetName)
+			currentPreset.setValue("");
 	}
 
 	void PresetManager::loadPreset(const juce::String& presetName)
@@ -99,19 +190,30 @@ namespace Service {
 		if (presetName.isEmpty())
 			return;
 
+		if (isEmbeddedPreset(presetName))
+		{
+			loadEmbeddedPreset(presetName);
+			return;
+		}
+
 		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
 		if (!presetFile.existsAsFile())
 		{
-			DBG("Preset file does not exist: " + presetFile.getFullPathName());
+			DBG("Preset file does not exist (user): " + presetName);
 			jassertfalse;
 			return;
 		}
 
 		juce::XmlDocument xmlDoc{ presetFile };
-		const auto valueTreeToLoad = juce::ValueTree::fromXml(*xmlDoc.getDocumentElement());
+		std::unique_ptr<juce::XmlElement> xml(xmlDoc.getDocumentElement());
+		if (!xml)
+		{
+			DBG("Invalid XML in user preset: " + presetFile.getFullPathName());
+			jassertfalse;
+			return;
+		}
 
-		// valueTreeState.replaceState(valueTreeToLoad);
-
+		const auto valueTreeToLoad = juce::ValueTree::fromXml(*xml);
 		for (int i = 0; i < valueTreeToLoad.getNumChildren(); i++)
 		{
 			const auto paramChildToLoad = valueTreeToLoad.getChild(i);
@@ -119,9 +221,7 @@ namespace Service {
 			auto paramTree = valueTreeState.state.getChildWithProperty("id", paramID);
 
 			if (paramTree.isValid())
-			{
 				paramTree.copyPropertiesFrom(paramChildToLoad, nullptr);
-			}
 		}
 
 		currentPreset.setValue(presetName);
@@ -151,16 +251,40 @@ namespace Service {
 		return previousIndex;
 	}
 
-	juce::StringArray PresetManager::getAllPresets() const
+	juce::StringArray PresetManager::getUserPresets() const
 	{
 		juce::StringArray presets;
-		// Aggiunto il punto prima dell'estensione
 		const auto fileArray = defaultDirectory.findChildFiles(juce::File::findFiles, false, "*." + extension);
-
 		for (const auto& file : fileArray)
 			presets.add(file.getFileNameWithoutExtension());
-
+		presets.sort(true);
 		return presets;
+	}
+
+	juce::StringArray PresetManager::getEmbeddedPresets() const
+	{
+		juce::StringArray names;
+		for (int i = 0; i < BinaryData::namedResourceListSize; ++i)
+		{
+			const String originalName = BinaryData::originalFilenames[i];
+			if (originalName.endsWith("." + extension))
+			{
+				auto base = originalName.dropLastCharacters(extension.length() + 1);
+				names.addIfNotAlreadyThere(base);
+			}
+		}
+		names.sort(true);
+		return names;
+	}
+
+	juce::StringArray PresetManager::getAllPresets() const
+	{
+		auto embedded = getEmbeddedPresets();
+		auto user = getUserPresets();
+		juce::StringArray combined;
+		combined.addArray(embedded);
+		combined.addArray(user);
+		return combined;
 	}
 
 	juce::String PresetManager::getCurrentPreset() const

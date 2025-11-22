@@ -4,6 +4,9 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
               companyName="univpm" version="1.0.9">
   <MAINGROUP id="nUzka3" name="SubSynth">
+    <GROUP id="{11D3644D-AD7F-BC34-2D8E-F448FCDB550C}" name="Resources">
+      <FILE id="mVIo6F" name="default1.preset" compile="0" resource="1" file="../../../../../../../../../../Public/Documents/univpm/SubSynth/default1.preset"/>
+    </GROUP>
     <GROUP id="{CBF839B3-2299-6FFB-64EA-456657789D4B}" name="Service">
       <FILE id="dNgxEq" name="PresetManager.cpp" compile="1" resource="0"
             file="Source/Service/PresetManager.cpp"/>

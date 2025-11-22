@@ -84,6 +84,9 @@ namespace Gui
 				if (presetManager.getCurrentPreset().isEmpty())
 					return;
 
+				if(presetManager.isEmbeddedPreset(presetManager.getCurrentPreset()))
+					return;
+
 				showDeleteWindow();
 			}
 			else if (button == &previousPresetButton) {
