@@ -74,6 +74,17 @@ namespace Gui
 				fileChooser->launchAsync(juce::FileBrowserComponent::saveMode, [&](const juce::FileChooser& chooser) {
 					auto file = chooser.getResult();
 					auto presetName = file.getFileNameWithoutExtension();
+
+					if (presetManager.isEmbeddedPreset(presetName)) {
+
+						juce::String msg = "Il nome preset '" + presetManager.getCurrentPreset() + "' è usato da un preset default. Cambiare nome.";
+
+						std::function <void()> onAccept = [this]() {dialogBox.reset();};
+
+						showDialogBox(msg, "", "Ok ok", onAccept);
+						return;
+					}
+
 					presetManager.savePreset(presetName);
 					loadPresetList();
 					});
@@ -84,10 +95,19 @@ namespace Gui
 				if (presetManager.getCurrentPreset().isEmpty())
 					return;
 
-				if(presetManager.isEmbeddedPreset(presetManager.getCurrentPreset()))
+				if (presetManager.isEmbeddedPreset(presetManager.getCurrentPreset()))
 					return;
 
-				showDeleteWindow();
+
+				juce::String msg = "Cancellare il preset '" + presetManager.getCurrentPreset() + "' ? ";
+
+				std::function <void()> onAccept = [this]() {
+					presetManager.deletePreset(presetManager.getCurrentPreset());
+					loadPresetList();
+					dialogBox.reset();
+					};
+
+				showDialogBox(msg, "Cancella preset", "Annulla", onAccept);
 			}
 			else if (button == &previousPresetButton) {
 				presetList.setSelectedItemIndex(presetManager.loadPreviousPreset(), juce::dontSendNotification);
@@ -116,26 +136,17 @@ namespace Gui
 			button.setBounds(size);
 		}
 
-		void showDeleteWindow() {
+		void showDialogBox(juce::String msg, juce::String confirmText, juce::String returnText, std::function<void()> onAccept) {
 
-			juce::String message = "Cancellare il preset '" + presetManager.getCurrentPreset() + "' ? ";
+			dialogBox = std::make_unique<DialogBox>(msg, confirmText, returnText, onAccept);
 
-			// Funzione eseguita alla conferma della cancellazione
-			std::function <void()> onAccept = [this]() {
-				presetManager.deletePreset(presetManager.getCurrentPreset());
-				loadPresetList();
-				deleteDialog.reset();
-				};
-
-			deleteDialog = std::make_unique<DialogBox>(message, "Cancella", "Indietro", onAccept);
-
-			addAndMakeVisible(*deleteDialog);
-			deleteDialog->setBounds(0, 0, getWidth(), getHeight());
+			addAndMakeVisible(*dialogBox);
+			dialogBox->setBounds(0, 0, getWidth(), getHeight());
 
 		}
 
 		Service::PresetManager& presetManager;
-		std::unique_ptr<DialogBox> deleteDialog;
+		std::unique_ptr<DialogBox> dialogBox;
 		juce::TextButton saveButton, deleteButton, previousPresetButton, nextPresetButton;
 		juce::ComboBox presetList;
 		std::unique_ptr<juce::FileChooser> fileChooser;
