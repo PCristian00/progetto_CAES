@@ -15,16 +15,18 @@
 
 namespace Gui
 {
-	class PresetPanel : public juce::Component, public juce::Button::Listener, public juce::ComboBox::Listener
+	class PresetPanel : public juce::Component,
+		public juce::Button::Listener,
+		public juce::ComboBox::Listener
 	{
 	public:
-		PresetPanel(Service::PresetManager& pm) : presetManager(pm) {
+		PresetPanel(Service::PresetManager& pm) : presetManager(pm)
+		{
 			configureButton(saveButton, "Save");
 			configureButton(deleteButton, "Delete");
 			configureButton(previousPresetButton, "<");
 			configureButton(nextPresetButton, ">");
 
-			// Configurazione presetList ComboBox
 			presetList.setTextWhenNothingSelected("Select Preset");
 			presetList.setMouseCursor(juce::MouseCursor::PointingHandCursor);
 			addAndMakeVisible(presetList);
@@ -33,32 +35,34 @@ namespace Gui
 			loadPresetList();
 		}
 
-		~PresetPanel() {
+		~PresetPanel()
+		{
 			saveButton.removeListener(this);
 			deleteButton.removeListener(this);
 			previousPresetButton.removeListener(this);
 			nextPresetButton.removeListener(this);
 			presetList.removeListener(this);
+			closeDialogBox(); // pulizia difensiva
 		}
 
-		void resized() override {
-
+		void resized() override
+		{
 			const auto container = getLocalBounds().reduced(4);
 			auto bounds = container;
-
-			// Rendere migliori queste funzioni
 
 			setButtonBounds(saveButton, bounds.removeFromLeft(container.proportionOfWidth(0.2f)).reduced(4));
 			setButtonBounds(previousPresetButton, bounds.removeFromLeft(container.proportionOfWidth(0.1f)).reduced(4));
 			presetList.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.4f)).reduced(4));
 			setButtonBounds(nextPresetButton, bounds.removeFromLeft(container.proportionOfWidth(0.1f)).reduced(4));
 			setButtonBounds(deleteButton, bounds.reduced(4));
+
+			if (dialogBox)
+				dialogBox->setBounds(0, 0, getWidth(), getHeight());
 		}
 
 	private:
-
-		void loadPresetList() {
-
+		void loadPresetList()
+		{
 			presetList.clear(juce::dontSendNotification);
 
 			const auto allPresets = presetManager.getAllPresets();
@@ -67,82 +71,117 @@ namespace Gui
 			presetList.setSelectedItemIndex(allPresets.indexOf(currentPreset), juce::dontSendNotification);
 		}
 
-		void buttonClicked(juce::Button* button) override {
+		void buttonClicked(juce::Button* button) override
+		{
+			if (button == &saveButton)
+			{
+				fileChooser = std::make_unique<juce::FileChooser>("Save Preset",
+					Service::PresetManager::defaultDirectory,
+					"*." + Service::PresetManager::extension);
+				fileChooser->launchAsync(juce::FileBrowserComponent::saveMode,
+					[this](const juce::FileChooser& chooser)
+					{
+						auto file = chooser.getResult();
+						if (file == juce::File{}) return;
+						auto presetName = file.getFileNameWithoutExtension();
 
-			if (button == &saveButton) {
-				fileChooser = std::make_unique<juce::FileChooser>("Save Preset", Service::PresetManager::defaultDirectory, "*." + Service::PresetManager::extension);
-				fileChooser->launchAsync(juce::FileBrowserComponent::saveMode, [&](const juce::FileChooser& chooser) {
-					auto file = chooser.getResult();
-					auto presetName = file.getFileNameWithoutExtension();
+						// Validazione nome (esempio):
+						if (!presetManager.isValidUserPresetName(presetName))
+						{
+							showDialogBox("Nome preset '" + presetName + "' non valido. Esiste un preset di fabbrica con questo nome.",
+								"Ok",
+								"",
+								[this]() { closeDialogBox(); });
+							return;
+						}
 
-					if (presetManager.isEmbeddedPreset(presetName)) {
-
-						juce::String msg = "Il nome preset '" + presetManager.getCurrentPreset() + "' è usato da un preset default. Cambiare nome.";
-
-						std::function <void()> onAccept = [this]() {dialogBox.reset();};
-
-						showDialogBox(msg, "", "Ok ok", onAccept);
-						return;
-					}
-
-					presetManager.savePreset(presetName);
-					loadPresetList();
+						presetManager.savePreset(presetName);
+						loadPresetList();
 					});
+
+				// Rimuovi l'if (true) provvisorio. Se ti serve una condizione reale, sostituiscila.
+				return;
 			}
 			else if (button == &deleteButton)
 			{
-
-				if (presetManager.getCurrentPreset().isEmpty())
+				const auto current = presetManager.getCurrentPreset();
+				if (current.isEmpty())
 					return;
 
-				if (presetManager.isEmbeddedPreset(presetManager.getCurrentPreset()))
+				if (presetManager.isEmbeddedPreset(current)) {
+					showDialogBox("Impossibile cancellare preset '" + current + "' (preset di fabbrica)",
+						"Ok",
+						"",
+						[this]() { closeDialogBox(); });
 					return;
+				}
+				// return;
 
+				juce::String msg = "Cancellare il preset '" + current + "' ?";
 
-				juce::String msg = "Cancellare il preset '" + presetManager.getCurrentPreset() + "' ? ";
-
-				std::function <void()> onAccept = [this]() {
-					presetManager.deletePreset(presetManager.getCurrentPreset());
-					loadPresetList();
-					dialogBox.reset();
-					};
-
-				showDialogBox(msg, "Cancella preset", "Annulla", onAccept);
+				showDialogBox(msg,
+					"Cancella preset",
+					"Annulla",
+					[this]()
+					{
+						presetManager.deletePreset(presetManager.getCurrentPreset());
+						loadPresetList();
+						closeDialogBox();
+					});
 			}
-			else if (button == &previousPresetButton) {
+			else if (button == &previousPresetButton)
+			{
 				presetList.setSelectedItemIndex(presetManager.loadPreviousPreset(), juce::dontSendNotification);
 			}
-			else if (button == &nextPresetButton) {
+			else if (button == &nextPresetButton)
+			{
 				presetList.setSelectedItemIndex(presetManager.loadNextPreset(), juce::dontSendNotification);
 			}
 		}
 
-		void comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged) override {
-			if (comboBoxThatHasChanged == &presetList) {
+		void comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged) override
+		{
+			if (comboBoxThatHasChanged == &presetList)
+			{
 				auto selectedPreset = presetList.getItemText(presetList.getSelectedItemIndex());
 				presetManager.loadPreset(selectedPreset);
 			}
 		}
 
-		void configureButton(juce::Button& button, const juce::String& buttonText) {
+		void configureButton(juce::Button& button, const juce::String& buttonText)
+		{
 			button.setButtonText(buttonText);
 			button.setMouseCursor(juce::MouseCursor::PointingHandCursor);
 			addAndMakeVisible(button);
 			button.addListener(this);
 		}
 
-		// da migliorare, spostare in utils o rimuovere
-		void setButtonBounds(juce::Button& button, juce::Rectangle<int> size) {
+		void setButtonBounds(juce::Button& button, juce::Rectangle<int> size)
+		{
 			button.setBounds(size);
 		}
 
-		void showDialogBox(juce::String msg, juce::String confirmText, juce::String returnText, std::function<void()> onAccept) {
+		void showDialogBox(juce::String msg,
+			juce::String confirmText,
+			juce::String returnText,
+			std::function<void()> onAccept)
+		{
+			// Rimuove la precedente (sicuro)
+			closeDialogBox();
 
 			dialogBox = std::make_unique<DialogBox>(msg, confirmText, returnText, onAccept);
-
 			addAndMakeVisible(*dialogBox);
 			dialogBox->setBounds(0, 0, getWidth(), getHeight());
+			dialogBox->toFront(true);
+		}
 
+		void closeDialogBox()
+		{
+			if (dialogBox)
+			{
+				removeChildComponent(dialogBox.get());
+				dialogBox.reset();
+			}
 		}
 
 		Service::PresetManager& presetManager;
@@ -153,4 +192,4 @@ namespace Gui
 
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PresetPanel)
 	};
-} // namespace Gui
+}
