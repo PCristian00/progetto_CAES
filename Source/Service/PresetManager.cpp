@@ -176,7 +176,7 @@ namespace Service {
 		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
 		if (!presetFile.existsAsFile())
 		{
-			// Se esiste come factory, non è cancellabile
+			// Se esiste come factory, non ancellabile
 			if (isEmbeddedPreset(presetName))
 			{
 				DBG("Cannot delete embedded (factory) preset: " + presetName);
