@@ -60,11 +60,11 @@ namespace Gui
 			const auto container = getLocalBounds().reduced(4);
 			auto bounds = container;
 
-			setButtonBounds(saveButton, bounds.removeFromLeft(container.proportionOfWidth(0.2f)).reduced(4));
-			setButtonBounds(previousPresetButton, bounds.removeFromLeft(container.proportionOfWidth(0.1f)).reduced(4));
-			presetList.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.4f)).reduced(4));
-			setButtonBounds(nextPresetButton, bounds.removeFromLeft(container.proportionOfWidth(0.1f)).reduced(4));
-			setButtonBounds(deleteButton, bounds.reduced(4));
+			utils::setButtonBounds(saveButton, bounds.removeFromLeft(container.proportionOfWidth(0.2f)).reduced(4));
+			utils::setButtonBounds(previousPresetButton, bounds.removeFromLeft(container.proportionOfWidth(0.1f)).reduced(4));
+			utils::setComboBoxBounds(presetList, bounds.removeFromLeft(container.proportionOfWidth(0.4f)).reduced(4));
+			utils::setButtonBounds(nextPresetButton, bounds.removeFromLeft(container.proportionOfWidth(0.1f)).reduced(4));
+			utils::setButtonBounds(deleteButton, bounds.reduced(4));
 
 			if (dialogBox)
 				dialogBox->setBounds(0, 0, getWidth(), getHeight());
@@ -179,13 +179,6 @@ namespace Gui
 				presetList.setColour(presetList.textColourId, defaultListTextColour);
 				presetList.setColour(presetList.backgroundColourId, defaultListBgColour);
 			}
-		}
-
-
-
-		void setButtonBounds(juce::Button& button, juce::Rectangle<int> size)
-		{
-			button.setBounds(size);
 		}
 
 		void showDialogBox(juce::String msg, juce::String confirmText, juce::String returnText, std::function<void()> onAccept)
