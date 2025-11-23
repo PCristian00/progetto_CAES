@@ -51,6 +51,10 @@ namespace Gui
 			closeDialogBox();
 		}
 
+		void paint(juce::Graphics& g) override {
+			g.fillAll(juce::Colours::black);
+		}
+
 		void resized() override
 		{
 			const auto container = getLocalBounds().reduced(4);
