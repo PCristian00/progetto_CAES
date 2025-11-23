@@ -34,10 +34,6 @@ public:
 	void paint(juce::Graphics&) override;
 	void resized() override;
 
-	void configureButton(juce::Button& button, const juce::String& buttonText);
-
-	void setButtonBounds(juce::Button& button, juce::Rectangle<int> size);
-
 	void buttonClicked(juce::Button* button) override;
 private:
 

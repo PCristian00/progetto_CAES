@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "DialogBox.h"
+#include "Utils.h"
 
 //==============================================================================
 
@@ -20,9 +21,9 @@ DialogBox::DialogBox(juce::String messageText, juce::String acceptButtonText, ju
 	addAndMakeVisible(message);
 
 	if (acceptButtonText.isNotEmpty())
-		configureButton(leftButton, acceptButtonText);
+		utils::setButton(leftButton, acceptButtonText, this);
 	if (closeButtonText.isNotEmpty())
-		configureButton(rightButton, closeButtonText);
+		utils::setButton(rightButton, closeButtonText, this);
 
 	leftFunction = std::move(acceptFunction);
 	rightFunction = std::move(closeFunction);
@@ -55,7 +56,7 @@ void DialogBox::buttonClicked(juce::Button* button) {
 
 void DialogBox::paint(juce::Graphics& g)
 {
-	g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));   // clear the background
+	g.fillAll(juce::Colours::black);
 }
 
 void DialogBox::resized()
@@ -73,20 +74,7 @@ void DialogBox::resized()
 	message.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.6f)).reduced(4));
 
 	if (rightButton.isVisible())
-		setButtonBounds(rightButton, bounds.removeFromRight(buttonWidth).reduced(4));
+		utils::setButtonBounds(rightButton, bounds.removeFromRight(buttonWidth).reduced(4));
 	if (leftButton.isVisible())
-		setButtonBounds(leftButton, bounds.removeFromRight(buttonWidth).reduced(4));
-}
-
-// da migliorare, spostare in utils o rimuovere
-
-void DialogBox::configureButton(juce::Button& button, const juce::String& buttonText) {
-	button.setButtonText(buttonText);
-	button.setMouseCursor(juce::MouseCursor::PointingHandCursor);
-	addAndMakeVisible(button);
-	button.addListener(this);
-}
-
-void DialogBox::setButtonBounds(juce::Button& button, juce::Rectangle<int> size) {
-	button.setBounds(size);
+		utils::setButtonBounds(leftButton, bounds.removeFromRight(buttonWidth).reduced(4));
 }
