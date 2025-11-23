@@ -12,11 +12,7 @@
 
 namespace Service {
 
-	const File PresetManager::defaultDirectory{
-		File::getSpecialLocation(File::commonDocumentsDirectory)
-			.getChildFile(ProjectInfo::companyName)
-			.getChildFile(ProjectInfo::projectName)
-	};
+	const File PresetManager::defaultDirectory{ File::getSpecialLocation(File::commonDocumentsDirectory).getChildFile(ProjectInfo::companyName).getChildFile(ProjectInfo::projectName) };
 
 	const String PresetManager::extension{ "preset" };
 	const String PresetManager::presetNameProperty{ "presetName" };
@@ -91,11 +87,9 @@ namespace Service {
 		if (presetName.isEmpty())
 			return false;
 
-		// Scorre risorse BinaryData e confronta nome (senza estensione)
 		for (int i = 0; i < BinaryData::namedResourceListSize; ++i)
 		{
-			const String originalName = BinaryData::originalFilenames[i]; // JUCE >= 7
-			// Se versione precedente: BinaryData::namedResourceOriginalFilenames[i]
+			const String originalName = BinaryData::originalFilenames[i];
 			if (originalName.endsWith("." + extension))
 			{
 				auto base = originalName.dropLastCharacters(extension.length() + 1);
@@ -150,7 +144,6 @@ namespace Service {
 				return;
 			}
 
-			// Copia parametri come nel caricamento da file
 			for (int c = 0; c < vt.getNumChildren(); ++c)
 			{
 				const auto paramChild = vt.getChild(c);
@@ -176,7 +169,6 @@ namespace Service {
 		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
 		if (!presetFile.existsAsFile())
 		{
-			// Se esiste come factory, non ancellabile
 			if (isEmbeddedPreset(presetName))
 			{
 				DBG("Cannot delete embedded (factory) preset: " + presetName);

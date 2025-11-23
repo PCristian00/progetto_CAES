@@ -42,7 +42,7 @@ namespace Gui
 			previousPresetButton.removeListener(this);
 			nextPresetButton.removeListener(this);
 			presetList.removeListener(this);
-			closeDialogBox(); // pulizia difensiva
+			closeDialogBox();
 		}
 
 		void resized() override
@@ -75,31 +75,25 @@ namespace Gui
 		{
 			if (button == &saveButton)
 			{
-				fileChooser = std::make_unique<juce::FileChooser>("Save Preset",
-					Service::PresetManager::defaultDirectory,
-					"*." + Service::PresetManager::extension);
-				fileChooser->launchAsync(juce::FileBrowserComponent::saveMode,
-					[this](const juce::FileChooser& chooser)
+				fileChooser = std::make_unique<juce::FileChooser>("Salva Preset", Service::PresetManager::defaultDirectory, "*." + Service::PresetManager::extension);
+
+				auto saveFunction = [this](const juce::FileChooser& chooser) {
+					auto file = chooser.getResult();
+					if (file == juce::File{}) return;
+					auto presetName = file.getFileNameWithoutExtension();
+
+					if (!presetManager.isValidUserPresetName(presetName))
 					{
-						auto file = chooser.getResult();
-						if (file == juce::File{}) return;
-						auto presetName = file.getFileNameWithoutExtension();
+						showDialogBox("Nome preset '" + presetName + "' non valido. Esiste un preset di fabbrica con questo nome.", "Ok", "", [this]() { closeDialogBox(); });
+						return;
+					}
 
-						// Validazione nome (esempio):
-						if (!presetManager.isValidUserPresetName(presetName))
-						{
-							showDialogBox("Nome preset '" + presetName + "' non valido. Esiste un preset di fabbrica con questo nome.",
-								"Ok",
-								"",
-								[this]() { closeDialogBox(); });
-							return;
-						}
+					presetManager.savePreset(presetName);
+					loadPresetList();
+					};
 
-						presetManager.savePreset(presetName);
-						loadPresetList();
-					});
 
-				// Rimuovi l'if (true) provvisorio. Se ti serve una condizione reale, sostituiscila.
+				fileChooser->launchAsync(juce::FileBrowserComponent::saveMode, saveFunction);
 				return;
 			}
 			else if (button == &deleteButton)
@@ -109,25 +103,20 @@ namespace Gui
 					return;
 
 				if (presetManager.isEmbeddedPreset(current)) {
-					showDialogBox("Impossibile cancellare preset '" + current + "' (preset di fabbrica)",
-						"Ok",
-						"",
-						[this]() { closeDialogBox(); });
+					showDialogBox("Impossibile cancellare preset '" + current + "' (preset di fabbrica)", "Ok", "", [this]() { closeDialogBox(); });
 					return;
 				}
-				// return;
 
 				juce::String msg = "Cancellare il preset '" + current + "' ?";
 
-				showDialogBox(msg,
-					"Cancella preset",
-					"Annulla",
-					[this]()
+				auto deleteFunction = [this]()
 					{
 						presetManager.deletePreset(presetManager.getCurrentPreset());
 						loadPresetList();
 						closeDialogBox();
-					});
+					};
+
+				showDialogBox(msg, "Cancella preset", "Annulla", deleteFunction);
 			}
 			else if (button == &previousPresetButton)
 			{
@@ -161,12 +150,8 @@ namespace Gui
 			button.setBounds(size);
 		}
 
-		void showDialogBox(juce::String msg,
-			juce::String confirmText,
-			juce::String returnText,
-			std::function<void()> onAccept)
+		void showDialogBox(juce::String msg, juce::String confirmText, juce::String returnText, std::function<void()> onAccept)
 		{
-			// Rimuove la precedente (sicuro)
 			closeDialogBox();
 
 			dialogBox = std::make_unique<DialogBox>(msg, confirmText, returnText, onAccept);

@@ -75,8 +75,8 @@ void SubSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
 		{
 			voice->prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
-			voice->setAmpEnvelopeDebug(true);
-			voice->setModEnvelopeDebug(true);
+			voice->setAmpEnvelopeDebug(false);
+			voice->setModEnvelopeDebug(false);
 			voice->setEnvelopeDebugRates(60, 120);
 		}
 	}
