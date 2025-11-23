@@ -48,7 +48,7 @@ namespace Gui
 			previousPresetButton.removeListener(this);
 			nextPresetButton.removeListener(this);
 			presetList.removeListener(this);
-			closeDialogBox();
+			if (dialogBox) dialogBox->close();
 		}
 
 		void paint(juce::Graphics& g) override {
@@ -108,7 +108,7 @@ namespace Gui
 
 					if (!presetManager.isValidUserPresetName(presetName))
 					{
-						showDialogBox("Nome preset '" + presetName + "' non valido. Esiste un preset di fabbrica con questo nome.", "Ok", "", [this]() { closeDialogBox(); });
+						showDialogBox("Nome preset '" + presetName + "' non valido. Esiste un preset di fabbrica con questo nome.", "Ok", "", [this]() { dialogBox->close(); });
 						return;
 					}
 
@@ -129,7 +129,7 @@ namespace Gui
 				// Nota: questo controllo non viene piu' raggiunto in quanto il pulsante viene disattiva da checkPreset().
 				// Mantenuto qualora si volesse reimpostare il pulsante come sempre attivo in futuro.
 				if (presetManager.isEmbeddedPreset(current)) {
-					showDialogBox("Impossibile cancellare preset '" + current + "' (preset di fabbrica)", "Ok", "", [this]() { closeDialogBox(); });
+					showDialogBox("Impossibile cancellare preset '" + current + "' (preset di fabbrica)", "Ok", "", [this]() { dialogBox->close(); });
 					return;
 				}
 
@@ -139,7 +139,8 @@ namespace Gui
 					{
 						presetManager.deletePreset(presetManager.getCurrentPreset());
 						loadPresetList();
-						closeDialogBox();
+
+						if (dialogBox) dialogBox->close();
 					};
 
 				showDialogBox(msg, "Cancella preset", "Annulla", deleteFunction);
@@ -183,21 +184,16 @@ namespace Gui
 
 		void showDialogBox(juce::String msg, juce::String confirmText, juce::String returnText, std::function<void()> onAccept)
 		{
-			closeDialogBox();
+			if (dialogBox)
+			{
+				dialogBox->close();
+			}
 
 			dialogBox = std::make_unique<DialogBox>(msg, confirmText, returnText, onAccept);
 			addAndMakeVisible(*dialogBox);
-			dialogBox->setBounds(0, 0, getWidth(), getHeight());
-			dialogBox->toFront(true);
-		}
 
-		void closeDialogBox()
-		{
-			if (dialogBox)
-			{
-				removeChildComponent(dialogBox.get());
-				dialogBox.reset();
-			}
+			dialogBox->setBounds(0, 0, getWidth(), getHeight());
+			dialogBox->show();
 		}
 
 		Service::PresetManager& presetManager;

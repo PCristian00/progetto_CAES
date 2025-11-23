@@ -35,16 +35,16 @@ public:
 	void resized() override;
 
 	void buttonClicked(juce::Button* button) override;
+
+	void show();
+	void close();
+
 private:
 
 	juce::Label message;
 	juce::TextButton rightButton, leftButton;
 
 	std::function <void()> leftFunction, rightFunction;
-
-	std::function <void()> closeFunction = [this]() {
-		this->setVisible(false);
-		};
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DialogBox)
 };

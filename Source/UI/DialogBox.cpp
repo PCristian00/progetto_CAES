@@ -26,7 +26,7 @@ DialogBox::DialogBox(juce::String messageText, juce::String acceptButtonText, ju
 		utils::setButton(rightButton, closeButtonText, this);
 
 	leftFunction = std::move(acceptFunction);
-	rightFunction = std::move(closeFunction);
+	rightFunction = [this]() { this->close(); };
 }
 
 DialogBox::DialogBox(juce::String messageText, juce::String leftButtonText, juce::String rightButtonText, std::function<void()>& leftFunction, std::function<void()>& rightFunction) : DialogBox(messageText, leftButtonText, rightButtonText, leftFunction)
@@ -40,19 +40,6 @@ DialogBox::~DialogBox()
 	rightButton.removeListener(this);
 }
 
-
-// CAPIRE COME RESTITUIRE QUALE BUTTON E' STATO CLICCATO ALL'ESTERNO
-void DialogBox::buttonClicked(juce::Button* button) {
-
-	if (button == &leftButton && leftFunction) {
-		// Handle left button click
-		leftFunction();
-	}
-	else if (button == &rightButton && rightFunction) {
-		// Handle right button click
-		rightFunction();
-	}
-}
 
 void DialogBox::paint(juce::Graphics& g)
 {
@@ -77,4 +64,25 @@ void DialogBox::resized()
 		utils::setButtonBounds(rightButton, bounds.removeFromRight(buttonWidth).reduced(4));
 	if (leftButton.isVisible())
 		utils::setButtonBounds(leftButton, bounds.removeFromRight(buttonWidth).reduced(4));
+}
+
+void DialogBox::buttonClicked(juce::Button* button) {
+
+	if (button == &leftButton && leftFunction) {
+		// Handle left button click
+		leftFunction();
+	}
+	else if (button == &rightButton && rightFunction) {
+		// Handle right button click
+		rightFunction();
+	}
+}
+
+void DialogBox::show() {
+	this->setVisible(true);
+	this->toFront(true);
+}
+
+void DialogBox::close() {
+	this->setVisible(false);
 }
