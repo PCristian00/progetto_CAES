@@ -22,10 +22,10 @@ namespace Gui
 	public:
 		PresetPanel(Service::PresetManager& pm) : presetManager(pm)
 		{
-			configureButton(saveButton, "Save");
-			configureButton(deleteButton, "Delete");
-			configureButton(previousPresetButton, "<");
-			configureButton(nextPresetButton, ">");
+			utils::setButton(saveButton, "Save", this);
+			utils::setButton(deleteButton, "Delete", this);
+			utils::setButton(previousPresetButton, "<", this);
+			utils::setButton(nextPresetButton, ">", this);
 
 			presetList.setTextWhenNothingSelected("Select Preset");
 			presetList.setMouseCursor(juce::MouseCursor::PointingHandCursor);
@@ -181,13 +181,7 @@ namespace Gui
 			}
 		}
 
-		void configureButton(juce::Button& button, const juce::String& buttonText)
-		{
-			button.setButtonText(buttonText);
-			button.setMouseCursor(juce::MouseCursor::PointingHandCursor);
-			addAndMakeVisible(button);
-			button.addListener(this);
-		}
+
 
 		void setButtonBounds(juce::Button& button, juce::Rectangle<int> size)
 		{

@@ -19,7 +19,7 @@ namespace utils
 		setSliderParams(slider, attachment, apvts, paramID, &label, parent, style);
 	}
 
-	// Nuova implementazione con label opzionale
+	// implementazione con label opzionale
 	void setSliderParams(juce::Slider& slider, std::unique_ptr<SliderAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::Label* label, juce::Component* parent, SliderStyle style) noexcept
 	{
 		slider.setSliderStyle(style);
@@ -47,7 +47,7 @@ namespace utils
 		setSliderBounds(slider, x, y, width, height, &label);
 	}
 
-	// Nuova implementazione con label opzionale
+	// implementazione con label opzionale
 	void setSliderBounds(juce::Slider& slider, int x, int y, int width, int height, juce::Label* label) noexcept
 	{
 		if (label != nullptr)
@@ -75,6 +75,15 @@ namespace utils
 		comboBox.setBounds(x, y, width, height);
 	}
 
+	void setButton(juce::Button& button, const juce::String& buttonText, juce::Component* parent)
+	{
+		button.setButtonText(buttonText);
+		button.setMouseCursor(juce::MouseCursor::PointingHandCursor);
+		if (parent != nullptr) {
+			parent->addAndMakeVisible(button);
+			button.addListener(parent->findParentComponentOfClass<juce::Button::Listener>());
+		}
+	}
 
 
 	juce::Rectangle<int>& getBoundsWithPadding(juce::Component* parent, int padding) noexcept
