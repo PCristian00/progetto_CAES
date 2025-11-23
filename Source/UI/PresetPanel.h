@@ -126,6 +126,8 @@ namespace Gui
 			{
 				presetList.setSelectedItemIndex(presetManager.loadNextPreset(), juce::dontSendNotification);
 			}
+
+			checkPreset(presetManager.getCurrentPreset());
 		}
 
 		void comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged) override
@@ -134,7 +136,20 @@ namespace Gui
 			{
 				auto selectedPreset = presetList.getItemText(presetList.getSelectedItemIndex());
 				presetManager.loadPreset(selectedPreset);
+				checkPreset(selectedPreset);
+
+
 			}
+		}
+
+
+		void checkPreset(juce::String preset) {
+			if (presetManager.isEmbeddedPreset(preset)) {
+				// AGGIUNGERE ALTRE PERSONALIZZAZIONI (colore riga, corsivo...)
+				deleteButton.setEnabled(false);
+			}
+			else
+				deleteButton.setEnabled(true);
 		}
 
 		void configureButton(juce::Button& button, const juce::String& buttonText)
