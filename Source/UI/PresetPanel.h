@@ -30,6 +30,9 @@ namespace Gui
 			presetList.setTextWhenNothingSelected("Select Preset");
 			presetList.setMouseCursor(juce::MouseCursor::PointingHandCursor);
 			addAndMakeVisible(presetList);
+
+			defaultListTextColour = presetList.findColour(presetList.textColourId);
+
 			presetList.addListener(this);
 
 			loadPresetList();
@@ -69,6 +72,8 @@ namespace Gui
 			const auto currentPreset = presetManager.getCurrentPreset();
 			presetList.addItemList(allPresets, 1);
 			presetList.setSelectedItemIndex(allPresets.indexOf(currentPreset), juce::dontSendNotification);
+
+			checkPreset(presetManager.getCurrentPreset());
 		}
 
 		void buttonClicked(juce::Button* button) override
@@ -137,8 +142,6 @@ namespace Gui
 				auto selectedPreset = presetList.getItemText(presetList.getSelectedItemIndex());
 				presetManager.loadPreset(selectedPreset);
 				checkPreset(selectedPreset);
-
-
 			}
 		}
 
@@ -147,9 +150,13 @@ namespace Gui
 			if (presetManager.isEmbeddedPreset(preset)) {
 				// AGGIUNGERE ALTRE PERSONALIZZAZIONI (colore riga, corsivo...)
 				deleteButton.setEnabled(false);
+				presetList.setColour(presetList.textColourId, juce::Colours::greenyellow);
 			}
-			else
+			else {
 				deleteButton.setEnabled(true);
+				presetList.setColour(presetList.textColourId, defaultListTextColour);
+			}
+
 		}
 
 		void configureButton(juce::Button& button, const juce::String& buttonText)
@@ -189,6 +196,7 @@ namespace Gui
 		juce::TextButton saveButton, deleteButton, previousPresetButton, nextPresetButton;
 		juce::ComboBox presetList;
 		std::unique_ptr<juce::FileChooser> fileChooser;
+		juce::Colour defaultListTextColour;
 
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PresetPanel)
 	};
