@@ -78,11 +78,14 @@ namespace Gui
 			const auto allPresets = presetManager.getAllPresets();
 			const auto currentPreset = presetManager.getCurrentPreset();
 
+			// Separatori tra preset di fabbrica e utente
 			presetList.addSectionHeading("Preset di fabbrica");
 			presetList.addItemList(presetManager.getEmbeddedPresets(), 1);
 			presetList.addSeparator();
 			presetList.addSectionHeading("Preset utente");
 			presetList.addItemList(presetManager.getUserPresets(), presetList.getNumItems() + 1);
+
+			// Versione senza separatori
 			// presetList.addItemList(allPresets, 1);
 
 
@@ -166,7 +169,7 @@ namespace Gui
 
 		void checkPreset(juce::String preset) {
 			if (presetManager.isEmbeddedPreset(preset)) {
-				// AGGIUNGERE ALTRE PERSONALIZZAZIONI (colore riga, corsivo...)
+				// QUI SI POSSONO AGGIUNGERE ALTRE PERSONALIZZAZIONI PER INDICARE SE IL PRESET E' DI FABBRICA
 				deleteButton.setEnabled(false);
 				presetList.setColour(presetList.textColourId, juce::Colours::greenyellow);
 				presetList.setColour(presetList.backgroundColourId, juce::Colours::darkblue);
@@ -176,7 +179,6 @@ namespace Gui
 				presetList.setColour(presetList.textColourId, defaultListTextColour);
 				presetList.setColour(presetList.backgroundColourId, defaultListBgColour);
 			}
-
 		}
 
 		void configureButton(juce::Button& button, const juce::String& buttonText)
