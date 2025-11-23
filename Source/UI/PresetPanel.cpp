@@ -160,8 +160,11 @@ namespace Gui
 			presetList.setColour(presetList.backgroundColourId, juce::Colours::black);
 		}
 		else
-			if (preset == "")
+			if (preset == "") {
 				deleteButton.setEnabled(false);
+				presetList.setColour(presetList.textColourId, defaultListTextColour);
+				presetList.setColour(presetList.backgroundColourId, juce::Colours::black);
+			}
 			else
 			{
 				deleteButton.setEnabled(true);
