@@ -31,7 +31,10 @@ namespace Gui
 			presetList.setMouseCursor(juce::MouseCursor::PointingHandCursor);
 			addAndMakeVisible(presetList);
 
+			// Usato per checkPreset, viene memorizzato il colore del testo di default per reimpostarlo in seguito
+			// Se serve, memorizzare i colori anche di sfondo e pulsanti
 			defaultListTextColour = presetList.findColour(presetList.textColourId);
+			defaultListBgColour = presetList.findColour(presetList.backgroundColourId);
 
 			presetList.addListener(this);
 
@@ -70,7 +73,16 @@ namespace Gui
 
 			const auto allPresets = presetManager.getAllPresets();
 			const auto currentPreset = presetManager.getCurrentPreset();
-			presetList.addItemList(allPresets, 1);
+
+			presetList.addSectionHeading("Preset di fabbrica");
+			presetList.addItemList(presetManager.getEmbeddedPresets(), 1);
+			presetList.addSeparator();
+			presetList.addSectionHeading("Preset utente");
+			presetList.addItemList(presetManager.getUserPresets(), presetList.getNumItems() + 1);
+			// presetList.addItemList(allPresets, 1);
+
+
+
 			presetList.setSelectedItemIndex(allPresets.indexOf(currentPreset), juce::dontSendNotification);
 
 			checkPreset(presetManager.getCurrentPreset());
@@ -107,6 +119,8 @@ namespace Gui
 				if (current.isEmpty())
 					return;
 
+				// Nota: questo controllo non viene piu' raggiunto in quanto il pulsante viene disattiva da checkPreset().
+				// Mantenuto qualora si volesse reimpostare il pulsante come sempre attivo in futuro.
 				if (presetManager.isEmbeddedPreset(current)) {
 					showDialogBox("Impossibile cancellare preset '" + current + "' (preset di fabbrica)", "Ok", "", [this]() { closeDialogBox(); });
 					return;
@@ -151,10 +165,12 @@ namespace Gui
 				// AGGIUNGERE ALTRE PERSONALIZZAZIONI (colore riga, corsivo...)
 				deleteButton.setEnabled(false);
 				presetList.setColour(presetList.textColourId, juce::Colours::greenyellow);
+				presetList.setColour(presetList.backgroundColourId, juce::Colours::darkblue);
 			}
 			else {
 				deleteButton.setEnabled(true);
 				presetList.setColour(presetList.textColourId, defaultListTextColour);
+				presetList.setColour(presetList.backgroundColourId, defaultListBgColour);
 			}
 
 		}
@@ -197,6 +213,7 @@ namespace Gui
 		juce::ComboBox presetList;
 		std::unique_ptr<juce::FileChooser> fileChooser;
 		juce::Colour defaultListTextColour;
+		juce::Colour defaultListBgColour;
 
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PresetPanel)
 	};
