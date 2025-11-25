@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "DialogBox.h"
+#include "Utils.h"
 
 //==============================================================================
 
@@ -19,18 +20,18 @@ DialogBox::DialogBox(juce::String messageText, juce::String acceptButtonText, ju
 	message.setText(messageText, juce::dontSendNotification);
 	addAndMakeVisible(message);
 
+	if (acceptButtonText.isNotEmpty())
+		utils::setButton(leftButton, acceptButtonText, this);
+	if (closeButtonText.isNotEmpty())
+		utils::setButton(rightButton, closeButtonText, this);
 
-	configureButton(leftButton, acceptButtonText);
-	configureButton(rightButton, closeButtonText);
-
-	this->leftFunction = acceptFunction;
-	this->rightFunction = closeFunction;
+	leftFunction = std::move(acceptFunction);
+	rightFunction = [this]() { this->close(); };
 }
 
-DialogBox::DialogBox(juce::String messageText, juce::String leftButtonText, juce::String rightButtonText, std::function<void()>& leftFunction, std::function<void()>& rightFunction)
+DialogBox::DialogBox(juce::String messageText, juce::String leftButtonText, juce::String rightButtonText, std::function<void()>& leftFunction, std::function<void()>& rightFunction) : DialogBox(messageText, leftButtonText, rightButtonText, leftFunction)
 {
-	new DialogBox(messageText, leftButtonText, rightButtonText, leftFunction);
-	this->rightFunction = rightFunction;
+	this->rightFunction = std::move(rightFunction);
 }
 
 DialogBox::~DialogBox()
@@ -40,49 +41,48 @@ DialogBox::~DialogBox()
 }
 
 
-// CAPIRE COME RESTITUIRE QUALE BUTTON E' STATO CLICCATO ALL'ESTERNO
+void DialogBox::paint(juce::Graphics& g)
+{
+	g.fillAll(juce::Colours::black);
+}
+
+void DialogBox::resized()
+{
+	const auto container = getLocalBounds().reduced(4);
+	auto bounds = container;
+
+	auto buttonWidth = container.proportionOfWidth(0.2f);
+
+	if (rightButton.isVisible() == false || leftButton.isVisible() == false)
+	{
+		buttonWidth = buttonWidth * 2;
+	}
+
+	message.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.6f)).reduced(4));
+
+	if (rightButton.isVisible())
+		utils::setButtonBounds(rightButton, bounds.removeFromRight(buttonWidth).reduced(4));
+	if (leftButton.isVisible())
+		utils::setButtonBounds(leftButton, bounds.removeFromRight(buttonWidth).reduced(4));
+}
+
 void DialogBox::buttonClicked(juce::Button* button) {
 
-	if (button == &leftButton) {
+	if (button == &leftButton && leftFunction) {
 		// Handle left button click
 		leftFunction();
 	}
-	else if (button == &rightButton) {
+	else if (button == &rightButton && rightFunction) {
 		// Handle right button click
 		rightFunction();
 	}
 }
 
-void DialogBox::paint(juce::Graphics& g)
-{
-	g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));   // clear the background
+void DialogBox::show() {
+	this->setVisible(true);
+	this->toFront(true);
 }
 
-void DialogBox::resized()
-{
-	// This method is where you should set the bounds of any child
-	// components that your component contains..
-	const auto container = getLocalBounds().reduced(4);
-	// const auto container = utils::getBoundsWithPadding(this, 4);
-	auto bounds = container;
-
-
-	message.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.6f)).reduced(4));
-	setButtonBounds(rightButton, bounds.removeFromRight(container.proportionOfWidth(0.2f)).reduced(4));
-	setButtonBounds(leftButton, bounds.removeFromRight(container.proportionOfWidth(0.2f)).reduced(4));
-
-
-}
-
-// da migliorare, spostare in utils o rimuovere
-
-void DialogBox::configureButton(juce::Button& button, const juce::String& buttonText) {
-	button.setButtonText(buttonText);
-	button.setMouseCursor(juce::MouseCursor::PointingHandCursor);
-	addAndMakeVisible(button);
-	button.addListener(this);
-}
-
-void DialogBox::setButtonBounds(juce::Button& button, juce::Rectangle<int> size) {
-	button.setBounds(size);
+void DialogBox::close() {
+	this->setVisible(false);
 }

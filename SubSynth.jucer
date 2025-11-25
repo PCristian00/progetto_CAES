@@ -2,8 +2,12 @@
 
 <JUCERPROJECT id="IN6TnE" name="SubSynth" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
-              companyName="univpm" version="1.0.7">
+              companyName="univpm" version="1.0.9">
   <MAINGROUP id="nUzka3" name="SubSynth">
+    <GROUP id="{11D3644D-AD7F-BC34-2D8E-F448FCDB550C}" name="Resources">
+      <FILE id="UwOo8l" name="default.preset" compile="0" resource="1" file="Source/Resources/default.preset"/>
+      <FILE id="xbIWga" name="saw.preset" compile="0" resource="1" file="Source/Resources/saw.preset"/>
+    </GROUP>
     <GROUP id="{CBF839B3-2299-6FFB-64EA-456657789D4B}" name="Service">
       <FILE id="dNgxEq" name="PresetManager.cpp" compile="1" resource="0"
             file="Source/Service/PresetManager.cpp"/>
@@ -37,6 +41,7 @@
         <FILE id="ZyqEc5" name="OscComponent.cpp" compile="1" resource="0"
               file="Source/UI/OscComponent.cpp"/>
         <FILE id="oN2PGx" name="OscComponent.h" compile="0" resource="0" file="Source/UI/OscComponent.h"/>
+        <FILE id="FvtoeM" name="PresetPanel.cpp" compile="1" resource="0" file="Source/UI/PresetPanel.cpp"/>
         <FILE id="JmTLRR" name="PresetPanel.h" compile="0" resource="0" file="Source/UI/PresetPanel.h"/>
         <FILE id="HdJFh0" name="Utils.cpp" compile="1" resource="0" file="Source/UI/Utils.cpp"/>
         <FILE id="f2zH1L" name="Utils.h" compile="0" resource="0" file="Source/UI/Utils.h"/>

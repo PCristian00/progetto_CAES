@@ -10,7 +10,7 @@
 
 #pragma once
 #include <JuceHeader.h>
-#include "Utils.h"
+#include "../Service/PresetManager.h"
 #include "DialogBox.h"
 
 namespace Gui
@@ -18,125 +18,28 @@ namespace Gui
 	class PresetPanel : public juce::Component, public juce::Button::Listener, public juce::ComboBox::Listener
 	{
 	public:
-		PresetPanel(Service::PresetManager& pm) : presetManager(pm) {
-			configureButton(saveButton, "Save");
-			configureButton(deleteButton, "Delete");
-			configureButton(previousPresetButton, "<");
-			configureButton(nextPresetButton, ">");
+		PresetPanel(Service::PresetManager& pm);
+		~PresetPanel() override;
 
-			// Configurazione presetList ComboBox
-			presetList.setTextWhenNothingSelected("Select Preset");
-			presetList.setMouseCursor(juce::MouseCursor::PointingHandCursor);
-			addAndMakeVisible(presetList);
-			presetList.addListener(this);
-
-			loadPresetList();
-		}
-
-		~PresetPanel() {
-			saveButton.removeListener(this);
-			deleteButton.removeListener(this);
-			previousPresetButton.removeListener(this);
-			nextPresetButton.removeListener(this);
-			presetList.removeListener(this);
-		}
-
-		void resized() override {
-
-			const auto container = getLocalBounds().reduced(4);
-			auto bounds = container;
-
-			// Rendere migliori queste funzioni
-
-			setButtonBounds(saveButton, bounds.removeFromLeft(container.proportionOfWidth(0.2f)).reduced(4));
-			setButtonBounds(previousPresetButton, bounds.removeFromLeft(container.proportionOfWidth(0.1f)).reduced(4));
-			presetList.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.4f)).reduced(4));
-			setButtonBounds(nextPresetButton, bounds.removeFromLeft(container.proportionOfWidth(0.1f)).reduced(4));
-			setButtonBounds(deleteButton, bounds.reduced(4));
-		}
+		void paint(juce::Graphics& g) override;
+		void resized() override;
 
 	private:
+		void loadPresetList();
+		void buttonClicked(juce::Button* button) override;
+		void comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged) override;
 
-		void loadPresetList() {
-
-			presetList.clear(juce::dontSendNotification);
-
-			const auto allPresets = presetManager.getAllPresets();
-			const auto currentPreset = presetManager.getCurrentPreset();
-			presetList.addItemList(allPresets, 1);
-			presetList.setSelectedItemIndex(allPresets.indexOf(currentPreset), juce::dontSendNotification);
-		}
-
-		void buttonClicked(juce::Button* button) override {
-
-			if (button == &saveButton) {
-				fileChooser = std::make_unique<juce::FileChooser>("Save Preset", Service::PresetManager::defaultDirectory, "*." + Service::PresetManager::extension);
-				fileChooser->launchAsync(juce::FileBrowserComponent::saveMode, [&](const juce::FileChooser& chooser) {
-					auto file = chooser.getResult();
-					auto presetName = file.getFileNameWithoutExtension();
-					presetManager.savePreset(presetName);
-					loadPresetList();
-					});
-			}
-			else if (button == &deleteButton)
-			{
-
-				if (presetManager.getCurrentPreset().isEmpty())
-					return;
-
-				showDeleteWindow();
-			}
-			else if (button == &previousPresetButton) {
-				presetList.setSelectedItemIndex(presetManager.loadPreviousPreset(), juce::dontSendNotification);
-			}
-			else if (button == &nextPresetButton) {
-				presetList.setSelectedItemIndex(presetManager.loadNextPreset(), juce::dontSendNotification);
-			}
-		}
-
-		void comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged) override {
-			if (comboBoxThatHasChanged == &presetList) {
-				auto selectedPreset = presetList.getItemText(presetList.getSelectedItemIndex());
-				presetManager.loadPreset(selectedPreset);
-			}
-		}
-
-		void configureButton(juce::Button& button, const juce::String& buttonText) {
-			button.setButtonText(buttonText);
-			button.setMouseCursor(juce::MouseCursor::PointingHandCursor);
-			addAndMakeVisible(button);
-			button.addListener(this);
-		}
-
-		// da migliorare, spostare in utils o rimuovere
-		void setButtonBounds(juce::Button& button, juce::Rectangle<int> size) {
-			button.setBounds(size);
-		}
-
-		void showDeleteWindow() {
-
-			juce::String message = "Cancellare il preset '" + presetManager.getCurrentPreset() + "' ? ";
-
-			// Funzione eseguita alla conferma della cancellazione
-			std::function <void()> onAccept = [this]() {
-				presetManager.deletePreset(presetManager.getCurrentPreset());
-				loadPresetList();
-				deleteDialog.reset();
-				};
-
-			deleteDialog = std::make_unique<DialogBox>(message, "Cancella", "Indietro", onAccept);
-
-			addAndMakeVisible(*deleteDialog);
-			deleteDialog->setBounds(0, 0, getWidth(), getHeight());
-
-		}
+		void checkPreset(juce::String preset);
+		void showDialogBox(juce::String msg, juce::String confirmText, juce::String returnText, std::function<void()> onAccept);
 
 		Service::PresetManager& presetManager;
-		std::unique_ptr<DialogBox> deleteDialog;
+		std::unique_ptr<DialogBox> dialogBox;
 		juce::TextButton saveButton, deleteButton, previousPresetButton, nextPresetButton;
 		juce::ComboBox presetList;
 		std::unique_ptr<juce::FileChooser> fileChooser;
+		juce::Colour defaultListTextColour;
+		juce::Colour defaultListBgColour;
 
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PresetPanel)
 	};
-} // namespace Gui
+}

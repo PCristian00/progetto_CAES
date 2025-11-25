@@ -75,8 +75,8 @@ void SubSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
 		{
 			voice->prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
-			voice->setAmpEnvelopeDebug(true);
-			voice->setModEnvelopeDebug(true);
+			voice->setAmpEnvelopeDebug(false);
+			voice->setModEnvelopeDebug(false);
 			voice->setEnvelopeDebugRates(60, 120);
 		}
 	}
@@ -148,8 +148,12 @@ bool SubSynthAudioProcessor::hasEditor() const { return true; }
 juce::AudioProcessorEditor* SubSynthAudioProcessor::createEditor() { return new SubSynthAudioProcessorEditor(*this); }
 
 void SubSynthAudioProcessor::getStateInformation(juce::MemoryBlock& destData) {
-	const auto state = apvts.copyState();
-	const auto xml(state.createXml());
+	auto state = apvts.copyState();
+
+	// Assicura versione corrente prima di serializzare
+	state.setProperty("version", ProjectInfo::versionString, nullptr);
+
+	auto xml = state.createXml();
 	copyXmlToBinary(*xml, destData);
 }
 
@@ -157,7 +161,14 @@ void SubSynthAudioProcessor::setStateInformation(const void* data, int sizeInByt
 	const auto xmlState = getXmlFromBinary(data, sizeInBytes);
 	if (xmlState == nullptr)
 		return;
-	const auto newTree = juce::ValueTree::fromXml(*xmlState);
+
+	auto newTree = juce::ValueTree::fromXml(*xmlState);
+
+	// Re-inserisci proprietà obbligatorie/migrate
+	newTree.setProperty("version", ProjectInfo::versionString, nullptr);
+	if (!newTree.hasProperty(Service::PresetManager::presetNameProperty))
+		newTree.setProperty(Service::PresetManager::presetNameProperty, "", nullptr);
+
 	apvts.replaceState(newTree);
 }
 
