@@ -37,6 +37,9 @@ namespace Service {
 			valueTreeState.state.setProperty(presetNameProperty, "", nullptr);
 
 		currentPreset.referTo(valueTreeState.state.getPropertyAsValue(presetNameProperty, nullptr));
+
+		// Pulisce eventuali parametri orfani ancora presenti nello stato
+		purgeUnknownParameters();
 	}
 
 	PresetManager::~PresetManager()
@@ -75,6 +78,9 @@ namespace Service {
 			DBG("Nome preset non valido o riservato (factory): " + presetName);
 			return;
 		}
+
+		// Garantisce che lo stato corrente non contenga parametri orfani
+		purgeUnknownParameters();
 
 		currentPreset.setValue(presetName);
 
@@ -219,6 +225,9 @@ namespace Service {
 		}
 
 		const auto valueTreeToLoad = juce::ValueTree::fromXml(*xml);
+
+		// valueTreeState.replaceState(valueTreeToLoad);
+
 		for (int i = 0; i < valueTreeToLoad.getNumChildren(); i++)
 		{
 			const auto paramChildToLoad = valueTreeToLoad.getChild(i);
@@ -300,5 +309,30 @@ namespace Service {
 	void PresetManager::valueTreeRedirected(juce::ValueTree& treeWhichHasBeenChanged)
 	{
 		currentPreset.referTo(treeWhichHasBeenChanged.getPropertyAsValue(presetNameProperty, nullptr));
+
+		// Se lo stato viene reindirizzato/sostituito, puliamolo da parametri orfani
+		purgeUnknownParameters();
+	}
+
+	void PresetManager::purgeUnknownParameters()
+	{
+		juce::Array<juce::ValueTree> toRemove;
+
+		for (int i = 0; i < valueTreeState.state.getNumChildren(); ++i)
+		{
+			const auto child = valueTreeState.state.getChild(i);
+
+			if (!child.hasProperty("id"))
+				continue;
+
+			juce::String id = (child.getProperty("id")).toString();
+
+			// Se l'APVTS non ha un parametro con questo id, il nodo è orfano
+			if (valueTreeState.getParameter(id) == nullptr)
+				toRemove.add(child);
+		}
+
+		for (const auto& orphan : toRemove)
+			valueTreeState.state.removeChild(orphan, nullptr);
 	}
 } // namespace Service

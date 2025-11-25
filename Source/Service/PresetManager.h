@@ -47,6 +47,9 @@ namespace Service {
 		void loadEmbeddedPreset(const String& presetName);
 		juce::ValueTree valueTreeFromEmbeddedXml(const void* data, size_t size) const;
 
+		// Rimuove dallo stato eventuali parametri "orfani" non presenti nell'APVTS
+		void purgeUnknownParameters();
+
 		juce::AudioProcessorValueTreeState& valueTreeState;
 		juce::Value currentPreset;
 	};
