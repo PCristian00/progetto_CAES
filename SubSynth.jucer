@@ -20,6 +20,8 @@
         <FILE id="cUskYo" name="ADSRData.h" compile="0" resource="0" file="Source/Data/ADSRData.h"/>
         <FILE id="yCmuI4" name="FilterData.cpp" compile="1" resource="0" file="Source/Data/FilterData.cpp"/>
         <FILE id="bBK1vQ" name="FilterData.h" compile="0" resource="0" file="Source/Data/FilterData.h"/>
+        <FILE id="WRP50q" name="FXData.cpp" compile="1" resource="0" file="Source/Data/FXData.cpp"/>
+        <FILE id="xebeet" name="FXData.h" compile="0" resource="0" file="Source/Data/FXData.h"/>
         <FILE id="axpW90" name="GainData.cpp" compile="1" resource="0" file="Source/Data/GainData.cpp"/>
         <FILE id="h0b9R0" name="GainData.h" compile="0" resource="0" file="Source/Data/GainData.h"/>
         <FILE id="NS82hx" name="OscData.cpp" compile="1" resource="0" file="Source/Data/OscData.cpp"/>
@@ -35,6 +37,8 @@
               file="Source/UI/FilterComponent.cpp"/>
         <FILE id="Jai3mj" name="FilterComponent.h" compile="0" resource="0"
               file="Source/UI/FilterComponent.h"/>
+        <FILE id="yIIbsF" name="FXComponent.cpp" compile="1" resource="0" file="Source/UI/FXComponent.cpp"/>
+        <FILE id="b8HxPs" name="FXComponent.h" compile="0" resource="0" file="Source/UI/FXComponent.h"/>
         <FILE id="sNacgy" name="GainComponent.cpp" compile="1" resource="0"
               file="Source/UI/GainComponent.cpp"/>
         <FILE id="JCGdIU" name="GainComponent.h" compile="0" resource="0" file="Source/UI/GainComponent.h"/>

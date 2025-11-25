@@ -327,7 +327,7 @@ namespace Service {
 
 			juce::String id = (child.getProperty("id")).toString();
 
-			// Se l'APVTS non ha un parametro con questo id, il nodo è orfano
+			// Se l'APVTS non ha un parametro con questo id, il nodo e' orfano
 			if (valueTreeState.getParameter(id) == nullptr)
 				toRemove.add(child);
 		}
