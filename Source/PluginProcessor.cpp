@@ -71,7 +71,6 @@ void SubSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 {
 	synth.setCurrentPlaybackSampleRate(sampleRate);
 	for (int i = 0; i < synth.getNumVoices(); ++i)
-	{
 		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
 		{
 			voice->prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
@@ -79,7 +78,8 @@ void SubSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 			voice->setModEnvelopeDebug(false);
 			voice->setEnvelopeDebugRates(60, 120);
 		}
-	}
+
+	fx.prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
 }
 
 void SubSynthAudioProcessor::releaseResources() {}
@@ -113,7 +113,6 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 		buffer.clear(i, 0, buffer.getNumSamples());
 
 	for (int i = 0; i < synth.getNumVoices(); ++i)
-	{
 		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
 		{
 			float attack = apvts.getRawParameterValue(parameters::ATTACK_PARAM_ID)->load();
@@ -138,9 +137,46 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 			voice->updateFilter((int)filterType, filterCutOff, filterResonance); // aggiornamento filtro
 			voice->updateModADSR(modAttack, modDecay, modSustain, modRelease); // aggiornamento inviluppo modulazione
 		}
+
+	// Render dry
+	synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
+
+	// Aggiorna FX dai parametri APVTS
+	{
+		const int fxType = static_cast<int>(apvts.getRawParameterValue(parameters::FX_TYPE)->load());
+		const bool fxBypass = apvts.getRawParameterValue(parameters::FX_BYPASS)->load() > 0.5f;
+		const float fxWet = apvts.getRawParameterValue(parameters::FX_WET)->load();
+
+		fx.setType(static_cast<FXData::FxType>(fxType));
+		fx.setBypass(fxBypass);
+		fx.setWet(fxWet);
+
+		// Chorus
+		fx.setChorus(
+			apvts.getRawParameterValue(parameters::CH_RATE)->load(),
+			apvts.getRawParameterValue(parameters::CH_DEPTH)->load(),
+			apvts.getRawParameterValue(parameters::CH_DELAY_MS)->load(),
+			apvts.getRawParameterValue(parameters::CH_FEEDBACK)->load()
+		);
+
+		// Flanger
+		fx.setFlanger(
+			apvts.getRawParameterValue(parameters::FL_RATE)->load(),
+			apvts.getRawParameterValue(parameters::FL_DEPTH)->load(),
+			apvts.getRawParameterValue(parameters::FL_DELAY_MS)->load(),
+			apvts.getRawParameterValue(parameters::FL_FEEDBACK)->load()
+		);
+
+		// Reverb
+		fx.setReverb(
+			apvts.getRawParameterValue(parameters::RV_SIZE)->load(),
+			apvts.getRawParameterValue(parameters::RV_DAMP)->load(),
+			apvts.getRawParameterValue(parameters::RV_WIDTH)->load()
+		);
 	}
 
-	synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
+	// Applica FX post-synth
+	fx.process(buffer);
 }
 
 bool SubSynthAudioProcessor::hasEditor() const { return true; }
