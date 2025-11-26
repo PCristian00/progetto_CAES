@@ -11,6 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "Utils.h"
 
 //==============================================================================
 ///
@@ -26,19 +27,14 @@ public:
 	void resized() override;
 
 private:
+	using LabeledSlider = utils::LabeledSlider;
 
 	juce::ComboBox filterTypeSelector{ "Filter Type" };
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> filterTypeSelectorAttachment;
 
-	juce::Slider filterCutOffSlider;
-	juce::Slider filterResonanceSlider;
-
-	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> filterCutOffSliderAttachment;
-	juce::Label filterFreqLabel{ "Filter Cutoff", "Filter Cutoff" };
-
-	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> filterResonanceSliderAttachment;
-	juce::Label filterResonanceLabel{ "Filter Resonance", "Filter Resonance" };
-
+	// Sostituisce juce::Slider + Attachment + Label
+	LabeledSlider filterCutOffLS;
+	LabeledSlider filterResonanceLS;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FilterComponent)
 };
