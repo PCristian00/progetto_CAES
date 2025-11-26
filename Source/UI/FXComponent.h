@@ -28,7 +28,7 @@ public:
 private:
 	void comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged) override;
 	void updateVisibility();
-	
+
 
 	juce::AudioProcessorValueTreeState& apvts;
 
@@ -40,21 +40,17 @@ private:
 	std::unique_ptr<APVTS::ComboBoxAttachment> fxTypeAttachment;
 	std::unique_ptr<APVTS::ButtonAttachment>   bypassAttachment;
 
-	// LabeledSlider (sostituiscono vecchi slider + label + attachment)
-
-
-
-	LabeledSlider wetLS{ "Wet" };
-
-	LabeledSlider chRateLS{ "Ch Rate" };
-	LabeledSlider chDepthLS{ "Ch Depth" };
-	LabeledSlider chDelayLS{ "Ch Delay" };
-	LabeledSlider chFeedbackLS{ "Ch Feedback" };
-	LabeledSlider flRateLS{ "Fl Rate" };
-	LabeledSlider flDepthLS{ "Fl Depth" };
-	LabeledSlider flDelayLS{ "Fl Delay" };
-	LabeledSlider flFeedbackLS{ "Fl Feedback" };
-	LabeledSlider rvSizeLS{ "Rev Size" };
-	LabeledSlider rvDampLS{ "Rev Damp" };
-	LabeledSlider rvWidthLS{ "Rev Width" };
+	// Dichiarazioni senza inizializzazione
+	LabeledSlider wetLS;
+	LabeledSlider chRateLS;
+	LabeledSlider chDepthLS;
+	LabeledSlider chDelayLS;
+	LabeledSlider chFeedbackLS;
+	LabeledSlider flRateLS;
+	LabeledSlider flDepthLS;
+	LabeledSlider flDelayLS;
+	LabeledSlider flFeedbackLS;
+	LabeledSlider rvSizeLS;
+	LabeledSlider rvDampLS;
+	LabeledSlider rvWidthLS;
 };
