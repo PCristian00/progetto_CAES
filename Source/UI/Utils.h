@@ -84,11 +84,14 @@ namespace utils
 				slider.setLookAndFeel(laf);
 		}
 
-		void setBounds(const juce::Rectangle<int>& area, int labelHeight = 16, int gap = 4)
+		void setBounds(const juce::Rectangle<int>& area, int labelHeight = padding * 2, int gap = static_cast<int> (padding / 2))
 		{
+
 			auto r = area;
-			label.setBounds(r.removeFromTop(labelHeight));
-			r.removeFromBottom(gap);
+			if (label.getText() != "") {
+				label.setBounds(r.removeFromTop(labelHeight));
+				r.removeFromBottom(gap);
+			}
 			slider.setBounds(r);
 		}
 
