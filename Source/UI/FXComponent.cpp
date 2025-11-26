@@ -69,18 +69,21 @@ void FXComponent::paint(juce::Graphics& g)
 
 void FXComponent::resized()
 {
-	const int heightUnit = utils::getBoundsWithPadding(this).getHeight() / 3 - utils::padding;
+	const int heightUnit = (utils::getBoundsWithPadding(this).getHeight() / 6) - utils::padding;
+
 	const int totalWidth = utils::getBoundsWithPadding(this).getWidth() - utils::padding;
-	const int comboBoxWidth = (utils::getBoundsWithPadding(this).getWidth() - utils::padding) / 3;
+
+	const int comboBoxWidth = totalWidth / 3;
 	const int comboBoxHeight = heightUnit - utils::padding;
 
 	utils::setComboBoxBounds(fxType, utils::Xstart, utils::Ystart, comboBoxWidth, comboBoxHeight);
+
 	bypass.setBounds(fxType.getRight() + utils::padding, fxType.getY(), comboBoxWidth - utils::padding, comboBoxHeight);
 
 	wetLS.setBounds(bypass.getRight() + utils::padding, bypass.getY(), comboBoxWidth - utils::padding, comboBoxHeight);
 
 	const int rowY = fxType.getBottom() + utils::padding;
-	const int rowH = 2 * heightUnit;
+	const int rowH = 5.5f * (heightUnit)-utils::padding;
 
 	auto chSliders = { &chRateLS, &chDepthLS, &chDelayLS, &chFeedbackLS };
 	auto flSliders = { &flRateLS, &flDepthLS, &flDelayLS, &flFeedbackLS };
