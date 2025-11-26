@@ -35,8 +35,26 @@ namespace utils
 			label.setJustificationType(juce::Justification::centred);
 			label.setColour(juce::Label::textColourId, juce::Colours::white);
 
-			slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 60, 18);
+			slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 5 * padding, static_cast<int> (2.5f * padding));
 		}
+
+		LabeledSlider(const juce::String& labelText, juce::AudioProcessorValueTreeState& state, const juce::String& paramID)
+			: LabeledSlider(labelText)
+		{
+			attach(state, paramID);
+		}
+
+		LabeledSlider(const juce::String& labelText, juce::AudioProcessorValueTreeState& state, const juce::String& paramID, juce::Component& parent)
+			: LabeledSlider(labelText, state, paramID) {
+			addTo(parent);
+		}
+
+		LabeledSlider(const juce::String& labelText, juce::AudioProcessorValueTreeState& state, const juce::String& paramID, juce::Component& parent, juce::Slider::SliderStyle style, bool showTextBox, juce::LookAndFeel* laf = nullptr)
+			: LabeledSlider(labelText, state, paramID, parent)
+		{
+			configure(style, showTextBox, laf);
+		}
+
 
 		// Aggiunge i controlli al parent
 		void addTo(juce::Component& parent)
@@ -58,7 +76,7 @@ namespace utils
 		{
 			slider.setSliderStyle(style);
 			if (showTextBox)
-				slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 60, 18);
+				slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 5 * padding, static_cast<int> (2.5f * padding));
 			else
 				slider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
 
@@ -66,13 +84,17 @@ namespace utils
 				slider.setLookAndFeel(laf);
 		}
 
-		// Layout: label sopra, slider sotto
 		void setBounds(const juce::Rectangle<int>& area, int labelHeight = 16, int gap = 4)
 		{
 			auto r = area;
 			label.setBounds(r.removeFromTop(labelHeight));
-			r.removeFromTop(gap);
+			r.removeFromBottom(gap);
 			slider.setBounds(r);
+		}
+
+		void setBounds(int x, int y, int width, int height, int labelHeight = padding * 2, int gap = static_cast<int> (padding / 2))
+		{
+			setBounds(juce::Rectangle<int>(x, y, width, height), labelHeight, gap);
 		}
 
 		void setVisible(bool v)
