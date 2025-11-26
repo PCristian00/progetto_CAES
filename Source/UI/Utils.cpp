@@ -135,7 +135,8 @@ namespace utils
 		{
 			if (ls && ls->slider.isVisible())
 			{
-				utils::setSliderBounds(ls->slider, nextX, y, columnWidth, height, ls->label);
+				// utils::setSliderBounds(ls->slider, nextX, y, columnWidth, height, ls->label);
+				ls->setBounds(nextX, y, columnWidth, height);
 				nextX += columnWidth + padding;
 			}
 		}
