@@ -31,16 +31,5 @@ void FilterComponent::paint(juce::Graphics& g)
 
 void FilterComponent::resized()
 {
-	const int numSliders = 2;
-
-	const int comboBoxWidth = utils::getBoundsWithPadding(this).getWidth() - utils::padding;
-	const int comboBoxHeight = utils::getBoundsWithPadding(this).getHeight() / 6 - utils::padding;
-
-	const int sliderWidth = (comboBoxWidth / numSliders) - (utils::padding / numSliders);
-	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - (utils::Ystart + comboBoxHeight + utils::padding);
-
-	utils::setComboBoxBounds(filterTypeSelector, utils::Xstart, utils::Ystart, comboBoxWidth, comboBoxHeight);
-
-	filterCutOffLS.setBounds(utils::Xstart, filterTypeSelector.getBottom() + utils::padding, sliderWidth, sliderHeight);
-	filterResonanceLS.setBounds(utils::Xstart + sliderWidth + utils::padding, filterTypeSelector.getBottom() + utils::padding, sliderWidth, sliderHeight);
+	utils::comboAndSliderRow(filterTypeSelector, { &filterCutOffLS, &filterResonanceLS }, this);
 }

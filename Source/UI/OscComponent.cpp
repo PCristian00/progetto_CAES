@@ -32,16 +32,5 @@ void OscComponent::paint(juce::Graphics& g)
 
 void OscComponent::resized()
 {
-	const int numSliders = 2;
-
-	const int comboBoxWidth = utils::getBoundsWithPadding(this).getWidth() - utils::padding;
-	const int comboBoxHeight = utils::getBoundsWithPadding(this).getHeight() / 6 - utils::padding;
-
-	const int sliderWidth = (comboBoxWidth / numSliders) - (utils::padding / numSliders);
-	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - (utils::Ystart + comboBoxHeight + utils::padding);
-
-	utils::setComboBoxBounds(oscWaveSelector, utils::Xstart, utils::Ystart, comboBoxWidth, comboBoxHeight);
-
-	fmFreqLS.setBounds(utils::Xstart, oscWaveSelector.getBottom() + utils::padding, sliderWidth, sliderHeight);
-	fmDepthLS.setBounds(utils::Xstart + sliderWidth + utils::padding, oscWaveSelector.getBottom() + utils::padding, sliderWidth, sliderHeight);
+	utils::comboAndSliderRow(oscWaveSelector, { &fmFreqLS, &fmDepthLS }, this);
 }
