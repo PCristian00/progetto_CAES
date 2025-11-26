@@ -34,19 +34,8 @@ void ADSRComponent::paint(juce::Graphics& g)
 
 void ADSRComponent::resized()
 {
-	const int numSliders = 4;
-	const auto padded = utils::getBoundsWithPadding(this);
-	const int sliderWidth = padded.getWidth() / numSliders - utils::padding;
-	const int sliderHeight = padded.getHeight() - (utils::Ystart - utils::padding);
+	const int totalWidth = utils::getBoundsWithPadding(this).getWidth() - utils::padding;
+	const int height = utils::getBoundsWithPadding(this).getHeight() - (3 * utils::padding);
 
-	int x = utils::Xstart;
-	const int y = utils::Ystart;
-
-	attackLS.setBounds(x, y, sliderWidth, sliderHeight);
-	x += sliderWidth + utils::padding;
-	decayLS.setBounds(x, y, sliderWidth, sliderHeight);
-	x += sliderWidth + utils::padding;
-	sustainLS.setBounds(x, y, sliderWidth, sliderHeight);
-	x += sliderWidth + utils::padding;
-	releaseLS.setBounds(x, y, sliderWidth, sliderHeight);
+	utils::layoutVisibleRow(utils::Xstart, utils::Ystart, totalWidth, height, { &attackLS, &decayLS, &sustainLS, &releaseLS });
 }

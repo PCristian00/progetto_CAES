@@ -144,7 +144,7 @@ namespace utils
 	void comboAndSliderRow(juce::ComboBox& comboBox, std::initializer_list<LabeledSlider*> sliders, juce::Component* parent, int x, int y, int totalWidth, int height) noexcept
 	{
 		if (height == 0)
-			height = getBoundsWithPadding(parent).getHeight() / 6 - padding;
+			height = (getBoundsWithPadding(parent).getHeight() / 6) - padding;
 		if (totalWidth == 0)
 			totalWidth = getBoundsWithPadding(parent).getWidth() - padding;
 
