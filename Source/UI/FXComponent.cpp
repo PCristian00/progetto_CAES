@@ -78,7 +78,7 @@ void FXComponent::resized()
 	// Riga superiore: 3 colonne con gutter = utils::padding
 	const int gaps = 2;
 	const int colW = (totalWidth - gaps * utils::padding) / 3;
-	const int headerH = content.getHeight() / 6;
+	const int headerH = content.getHeight() / 8;
 
 	// Colonne
 	const int x0 = startX;
