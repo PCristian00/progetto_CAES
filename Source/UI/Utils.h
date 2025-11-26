@@ -18,6 +18,9 @@ using SliderStyle = juce::Slider::SliderStyle;
 namespace utils
 {
 	const int padding = 10;
+	// Margine interno tra contenuti e bordo disegnato (separato dal padding generale)
+	const int contentPadding = 12;
+
 	const int Xstart = static_cast<int>(padding * 1.5f);
 	const int Ystart = padding * 4;
 
@@ -130,7 +133,7 @@ namespace utils
 	// Bounds interni ridotti dal padding di contenitore
 	juce::Rectangle<int> getBoundsWithPadding(juce::Component* parent = nullptr, int paddingOverride = 0) noexcept;
 
-	// Area contenuti: bounds con padding, meno l'area del titolo/bordo (uniforma lo spazio di testata)
+	// Area contenuti: bounds con padding, meno l'area del titolo/bordo, e con rientro interno
 	juce::Rectangle<int> getContentArea(juce::Component* parent) noexcept;
 
 	void drawBorders(juce::Graphics& g, juce::Component* parent, juce::Colour colour, juce::String title = "") noexcept;

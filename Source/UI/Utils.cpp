@@ -100,11 +100,12 @@ namespace utils
 		return parent->getLocalBounds().reduced(usePadding);
 	}
 
-	// Area contenuti uniforme: padding esterno + rimozione dell'area del titolo (coerente con drawBorders)
+	// Area contenuti uniforme: padding esterno + rimozione dell'area del titolo + rientro interno
 	juce::Rectangle<int> getContentArea(juce::Component* parent) noexcept
 	{
 		auto bounds = getBoundsWithPadding(parent);
 		bounds.removeFromTop(titleAreaHeight());
+		bounds.reduce(contentPadding, contentPadding); // spazio tra contenuti e bordo disegnato
 		return bounds;
 	}
 
@@ -139,7 +140,8 @@ namespace utils
 		{
 			if (ls && ls->slider.isVisible())
 			{
-				ls->setBounds(nextX, y, columnWidth, height);
+				// labelHeight = padding * 2 (coerente con il resto), gap = 0 per simmetria con il bordo
+				ls->setBounds(nextX, y, columnWidth, height, padding * 2, 0);
 				nextX += columnWidth + padding;
 			}
 		}
