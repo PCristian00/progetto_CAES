@@ -44,10 +44,6 @@ FXComponent::FXComponent(juce::AudioProcessorValueTreeState& state) : apvts(stat
 	utils::setSliderParams(rvDampLS.slider, rvDampLS.attachment, apvts, parameters::RV_DAMP, rvDampLS.label, this, juce::Slider::SliderStyle::LinearBarVertical);
 	utils::setSliderParams(rvWidthLS.slider, rvWidthLS.attachment, apvts, parameters::RV_WIDTH, rvWidthLS.label, this, juce::Slider::SliderStyle::LinearBarVertical);
 
-	// Slider "filler" per mantenere layout a 4 colonne sul Reverb
-	uselessSlider.setVisible(false);
-	uselessSlider.addTo(*this);
-
 	updateVisibility();
 }
 
@@ -67,9 +63,6 @@ void FXComponent::updateVisibility()
 	chRateLS.setVisible(showCh); chDepthLS.setVisible(showCh); chDelayLS.setVisible(showCh); chFeedbackLS.setVisible(showCh);
 	flRateLS.setVisible(showFl); flDepthLS.setVisible(showFl); flDelayLS.setVisible(showFl); flFeedbackLS.setVisible(showFl);
 	rvSizeLS.setVisible(showRv); rvDampLS.setVisible(showRv); rvWidthLS.setVisible(showRv);
-
-	// Rende visibile il filler solo quando serve il layout 4-colonne per Reverb
-	uselessSlider.setVisible(showRv);
 }
 
 // Abbastanza generica per layout elastico di una riga di sliders etichettati, spostare in utils
