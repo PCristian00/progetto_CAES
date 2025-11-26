@@ -12,84 +12,41 @@
 #include "../Parameters.h"
 #include "Utils.h"
 
-//static void styleSlider(juce::Slider& s, const juce::String& name)
-//{
-//	s.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 60, 18);
-//	s.setName(name);
-//}
-
 FXComponent::FXComponent(juce::AudioProcessorValueTreeState& state) : apvts(state)
 {
-	// FX Type
-
-	/*fxType.addItem("None", 1);
-	fxType.addItem("Chorus", 2);
-	fxType.addItem("Flanger", 3);
-	fxType.addItem("Reverb", 4);
-	addAndMakeVisible(fxType);*/
-
-
 	utils::setComboBoxParams(fxType, fxTypeAttachment, apvts, parameters::FX_TYPE, { "None", "Chorus", "Flanger", "Reverb" }, this);
 	fxType.addListener(this);
 
-	// Inserire nuova funzione di utils per la gestione dei toggle button
+	// Assicura che updateVisibility scatti anche quando la Attachment cambia il valore (es. al restore)
+	fxType.onChange = [this]
+		{
+			updateVisibility();
+			resized(); // ridisegna il layout coerente con la visibilità
+		};
+
 	addAndMakeVisible(bypass);
 	bypassAttachment = std::make_unique<APVTS::ButtonAttachment>(apvts, parameters::FX_BYPASS, bypass);
 
-
 	// Sliders
-	// styleSlider(wet, "Wet");
-	utils::setSliderParams(wet, wetAttachment, apvts, parameters::FX_WET, wetLabel, this, juce::Slider::SliderStyle::LinearBar);
+	utils::setSliderParams(wetLS.slider, wetLS.attachment, apvts, parameters::FX_WET, wetLS.label, this, juce::Slider::SliderStyle::LinearBar);
 
-	utils::setSliderParams(chRate, chRateAttachment, apvts, parameters::CH_RATE, chRateLabel, this, juce::Slider::SliderStyle::LinearBarVertical);
-	utils::setSliderParams(chDepth, chDepthAttachment, apvts, parameters::CH_DEPTH, chDepthLabel, this, juce::Slider::SliderStyle::LinearBarVertical);
-	utils::setSliderParams(chDelay, chDelayAttachment, apvts, parameters::CH_DELAY_MS, chDelayLabel, this, juce::Slider::SliderStyle::LinearBarVertical);
-	utils::setSliderParams(chFeedback, chFeedbackAttachment, apvts, parameters::CH_FEEDBACK, chFeedbackLabel, this, juce::Slider::SliderStyle::LinearBarVertical);
-	utils::setSliderParams(flRate, flRateAttachment, apvts, parameters::FL_RATE, flRateLabel, this, juce::Slider::SliderStyle::LinearBarVertical);
-	utils::setSliderParams(flDepth, flDepthAttachment, apvts, parameters::FL_DEPTH, flDepthLabel, this, juce::Slider::SliderStyle::LinearBarVertical);
-	utils::setSliderParams(flDelay, flDelayAttachment, apvts, parameters::FL_DELAY_MS, flDelayLabel, this, juce::Slider::SliderStyle::LinearBarVertical);
-	utils::setSliderParams(flFeedback, flFeedbackAttachment, apvts, parameters::FL_FEEDBACK, flFeedbackLabel, this, juce::Slider::SliderStyle::LinearBarVertical);
-	utils::setSliderParams(rvSize, rvSizeAttachment, apvts, parameters::RV_SIZE, rvSizeLabel, this, juce::Slider::SliderStyle::LinearBarVertical);
-	utils::setSliderParams(rvDamp, rvDampAttachment, apvts, parameters::RV_DAMP, rvDampLabel, this, juce::Slider::SliderStyle::LinearBarVertical);
-	utils::setSliderParams(rvWidth, rvWidthAttachment, apvts, parameters::RV_WIDTH, rvWidthLabel, this, juce::Slider::SliderStyle::LinearBarVertical);
+	utils::setSliderParams(chRateLS.slider, chRateLS.attachment, apvts, parameters::CH_RATE, chRateLS.label, this, juce::Slider::SliderStyle::LinearBarVertical);
+	utils::setSliderParams(chDepthLS.slider, chDepthLS.attachment, apvts, parameters::CH_DEPTH, chDepthLS.label, this, juce::Slider::SliderStyle::LinearBarVertical);
+	utils::setSliderParams(chDelayLS.slider, chDelayLS.attachment, apvts, parameters::CH_DELAY_MS, chDelayLS.label, this, juce::Slider::SliderStyle::LinearBarVertical);
+	utils::setSliderParams(chFeedbackLS.slider, chFeedbackLS.attachment, apvts, parameters::CH_FEEDBACK, chFeedbackLS.label, this, juce::Slider::SliderStyle::LinearBarVertical);
 
-	//// styleSlider(chRate, "Ch Rate");
-	//styleSlider(chDepth, "Ch Depth");
-	//styleSlider(chDelay, "Ch Delay");
-	//styleSlider(chFeedback, "Ch Feedback");
+	utils::setSliderParams(flRateLS.slider, flRateLS.attachment, apvts, parameters::FL_RATE, flRateLS.label, this, juce::Slider::SliderStyle::LinearBarVertical);
+	utils::setSliderParams(flDepthLS.slider, flDepthLS.attachment, apvts, parameters::FL_DEPTH, flDepthLS.label, this, juce::Slider::SliderStyle::LinearBarVertical);
+	utils::setSliderParams(flDelayLS.slider, flDelayLS.attachment, apvts, parameters::FL_DELAY_MS, flDelayLS.label, this, juce::Slider::SliderStyle::LinearBarVertical);
+	utils::setSliderParams(flFeedbackLS.slider, flFeedbackLS.attachment, apvts, parameters::FL_FEEDBACK, flFeedbackLS.label, this, juce::Slider::SliderStyle::LinearBarVertical);
 
-	//styleSlider(flRate, "Fl Rate");
-	//styleSlider(flDepth, "Fl Depth");
-	//styleSlider(flDelay, "Fl Delay");
-	//styleSlider(flFeedback, "Fl Feedback");
+	utils::setSliderParams(rvSizeLS.slider, rvSizeLS.attachment, apvts, parameters::RV_SIZE, rvSizeLS.label, this, juce::Slider::SliderStyle::LinearBarVertical);
+	utils::setSliderParams(rvDampLS.slider, rvDampLS.attachment, apvts, parameters::RV_DAMP, rvDampLS.label, this, juce::Slider::SliderStyle::LinearBarVertical);
+	utils::setSliderParams(rvWidthLS.slider, rvWidthLS.attachment, apvts, parameters::RV_WIDTH, rvWidthLS.label, this, juce::Slider::SliderStyle::LinearBarVertical);
 
-	//styleSlider(rvSize, "Rev Size");
-	//styleSlider(rvDamp, "Rev Damp");
-	//styleSlider(rvWidth, "Rev Width");
-
-	/*addAndMakeVisible(wet);
-	addAndMakeVisible(chRate); addAndMakeVisible(chDepth); addAndMakeVisible(chDelay); addAndMakeVisible(chFeedback);
-	addAndMakeVisible(flRate); addAndMakeVisible(flDepth); addAndMakeVisible(flDelay); addAndMakeVisible(flFeedback);
-	addAndMakeVisible(rvSize); addAndMakeVisible(rvDamp); addAndMakeVisible(rvWidth);*/
-
-	//using namespace parameters;
-	// fxTypeAtt = std::make_unique<APVTS::ComboBoxAttachment>(apvts, FX_TYPE, fxType);
-
-	// wetAtt = std::make_unique<APVTS::SliderAttachment>(apvts, FX_WET, wet);
-
-	/*chRateAtt = std::make_unique<APVTS::SliderAttachment>(apvts, CH_RATE, chRate);
-	chDepthAtt = std::make_unique<APVTS::SliderAttachment>(apvts, CH_DEPTH, chDepth);
-	chDelayAtt = std::make_unique<APVTS::SliderAttachment>(apvts, CH_DELAY_MS, chDelay);
-	chFeedbackAtt = std::make_unique<APVTS::SliderAttachment>(apvts, CH_FEEDBACK, chFeedback);
-
-	flRateAtt = std::make_unique<APVTS::SliderAttachment>(apvts, FL_RATE, flRate);
-	flDepthAtt = std::make_unique<APVTS::SliderAttachment>(apvts, FL_DEPTH, flDepth);
-	flDelayAtt = std::make_unique<APVTS::SliderAttachment>(apvts, FL_DELAY_MS, flDelay);
-	flFeedbackAtt = std::make_unique<APVTS::SliderAttachment>(apvts, FL_FEEDBACK, flFeedback);
-
-	rvSizeAtt = std::make_unique<APVTS::SliderAttachment>(apvts, RV_SIZE, rvSize);
-	rvDampAtt = std::make_unique<APVTS::SliderAttachment>(apvts, RV_DAMP, rvDamp);
-	rvWidthAtt = std::make_unique<APVTS::SliderAttachment>(apvts, RV_WIDTH, rvWidth);*/
+	// Slider "filler" per mantenere layout a 4 colonne sul Reverb
+	uselessSlider.setVisible(false);
+	uselessSlider.addTo(*this);
 
 	updateVisibility();
 }
@@ -107,70 +64,72 @@ void FXComponent::updateVisibility()
 	const bool showFl = (type == 2);
 	const bool showRv = (type == 3);
 
-	chRate.setVisible(showCh); chDepth.setVisible(showCh); chDelay.setVisible(showCh); chFeedback.setVisible(showCh);
-	chRateLabel.setVisible(showCh); chDepthLabel.setVisible(showCh); chDelayLabel.setVisible(showCh); chFeedbackLabel.setVisible(showCh);
-	flRate.setVisible(showFl); flDepth.setVisible(showFl); flDelay.setVisible(showFl); flFeedback.setVisible(showFl);
-	flRateLabel.setVisible(showFl); flDepthLabel.setVisible(showFl); flDelayLabel.setVisible(showFl); flFeedbackLabel.setVisible(showFl);
-	rvSize.setVisible(showRv); rvDamp.setVisible(showRv); rvWidth.setVisible(showRv);
-	rvSizeLabel.setVisible(showRv); rvDampLabel.setVisible(showRv); rvWidthLabel.setVisible(showRv);
+	chRateLS.setVisible(showCh); chDepthLS.setVisible(showCh); chDelayLS.setVisible(showCh); chFeedbackLS.setVisible(showCh);
+	flRateLS.setVisible(showFl); flDepthLS.setVisible(showFl); flDelayLS.setVisible(showFl); flFeedbackLS.setVisible(showFl);
+	rvSizeLS.setVisible(showRv); rvDampLS.setVisible(showRv); rvWidthLS.setVisible(showRv);
+
+	// Rende visibile il filler solo quando serve il layout 4-colonne per Reverb
+	uselessSlider.setVisible(showRv);
 }
 
-void FXComponent::showFXSliders(int x, int y, int width, int height, juce::Slider& a, juce::Slider& b, juce::Slider& c, juce::Slider& d)
+// Abbastanza generica per layout elastico di una riga di sliders etichettati, spostare in utils
+void FXComponent::layoutVisibleRow(int x, int y, int totalWidth, int height, std::initializer_list<LabeledSlider*> sliders)
 {
-	utils::setSliderBounds(a, utils::Xstart, fxType.getBottom() + utils::padding, width, height, chRateLabel);
-	utils::setSliderBounds(chDepth, chRate.getRight() + utils::padding, chRate.getY(), width, height, chDepthLabel);
-	utils::setSliderBounds(chDelay, chDepth.getRight() + utils::padding, chRate.getY(), width, height, chDelayLabel);
-	utils::setSliderBounds(chFeedback, chDelay.getRight() + utils::padding, chRate.getY(), width, height, chFeedbackLabel);
+	// Conta quanti sono visibili
+	int visibleCount = 0;
+	for (auto* ls : sliders)
+		if (ls && ls->slider.isVisible())
+			++visibleCount;
+
+	if (visibleCount == 0)
+		return;
+
+	// Larghezza per colonna, con padding tra colonne
+	const int padding = utils::padding;
+	const int availableWidth = totalWidth - padding * (visibleCount - 1);
+	const int columnWidth = availableWidth / visibleCount;
+
+	int nextX = x;
+	for (auto* ls : sliders)
+	{
+		if (ls && ls->slider.isVisible())
+		{
+			utils::setSliderBounds(ls->slider, nextX, y, columnWidth, height, ls->label);
+			nextX += columnWidth + padding;
+		}
+	}
 }
 
 void FXComponent::paint(juce::Graphics& g)
 {
 	g.fillAll(juce::Colours::black);
 	utils::drawBorders(g, this, juce::Colours::deeppink, "FX");
-
-
 }
 
 void FXComponent::resized()
 {
-
 	const int heightUnit = utils::getBoundsWithPadding(this).getHeight() / 3 - utils::padding;
 	const int widthUnit = utils::getBoundsWithPadding(this).getWidth() / 4 - utils::padding;
+	const int totalWidth = utils::getBoundsWithPadding(this).getWidth() - utils::padding;
 
 	const int comboBoxWidth = (utils::getBoundsWithPadding(this).getWidth() - utils::padding) / 3;
 	const int comboBoxHeight = heightUnit - utils::padding;
 
 	utils::setComboBoxBounds(fxType, utils::Xstart, utils::Ystart, comboBoxWidth, comboBoxHeight);
 	bypass.setBounds(fxType.getRight() + utils::padding, fxType.getY(), comboBoxWidth - utils::padding, comboBoxHeight);
-	utils::setSliderBounds(wet, bypass.getRight() + utils::padding, bypass.getY(), comboBoxWidth - utils::padding, comboBoxHeight, wetLabel);
 
+	utils::setSliderBounds(wetLS.slider, bypass.getRight() + utils::padding, bypass.getY(), comboBoxWidth - utils::padding, comboBoxHeight, wetLS.label);
 
-	showFXSliders(utils::Xstart, fxType.getBottom() + utils::padding, widthUnit, 2 * heightUnit, chRate, chDepth, chDelay, chFeedback);
+	const int rowY = fxType.getBottom() + utils::padding;
+	const int rowH = 2 * heightUnit;
 
+	// Layout elastico per ogni gruppo
 
+	auto chSliders = { &chRateLS, &chDepthLS, &chDelayLS, &chFeedbackLS };
+	auto flSliders = { &flRateLS, &flDepthLS, &flDelayLS, &flFeedbackLS };
+	auto rvSliders = { &rvSizeLS, &rvDampLS, &rvWidthLS };
 
-
+	layoutVisibleRow(utils::Xstart, rowY, totalWidth, rowH, chSliders);
+	layoutVisibleRow(utils::Xstart, rowY, totalWidth, rowH, flSliders);
+	layoutVisibleRow(utils::Xstart, rowY, totalWidth, rowH, rvSliders);
 }
-
-// auto r = utils::getBoundsWithPadding(this).removeFromTop(comboBoxHeight);
-// auto top = r.removeFromTop(comboBoxHeight);
-// fxType.setBounds(top.removeFromLeft(160));
-// bypass.setBounds(top.removeFromLeft(90));
-
-// wet.setBounds(r.removeFromTop(70));
-
-/*auto row = [&](juce::Component& a, juce::Component& b, juce::Component& c, juce::Component& d)
-	{
-		auto line = r.removeFromTop(20);
-		auto w = utils::getBoundsWithPadding(this).getWidth() / 4;
-
-		a.setBounds(line.removeFromLeft(w).reduced(4));
-		b.setBounds(line.removeFromLeft(w).reduced(4));
-		c.setBounds(line.removeFromLeft(w).reduced(4));
-		d.setBounds(line.removeFromLeft(w).reduced(4));
-	};
-
-row(chRate, chDepth, chDelay, chFeedback);
-row(flRate, flDepth, flDelay, flFeedback);
-row(rvSize, rvDamp, rvWidth, wet);
-}*/
