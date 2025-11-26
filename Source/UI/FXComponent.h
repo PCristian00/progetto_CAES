@@ -28,10 +28,7 @@ public:
 private:
 	void comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged) override;
 	void updateVisibility();
-
-
-
-	void layoutVisibleRow(int x, int y, int totalWidth, int height, std::initializer_list<LabeledSlider*> sliders);
+	
 
 	juce::AudioProcessorValueTreeState& apvts;
 

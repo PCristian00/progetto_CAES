@@ -114,4 +114,30 @@ namespace utils
 			static_cast<float>(padding) / 2.0f,
 			static_cast<float>(padding) / 5.0f);
 	}
+
+	void layoutVisibleRow(int x, int y, int totalWidth, int height, std::initializer_list<LabeledSlider*> sliders) noexcept
+	{
+		// Conta quanti sono visibili
+		int visibleCount = 0;
+		for (auto* ls : sliders)
+			if (ls && ls->slider.isVisible())
+				++visibleCount;
+
+		if (visibleCount == 0)
+			return;
+
+		// Larghezza per colonna, con padding tra colonne
+		const int availableWidth = totalWidth - padding * (visibleCount - 1);
+		const int columnWidth = availableWidth / visibleCount;
+
+		int nextX = x;
+		for (auto* ls : sliders)
+		{
+			if (ls && ls->slider.isVisible())
+			{
+				utils::setSliderBounds(ls->slider, nextX, y, columnWidth, height, ls->label);
+				nextX += columnWidth + padding;
+			}
+		}
+	}
 }

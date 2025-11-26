@@ -65,33 +65,7 @@ void FXComponent::updateVisibility()
 	rvSizeLS.setVisible(showRv); rvDampLS.setVisible(showRv); rvWidthLS.setVisible(showRv);
 }
 
-// Abbastanza generica per layout elastico di una riga di sliders etichettati, spostare in utils
-void FXComponent::layoutVisibleRow(int x, int y, int totalWidth, int height, std::initializer_list<LabeledSlider*> sliders)
-{
-	// Conta quanti sono visibili
-	int visibleCount = 0;
-	for (auto* ls : sliders)
-		if (ls && ls->slider.isVisible())
-			++visibleCount;
 
-	if (visibleCount == 0)
-		return;
-
-	// Larghezza per colonna, con padding tra colonne
-	const int padding = utils::padding;
-	const int availableWidth = totalWidth - padding * (visibleCount - 1);
-	const int columnWidth = availableWidth / visibleCount;
-
-	int nextX = x;
-	for (auto* ls : sliders)
-	{
-		if (ls && ls->slider.isVisible())
-		{
-			utils::setSliderBounds(ls->slider, nextX, y, columnWidth, height, ls->label);
-			nextX += columnWidth + padding;
-		}
-	}
-}
 
 void FXComponent::paint(juce::Graphics& g)
 {
