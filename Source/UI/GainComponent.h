@@ -9,8 +9,8 @@
 */
 
 #pragma once
-
 #include <JuceHeader.h>
+#include "Utils.h"
 
 //==============================================================================
 /*
@@ -25,12 +25,11 @@ public:
 	void resized() override;
 
 private:
-	juce::Slider gainSlider;
+	using LabeledSlider = utils::LabeledSlider;
+	juce::AudioProcessorValueTreeState& apvts;
+	juce::String paramID;
 
-	using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
-	std::unique_ptr<SliderAttachment> gainSliderAttachment;
-
-	// juce::Label gainLabel{ "Gain", "Gain" }; Non usata per GainSlider: usa direttamente il titolo di utils::drawBorders
+	LabeledSlider gainLS;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GainComponent)
 };
