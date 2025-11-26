@@ -7,16 +7,13 @@
 
   ==============================================================================
 */
-
 #pragma once
 #include <JuceHeader.h>
 #include "Utils.h"
 
 class FXComponent : public juce::Component, private juce::ComboBox::Listener
 {
-
 	using LabeledSlider = utils::LabeledSlider;
-
 
 public:
 	FXComponent(juce::AudioProcessorValueTreeState& apvts);
@@ -29,10 +26,8 @@ private:
 	void comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged) override;
 	void updateVisibility();
 
-
 	juce::AudioProcessorValueTreeState& apvts;
 
-	// Controls
 	juce::ComboBox fxType;
 	juce::ToggleButton bypass{ "Bypass" };
 
@@ -40,7 +35,6 @@ private:
 	std::unique_ptr<APVTS::ComboBoxAttachment> fxTypeAttachment;
 	std::unique_ptr<APVTS::ButtonAttachment>   bypassAttachment;
 
-	// Dichiarazioni senza inizializzazione
 	LabeledSlider wetLS;
 	LabeledSlider chRateLS;
 	LabeledSlider chDepthLS;

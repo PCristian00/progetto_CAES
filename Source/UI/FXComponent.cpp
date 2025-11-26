@@ -14,28 +14,27 @@
 
 FXComponent::FXComponent(juce::AudioProcessorValueTreeState& state)
 	: apvts(state)
-	// Costruisci tutti i LabeledSlider qui usando il costruttore esteso
-	, wetLS("Wet", apvts, parameters::FX_WET, *this, juce::Slider::SliderStyle::LinearBar, true)
-	, chRateLS("Ch Rate", apvts, parameters::CH_RATE, *this, juce::Slider::SliderStyle::LinearBarVertical, true)
-	, chDepthLS("Ch Depth", apvts, parameters::CH_DEPTH, *this, juce::Slider::SliderStyle::LinearBarVertical, true)
-	, chDelayLS("Ch Delay", apvts, parameters::CH_DELAY_MS, *this, juce::Slider::SliderStyle::LinearBarVertical, true)
-	, chFeedbackLS("Ch Feedback", apvts, parameters::CH_FEEDBACK, *this, juce::Slider::SliderStyle::LinearBarVertical, true)
-	, flRateLS("Fl Rate", apvts, parameters::FL_RATE, *this, juce::Slider::SliderStyle::LinearBarVertical, true)
-	, flDepthLS("Fl Depth", apvts, parameters::FL_DEPTH, *this, juce::Slider::SliderStyle::LinearBarVertical, true)
-	, flDelayLS("Fl Delay", apvts, parameters::FL_DELAY_MS, *this, juce::Slider::SliderStyle::LinearBarVertical, true)
-	, flFeedbackLS("Fl Feedback", apvts, parameters::FL_FEEDBACK, *this, juce::Slider::SliderStyle::LinearBarVertical, true)
-	, rvSizeLS("Rev Size", apvts, parameters::RV_SIZE, *this, juce::Slider::SliderStyle::LinearBarVertical, true)
-	, rvDampLS("Rev Damp", apvts, parameters::RV_DAMP, *this, juce::Slider::SliderStyle::LinearBarVertical, true)
-	, rvWidthLS("Rev Width", apvts, parameters::RV_WIDTH, *this, juce::Slider::SliderStyle::LinearBarVertical, true)
+	, wetLS("Wet", apvts, parameters::FX_WET, *this, juce::Slider::LinearBar, true)
+	, chRateLS("Ch Rate", apvts, parameters::CH_RATE, *this, juce::Slider::LinearBarVertical, true)
+	, chDepthLS("Ch Depth", apvts, parameters::CH_DEPTH, *this, juce::Slider::LinearBarVertical, true)
+	, chDelayLS("Ch Delay", apvts, parameters::CH_DELAY_MS, *this, juce::Slider::LinearBarVertical, true)
+	, chFeedbackLS("Ch Feedback", apvts, parameters::CH_FEEDBACK, *this, juce::Slider::LinearBarVertical, true)
+	, flRateLS("Fl Rate", apvts, parameters::FL_RATE, *this, juce::Slider::LinearBarVertical, true)
+	, flDepthLS("Fl Depth", apvts, parameters::FL_DEPTH, *this, juce::Slider::LinearBarVertical, true)
+	, flDelayLS("Fl Delay", apvts, parameters::FL_DELAY_MS, *this, juce::Slider::LinearBarVertical, true)
+	, flFeedbackLS("Fl Feedback", apvts, parameters::FL_FEEDBACK, *this, juce::Slider::LinearBarVertical, true)
+	, rvSizeLS("Rev Size", apvts, parameters::RV_SIZE, *this, juce::Slider::LinearBarVertical, true)
+	, rvDampLS("Rev Damp", apvts, parameters::RV_DAMP, *this, juce::Slider::LinearBarVertical, true)
+	, rvWidthLS("Rev Width", apvts, parameters::RV_WIDTH, *this, juce::Slider::LinearBarVertical, true)
 {
-	utils::setComboBoxParams(fxType, fxTypeAttachment, apvts, parameters::FX_TYPE, { "None", "Chorus", "Flanger", "Reverb" }, this);
+	utils::setComboBoxParams(fxType, fxTypeAttachment, apvts, parameters::FX_TYPE,
+		{ "None", "Chorus", "Flanger", "Reverb" }, this);
 	fxType.addListener(this);
 
-	// Assicura che updateVisibility scatti anche quando la Attachment cambia il valore (es. al restore)
 	fxType.onChange = [this]
 		{
 			updateVisibility();
-			resized(); // ridisegna il layout coerente con la visibilità
+			resized();
 		};
 
 	addAndMakeVisible(bypass);
@@ -62,8 +61,6 @@ void FXComponent::updateVisibility()
 	rvSizeLS.setVisible(showRv); rvDampLS.setVisible(showRv); rvWidthLS.setVisible(showRv);
 }
 
-
-
 void FXComponent::paint(juce::Graphics& g)
 {
 	g.fillAll(juce::Colours::black);
@@ -73,9 +70,7 @@ void FXComponent::paint(juce::Graphics& g)
 void FXComponent::resized()
 {
 	const int heightUnit = utils::getBoundsWithPadding(this).getHeight() / 3 - utils::padding;
-	const int widthUnit = utils::getBoundsWithPadding(this).getWidth() / 4 - utils::padding;
 	const int totalWidth = utils::getBoundsWithPadding(this).getWidth() - utils::padding;
-
 	const int comboBoxWidth = (utils::getBoundsWithPadding(this).getWidth() - utils::padding) / 3;
 	const int comboBoxHeight = heightUnit - utils::padding;
 
@@ -84,18 +79,14 @@ void FXComponent::resized()
 
 	wetLS.setBounds(bypass.getRight() + utils::padding, bypass.getY(), comboBoxWidth - utils::padding, comboBoxHeight);
 
-	// utils::setSliderBounds(wetLS.slider, bypass.getRight() + utils::padding, bypass.getY(), comboBoxWidth - utils::padding, comboBoxHeight, wetLS.label);
-
 	const int rowY = fxType.getBottom() + utils::padding;
 	const int rowH = 2 * heightUnit;
-
-	// Layout elastico per ogni gruppo
 
 	auto chSliders = { &chRateLS, &chDepthLS, &chDelayLS, &chFeedbackLS };
 	auto flSliders = { &flRateLS, &flDepthLS, &flDelayLS, &flFeedbackLS };
 	auto rvSliders = { &rvSizeLS, &rvDampLS, &rvWidthLS };
 
-	layoutVisibleRow(utils::Xstart, rowY, totalWidth, rowH, chSliders);
-	layoutVisibleRow(utils::Xstart, rowY, totalWidth, rowH, flSliders);
-	layoutVisibleRow(utils::Xstart, rowY, totalWidth, rowH, rvSliders);
+	utils::layoutVisibleRow(utils::Xstart, rowY, totalWidth, rowH, chSliders);
+	utils::layoutVisibleRow(utils::Xstart, rowY, totalWidth, rowH, flSliders);
+	utils::layoutVisibleRow(utils::Xstart, rowY, totalWidth, rowH, rvSliders);
 }
