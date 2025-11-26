@@ -32,10 +32,10 @@ FXComponent::FXComponent(juce::AudioProcessorValueTreeState& state)
 	fxType.addListener(this);
 
 	fxType.onChange = [this]
-		{
-			updateVisibility();
-			resized();
-		};
+	{
+		updateVisibility();
+		resized();
+	};
 
 	addAndMakeVisible(bypass);
 	bypassAttachment = std::make_unique<APVTS::ButtonAttachment>(apvts, parameters::FX_BYPASS, bypass);
@@ -69,27 +69,36 @@ void FXComponent::paint(juce::Graphics& g)
 
 void FXComponent::resized()
 {
-	const int heightUnit = (utils::getBoundsWithPadding(this).getHeight() / 6) - utils::padding;
+	// Area contenuti uniforme (niente moltiplicazioni manuali di padding)
+	const auto content = utils::getContentArea(this);
+	const int totalWidth = content.getWidth();
+	const int startX = content.getX();
+	const int startY = content.getY();
 
-	const int totalWidth = utils::getBoundsWithPadding(this).getWidth() - utils::padding;
+	// Riga superiore: 3 colonne con gutter = utils::padding
+	const int gaps = 2;
+	const int colW = (totalWidth - gaps * utils::padding) / 3;
+	const int headerH = content.getHeight() / 6;
 
-	const int comboBoxWidth = totalWidth / 3;
-	const int comboBoxHeight = heightUnit - utils::padding;
+	// Colonne
+	const int x0 = startX;
+	const int x1 = x0 + colW + utils::padding;
+	const int x2 = x1 + colW + utils::padding;
 
-	utils::setComboBoxBounds(fxType, utils::Xstart, utils::Ystart, comboBoxWidth, comboBoxHeight);
+	// Posizionamento controlli di testata
+	utils::setComboBoxBounds(fxType, x0, startY, colW, headerH);
+	bypass.setBounds(x1, startY, colW, headerH);
+	wetLS.setBounds(x2, startY, colW, headerH);
 
-	bypass.setBounds(fxType.getRight() + utils::padding, fxType.getY(), comboBoxWidth - utils::padding, comboBoxHeight);
-
-	wetLS.setBounds(bypass.getRight() + utils::padding, bypass.getY(), comboBoxWidth - utils::padding, comboBoxHeight);
-
-	const int rowY = fxType.getBottom() + utils::padding;
-	const int rowH = 5.5f * (heightUnit)-utils::padding;
+	// Riga slider: occupa lo spazio restante sotto la testata
+	const int rowY = startY + headerH + utils::padding;
+	const int rowH = content.getBottom() - rowY;
 
 	auto chSliders = { &chRateLS, &chDepthLS, &chDelayLS, &chFeedbackLS };
 	auto flSliders = { &flRateLS, &flDepthLS, &flDelayLS, &flFeedbackLS };
 	auto rvSliders = { &rvSizeLS, &rvDampLS, &rvWidthLS };
 
-	utils::layoutVisibleRow(utils::Xstart, rowY, totalWidth, rowH, chSliders);
-	utils::layoutVisibleRow(utils::Xstart, rowY, totalWidth, rowH, flSliders);
-	utils::layoutVisibleRow(utils::Xstart, rowY, totalWidth, rowH, rvSliders);
+	utils::layoutVisibleRow(startX, rowY, totalWidth, rowH, chSliders);
+	utils::layoutVisibleRow(startX, rowY, totalWidth, rowH, flSliders);
+	utils::layoutVisibleRow(startX, rowY, totalWidth, rowH, rvSliders);
 }

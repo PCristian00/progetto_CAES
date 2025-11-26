@@ -21,6 +21,9 @@ namespace utils
 	const int Xstart = static_cast<int>(padding * 1.5f);
 	const int Ystart = padding * 4;
 
+	// Altezza dell'area riservata al titolo/bordo (coerente con drawBorders)
+	inline int titleAreaHeight() noexcept { return 2 * padding; }
+
 	// Struttura riutilizzabile Slider + Label + Attachment
 	struct LabeledSlider
 	{
@@ -28,7 +31,6 @@ namespace utils
 		juce::Label  label;
 		std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attachment;
 
-		// Costruttore: imposta il testo della label e qualche default sensato
 		explicit LabeledSlider(const juce::String& labelText = {})
 		{
 			label.setText(labelText, juce::dontSendNotification);
@@ -55,21 +57,17 @@ namespace utils
 			configure(style, showTextBox, laf);
 		}
 
-
-		// Aggiunge i controlli al parent
 		void addTo(juce::Component& parent)
 		{
 			parent.addAndMakeVisible(label);
 			parent.addAndMakeVisible(slider);
 		}
 
-		// Collega il parametro APVTS
 		void attach(juce::AudioProcessorValueTreeState& state, const juce::String& paramID)
 		{
 			attachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(state, paramID, slider);
 		}
 
-		// Configura stile e opzionale LookAndFeel
 		void configure(juce::Slider::SliderStyle style,
 			bool showTextBox = true,
 			juce::LookAndFeel* laf = nullptr)
@@ -86,7 +84,6 @@ namespace utils
 
 		void setBounds(const juce::Rectangle<int>& area, int labelHeight = padding * 2, int gap = static_cast<int> (padding / 2))
 		{
-
 			auto r = area;
 			if (label.getText() != "") {
 				label.setBounds(r.removeFromTop(labelHeight));
@@ -117,7 +114,6 @@ namespace utils
 	};
 
 	void setSliderParams(juce::Slider& slider, std::unique_ptr<SliderAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::Label& label, juce::Component* parent = nullptr, SliderStyle style = SliderStyle::LinearBarVertical) noexcept;
-
 	void setSliderParams(juce::Slider& slider, std::unique_ptr<SliderAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::Label* label = nullptr, juce::Component* parent = nullptr, SliderStyle style = SliderStyle::LinearBarVertical) noexcept;
 
 	void setSliderBounds(juce::Slider& slider, int x, int y, int width, int height, juce::Label& label) noexcept;
@@ -131,7 +127,11 @@ namespace utils
 	void setButton(juce::Button& button, const juce::String& buttonText, juce::Component* parent = nullptr) noexcept;
 	void setButtonBounds(juce::Button& button, juce::Rectangle<int> size) noexcept;
 
+	// Bounds interni ridotti dal padding di contenitore
 	juce::Rectangle<int> getBoundsWithPadding(juce::Component* parent = nullptr, int paddingOverride = 0) noexcept;
+
+	// Area contenuti: bounds con padding, meno l'area del titolo/bordo (uniforma lo spazio di testata)
+	juce::Rectangle<int> getContentArea(juce::Component* parent) noexcept;
 
 	void drawBorders(juce::Graphics& g, juce::Component* parent, juce::Colour colour, juce::String title = "") noexcept;
 

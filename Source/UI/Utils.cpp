@@ -63,7 +63,6 @@ namespace utils
 			parent->addAndMakeVisible(comboBox);
 	}
 
-	// Attualmente superflua, ma coerente con le altre funzioni (setSliderBounds)
 	void setComboBoxBounds(juce::ComboBox& comboBox, juce::Rectangle<int> size) noexcept
 	{
 		setComboBoxBounds(comboBox, size.getX(), size.getY(), size.getWidth(), size.getHeight());
@@ -87,7 +86,6 @@ namespace utils
 		}
 	}
 
-	// Attualmente superflua, ma coerente con le altre funzioni (setSliderBounds, setComboBoxBounds)
 	void setButtonBounds(juce::Button& button, juce::Rectangle<int> size) noexcept
 	{
 		button.setBounds(size);
@@ -102,10 +100,18 @@ namespace utils
 		return parent->getLocalBounds().reduced(usePadding);
 	}
 
+	// Area contenuti uniforme: padding esterno + rimozione dell'area del titolo (coerente con drawBorders)
+	juce::Rectangle<int> getContentArea(juce::Component* parent) noexcept
+	{
+		auto bounds = getBoundsWithPadding(parent);
+		bounds.removeFromTop(titleAreaHeight());
+		return bounds;
+	}
+
 	void drawBorders(juce::Graphics& g, juce::Component* parent, juce::Colour colour, juce::String title) noexcept
 	{
 		auto bounds = getBoundsWithPadding(parent);
-		auto labelSpace = bounds.removeFromTop(2 * padding);
+		auto labelSpace = bounds.removeFromTop(titleAreaHeight());
 
 		g.setColour(colour);
 		g.setFont(15.0f);
@@ -117,7 +123,6 @@ namespace utils
 
 	void layoutVisibleRow(int x, int y, int totalWidth, int height, std::initializer_list<LabeledSlider*> sliders) noexcept
 	{
-		// Conta quanti sono visibili
 		int visibleCount = 0;
 		for (auto* ls : sliders)
 			if (ls && ls->slider.isVisible())
@@ -126,7 +131,6 @@ namespace utils
 		if (visibleCount == 0)
 			return;
 
-		// Larghezza per colonna, con padding tra colonne
 		const int availableWidth = totalWidth - padding * (visibleCount - 1);
 		const int columnWidth = availableWidth / visibleCount;
 
@@ -135,20 +139,30 @@ namespace utils
 		{
 			if (ls && ls->slider.isVisible())
 			{
-				// utils::setSliderBounds(ls->slider, nextX, y, columnWidth, height, ls->label);
 				ls->setBounds(nextX, y, columnWidth, height);
 				nextX += columnWidth + padding;
 			}
 		}
 	}
+
+	// Ora usa l'area contenuti per posizionare ComboBox e Sliders
 	void comboAndSliderRow(juce::ComboBox& comboBox, std::initializer_list<LabeledSlider*> sliders, juce::Component* parent, int x, int y, int totalWidth, int height) noexcept
 	{
-		if (height == 0)
-			height = (getBoundsWithPadding(parent).getHeight() / 6) - padding;
-		if (totalWidth == 0)
-			totalWidth = getBoundsWithPadding(parent).getWidth() - padding;
+		auto content = getContentArea(parent);
 
-		setComboBoxBounds(comboBox, x, y, totalWidth, height);
-		layoutVisibleRow(x, comboBox.getBottom() + padding, totalWidth, 6 * height - padding, sliders);
+		if (height == 0)
+			height = content.getHeight() / 6;
+		if (totalWidth == 0)
+			totalWidth = content.getWidth();
+
+		const int startX = content.getX();
+		const int startY = content.getY();
+
+		setComboBoxBounds(comboBox, startX, startY, totalWidth, height);
+
+		const int rowY = comboBox.getBottom() + padding;
+		const int rowH = content.getBottom() - rowY; // tutto lo spazio rimanente
+
+		layoutVisibleRow(startX, rowY, totalWidth, rowH, sliders);
 	}
 }

@@ -29,7 +29,7 @@ void GainComponent::paint(juce::Graphics& g)
 
 void GainComponent::resized()
 {
-	const int sliderWidth = utils::getBoundsWithPadding(this).getWidth() - utils::padding;
-	const int sliderHeight = utils::getBoundsWithPadding(this).getHeight() - utils::Ystart;
-	gainLS.setBounds(utils::Xstart, utils::Ystart, sliderWidth, sliderHeight);
+	// Area contenuti uniforme (niente moltiplicazioni manuali di padding)
+	const auto content = utils::getContentArea(this);
+	gainLS.setBounds(content);
 }

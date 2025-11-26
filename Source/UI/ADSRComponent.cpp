@@ -34,8 +34,10 @@ void ADSRComponent::paint(juce::Graphics& g)
 
 void ADSRComponent::resized()
 {
-	const int totalWidth = utils::getBoundsWithPadding(this).getWidth() - utils::padding;
-	const int height = utils::getBoundsWithPadding(this).getHeight() - (3 * utils::padding);
+	// Usa un'unica fonte di verità per spaziature: area contenuti da utils
+	const auto content = utils::getContentArea(this);
 
-	utils::layoutVisibleRow(utils::Xstart, utils::Ystart, totalWidth, height, { &attackLS, &decayLS, &sustainLS, &releaseLS });
+	utils::layoutVisibleRow(content.getX(), content.getY(),
+		content.getWidth(), content.getHeight(),
+		{ &attackLS, &decayLS, &sustainLS, &releaseLS });
 }
