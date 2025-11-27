@@ -55,10 +55,25 @@ void FXComponent::updateVisibility()
 	const bool showCh = (type == 1);
 	const bool showFl = (type == 2);
 	const bool showRv = (type == 3);
+	const bool showNone = (type == 0);
 
-	chRateLS.setVisible(showCh); chDepthLS.setVisible(showCh); chDelayLS.setVisible(showCh); chFeedbackLS.setVisible(showCh);
-	flRateLS.setVisible(showFl); flDepthLS.setVisible(showFl); flDelayLS.setVisible(showFl); flFeedbackLS.setVisible(showFl);
-	rvSizeLS.setVisible(showRv); rvDampLS.setVisible(showRv); rvWidthLS.setVisible(showRv);
+	wetLS.setVisible(!showNone);
+	bypass.setVisible(!showNone);
+
+	auto chSliders = { &chRateLS, &chDepthLS, &chDelayLS, &chFeedbackLS };
+	auto flSliders = { &flRateLS, &flDepthLS, &flDelayLS, &flFeedbackLS };
+	auto rvSliders = { &rvSizeLS, &rvDampLS, &rvWidthLS };
+
+	for each(LabeledSlider * ls in chSliders)
+		ls->setVisible(showCh);
+
+
+	for each(LabeledSlider * ls in flSliders)
+		ls->setVisible(showFl);
+
+
+	for each(LabeledSlider * ls in rvSliders)
+		ls->setVisible(showRv);
 }
 
 void FXComponent::paint(juce::Graphics& g)
