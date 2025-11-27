@@ -105,7 +105,7 @@ namespace utils
 	{
 		auto bounds = getBoundsWithPadding(parent);
 		bounds.removeFromTop(titleAreaHeight());
-		bounds.reduce(contentPadding, contentPadding); // spazio tra contenuti e bordo disegnato
+		bounds.reduce(contentPadding, contentPadding);
 		return bounds;
 	}
 
@@ -140,14 +140,12 @@ namespace utils
 		{
 			if (ls && ls->slider.isVisible())
 			{
-				// labelHeight = padding * 2 (coerente con il resto), gap = 0 per simmetria con il bordo
 				ls->setBounds(nextX, y, columnWidth, height, padding * 2, 0);
 				nextX += columnWidth + padding;
 			}
 		}
 	}
 
-	// Ora usa l'area contenuti per posizionare ComboBox e Sliders
 	void comboAndSliderRow(juce::ComboBox& comboBox, std::initializer_list<LabeledSlider*> sliders, juce::Component* parent, int x, int y, int totalWidth, int height) noexcept
 	{
 		auto content = getContentArea(parent);

@@ -69,13 +69,12 @@ void FXComponent::paint(juce::Graphics& g)
 
 void FXComponent::resized()
 {
-	// Area contenuti uniforme (niente moltiplicazioni manuali di padding)
 	const auto content = utils::getContentArea(this);
 	const int totalWidth = content.getWidth();
 	const int startX = content.getX();
 	const int startY = content.getY();
 
-	// Riga superiore: 3 colonne con gutter = utils::padding
+	// Riga superiore: 3 colonne
 	const int gaps = 2;
 	const int colW = (totalWidth - gaps * utils::padding) / 3;
 	const int headerH = content.getHeight() / 8;

@@ -32,7 +32,6 @@ private:
 	juce::ComboBox filterTypeSelector{ "Filter Type" };
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> filterTypeSelectorAttachment;
 
-	// Sostituisce juce::Slider + Attachment + Label
 	LabeledSlider filterCutOffLS;
 	LabeledSlider filterResonanceLS;
 

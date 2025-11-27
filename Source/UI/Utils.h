@@ -24,7 +24,7 @@ namespace utils
 	const int Xstart = static_cast<int>(padding * 1.5f);
 	const int Ystart = padding * 4;
 
-	// Altezza dell'area riservata al titolo/bordo (coerente con drawBorders)
+	// Altezza dell'area riservata al titolo/bordo
 	inline int titleAreaHeight() noexcept { return 2 * padding; }
 
 	// Struttura riutilizzabile Slider + Label + Attachment

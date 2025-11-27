@@ -34,7 +34,6 @@ void ADSRComponent::paint(juce::Graphics& g)
 
 void ADSRComponent::resized()
 {
-	// Usa un'unica fonte di verità per spaziature: area contenuti da utils
 	const auto content = utils::getContentArea(this);
 
 	utils::layoutVisibleRow(content.getX(), content.getY(),

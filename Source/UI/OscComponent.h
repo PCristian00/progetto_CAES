@@ -31,7 +31,6 @@ private:
 	juce::ComboBox oscWaveSelector;
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> oscWaveSelectorAttachment;
 
-	// Sostituisce juce::Slider + Attachment + Label
 	LabeledSlider fmFreqLS;
 	LabeledSlider fmDepthLS;
 

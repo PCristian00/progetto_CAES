@@ -29,7 +29,6 @@ void GainComponent::paint(juce::Graphics& g)
 
 void GainComponent::resized()
 {
-	// Area contenuti uniforme (niente moltiplicazioni manuali di padding)
 	const auto content = utils::getContentArea(this);
 	gainLS.setBounds(content);
 }
