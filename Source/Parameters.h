@@ -11,8 +11,6 @@
 #pragma once
 #include <JuceHeader.h>
 
-using String = juce::String;
-
 namespace parameters
 {
 	// Oscillator: IDs
@@ -57,7 +55,6 @@ namespace parameters
 
 	inline juce::AudioProcessorValueTreeState::ParameterLayout createParameters()
 	{
-
 		std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
 
 		// Combobox: switch oscillator
@@ -84,28 +81,26 @@ namespace parameters
 
 		// FX
 		params.push_back(std::make_unique<juce::AudioParameterChoice>(FX_TYPE, "FX Type", juce::StringArray{ "None", "Chorus", "Flanger", "Reverb" }, 0));
-
 		params.push_back(std::make_unique<juce::AudioParameterBool>(FX_BYPASS, "FX Bypass", false));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(FX_WET, "FX Wet", juce::NormalisableRange<float>(0.0f, 1.0f, 0.0f, 1.0f), 0.3f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(FX_WET, "FX Wet", juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f), 0.3f));
 
 		// Chorus
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(CH_RATE, "Chorus Rate (Hz)", juce::NormalisableRange<float>(0.05f, 5.0f, 0.0f, 0.5f), 1.2f));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(CH_DEPTH, "Chorus Depth", juce::NormalisableRange<float>(0.0f, 1.0f, 0.0f, 1.0f), 0.6f));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(CH_DELAY_MS, "Chorus Delay (ms)", juce::NormalisableRange<float>(3.0f, 25.0f, 0.0f, 0.5f), 15.0f));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(CH_FEEDBACK, "Chorus Feedback", juce::NormalisableRange<float>(0.0f, 0.9f, 0.0f, 1.0f), 0.0f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(CH_RATE, "Chorus Rate (Hz)", juce::NormalisableRange<float>(0.05f, 5.0f, 0.01f, 0.5f), 1.2f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(CH_DEPTH, "Chorus Depth", juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f), 0.6f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(CH_DELAY_MS, "Chorus Delay (ms)", juce::NormalisableRange<float>(3.0f, 25.0f, 0.1f, 0.5f), 15.0f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(CH_FEEDBACK, "Chorus Feedback", juce::NormalisableRange<float>(0.0f, 0.9f, 0.01f, 1.0f), 0.0f));
 
 		// Flanger
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(FL_RATE, "Flanger Rate (Hz)", juce::NormalisableRange<float>(0.05f, 2.0f, 0.0f, 0.5f), 0.25f));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(FL_DEPTH, "Flanger Depth", juce::NormalisableRange<float>(0.0f, 1.0f, 0.0f, 1.0f), 0.9f));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(FL_DELAY_MS, "Flanger Delay (ms)", juce::NormalisableRange<float>(0.1f, 5.0f, 0.0f, 0.5f), 1.2f));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(FL_FEEDBACK, "Flanger Feedback", juce::NormalisableRange<float>(0.0f, 0.95f, 0.0f, 1.0f), 0.55f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(FL_RATE, "Flanger Rate (Hz)", juce::NormalisableRange<float>(0.05f, 2.0f, 0.01f, 0.5f), 0.25f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(FL_DEPTH, "Flanger Depth", juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f), 0.9f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(FL_DELAY_MS, "Flanger Delay (ms)", juce::NormalisableRange<float>(0.1f, 5.0f, 0.1f, 0.5f), 1.2f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(FL_FEEDBACK, "Flanger Feedback", juce::NormalisableRange<float>(0.0f, 0.95f, 0.01f, 1.0f), 0.55f));
 
 		// Reverb
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(RV_SIZE, "Reverb Size", juce::NormalisableRange<float>(0.0f, 1.0f), 0.25f));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(RV_DAMP, "Reverb Damping", juce::NormalisableRange<float>(0.0f, 1.0f), 0.4f));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(RV_WIDTH, "Reverb Width", juce::NormalisableRange<float>(0.0f, 1.0f), 1.0f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(RV_SIZE, "Reverb Size", juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f), 0.25f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(RV_DAMP, "Reverb Damping", juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f), 0.4f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(RV_WIDTH, "Reverb Width", juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f), 1.0f));
 
 		return { params.begin(), params.end() };
 	}
-
 };
