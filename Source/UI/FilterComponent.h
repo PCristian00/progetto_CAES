@@ -29,11 +29,11 @@ public:
 private:
 	using LabeledSlider = utils::LabeledSlider;
 
-	juce::ComboBox filterTypeSelector{ "Filter Type" };
-	std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> filterTypeSelectorAttachment;
+	utils::DropDown filterTypeSelector;
 
 	LabeledSlider filterCutOffLS;
 	LabeledSlider filterResonanceLS;
+
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FilterComponent)
 };

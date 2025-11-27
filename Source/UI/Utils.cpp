@@ -12,15 +12,6 @@
 
 namespace utils
 {
-	// DA RIMUOVERE : ora usato il DropDown in FXComponent
-	void setComboBoxParams(juce::ComboBox& comboBox, std::unique_ptr<ComboBoxAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::StringArray choices, juce::Component* parent) noexcept
-	{
-		comboBox.addItemList(choices, 1);
-		attachment = std::make_unique<ComboBoxAttachment>(apvts, paramID, comboBox);
-		if (parent)
-			parent->addAndMakeVisible(comboBox);
-	}
-
 	void setButton(juce::Button& button, const juce::String& buttonText, juce::Component* parent) noexcept
 	{
 		button.setButtonText(buttonText);
@@ -89,7 +80,7 @@ namespace utils
 		}
 	}
 
-	void comboAndSliderRow(juce::ComboBox& comboBox, std::initializer_list<LabeledSlider*> sliders, juce::Component* parent, int x, int y, int totalWidth, int height) noexcept
+	void comboAndSliderRow(utils::DropDown& dd, std::initializer_list<LabeledSlider*> sliders, juce::Component* parent, int x, int y, int totalWidth, int height) noexcept
 	{
 		auto content = getContentArea(parent);
 
@@ -101,9 +92,9 @@ namespace utils
 		const int startX = content.getX();
 		const int startY = content.getY();
 
-		comboBox.setBounds(startX, startY, totalWidth, height);
+		dd.setBounds(startX, startY, totalWidth, height);
 
-		const int rowY = comboBox.getBottom() + padding;
+		const int rowY = dd.cBox.getBottom() + padding;
 		const int rowH = content.getBottom() - rowY; // tutto lo spazio rimanente
 
 		layoutVisibleRow(startX, rowY, totalWidth, rowH, sliders);

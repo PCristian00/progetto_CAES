@@ -28,8 +28,7 @@ public:
 private:
 	using LabeledSlider = utils::LabeledSlider;
 
-	juce::ComboBox oscWaveSelector;
-	std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> oscWaveSelectorAttachment;
+	utils::DropDown oscWaveSelector;
 
 	LabeledSlider fmFreqLS;
 	LabeledSlider fmDepthLS;

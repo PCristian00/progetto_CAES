@@ -27,10 +27,6 @@ namespace utils
 	// Altezza dell'area riservata al titolo/bordo
 	inline int titleAreaHeight() noexcept { return 2 * padding; }
 
-	// Impostazioni comuni per combo box + attachment
-	// DA RIMUOVERE : ora usato il DropDown in FXComponent
-	void setComboBoxParams(juce::ComboBox& comboBox, std::unique_ptr<ComboBoxAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::StringArray choices, juce::Component* parent = nullptr) noexcept;
-
 	// Impostazioni comuni per button (create per coerenza con le altre, ma non usate)
 	void setButton(juce::Button& button, const juce::String& buttonText, juce::Component* parent = nullptr) noexcept;
 
@@ -252,5 +248,5 @@ namespace utils
 	// Mostra una riga di sliders etichettati (LabeledSlider), distribuiti uniformemente
 	void layoutVisibleRow(int x, int y, int totalWidth, int height, std::initializer_list<LabeledSlider*> sliders) noexcept;
 	// Mostra una riga di sliders etichettati (LabeledSlider) preceduti da una combo box, distribuiti uniformemente
-	void comboAndSliderRow(juce::ComboBox& comboBox, std::initializer_list<LabeledSlider*> sliders, juce::Component* parent, int x = Xstart, int y = Ystart, int totalWidth = 0, int height = 0) noexcept;
+	void comboAndSliderRow(utils::DropDown& dd, std::initializer_list<LabeledSlider*> sliders, juce::Component* parent, int x = Xstart, int y = Ystart, int totalWidth = 0, int height = 0) noexcept;
 }

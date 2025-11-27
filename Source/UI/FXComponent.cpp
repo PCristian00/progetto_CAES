@@ -28,8 +28,6 @@ FXComponent::FXComponent(juce::AudioProcessorValueTreeState& state)
 	, rvDampLS("Rev Damp", apvts, parameters::RV_DAMP, *this, juce::Slider::LinearBarVertical, true)
 	, rvWidthLS("Rev Width", apvts, parameters::RV_WIDTH, *this, juce::Slider::LinearBarVertical, true)
 {
-	/*utils::setComboBoxParams(fxType, fxTypeAttachment, apvts, parameters::FX_TYPE,
-		{ "None", "Chorus", "Flanger", "Reverb" }, this);*/
 	fxType.cBox.addListener(this);
 
 	fxType.cBox.onChange = [this]

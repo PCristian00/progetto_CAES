@@ -32,7 +32,7 @@ private:
 	juce::ToggleButton bypass{ "Bypass" };
 
 	using APVTS = juce::AudioProcessorValueTreeState;
-	// std::unique_ptr<APVTS::ComboBoxAttachment> fxTypeAttachment;
+	
 	std::unique_ptr<APVTS::ButtonAttachment>   bypassAttachment;
 
 	LabeledSlider wetLS;

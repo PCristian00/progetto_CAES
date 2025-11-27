@@ -16,9 +16,8 @@
 FilterComponent::FilterComponent(juce::AudioProcessorValueTreeState& apvts, juce::String filterTypeSelectorId, juce::String filterCutOffId, juce::String filterResonanceId)
 	: filterCutOffLS("Filter Cutoff", apvts, filterCutOffId, *this, juce::Slider::LinearBarVertical, true)
 	, filterResonanceLS("Filter Resonance", apvts, filterResonanceId, *this, juce::Slider::LinearBarVertical, true)
+	, filterTypeSelector(apvts, filterTypeSelectorId, *this, { "Low-Pass","Band-Pass","High-Pass" })
 {
-	juce::StringArray choices{ "Low-Pass","Band-Pass","High-Pass" };
-	utils::setComboBoxParams(filterTypeSelector, filterTypeSelectorAttachment, apvts, filterTypeSelectorId, choices, this);
 }
 
 FilterComponent::~FilterComponent() {}
