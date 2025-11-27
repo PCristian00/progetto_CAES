@@ -62,11 +62,9 @@ void DialogBox::resized()
 
 	if (rightButton.isVisible()) {
 		rightButton.setBounds(bounds.removeFromRight(buttonWidth).reduced(4));
-		// utils::setButtonBounds(rightButton, bounds.removeFromRight(buttonWidth).reduced(4));
 	}
 	if (leftButton.isVisible()) {
 		leftButton.setBounds(bounds.removeFromRight(buttonWidth).reduced(4));
-		// utils::setButtonBounds(leftButton, bounds.removeFromRight(buttonWidth).reduced(4));
 	}
 }
 

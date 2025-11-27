@@ -27,23 +27,11 @@ namespace utils
 	// Altezza dell'area riservata al titolo/bordo
 	inline int titleAreaHeight() noexcept { return 2 * padding; }
 
-
-	//// Impostazioni comuni per slider + label + attachment (Rimpiazzate dalla struct LabeledSlider)
-	//void setSliderParams(juce::Slider& slider, std::unique_ptr<SliderAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::Label& label, juce::Component* parent = nullptr, SliderStyle style = SliderStyle::LinearBarVertical) noexcept;
-	//void setSliderParams(juce::Slider& slider, std::unique_ptr<SliderAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::Label* label = nullptr, juce::Component* parent = nullptr, SliderStyle style = SliderStyle::LinearBarVertical) noexcept;
-	//void setSliderBounds(juce::Slider& slider, int x, int y, int width, int height, juce::Label& label) noexcept;
-	//void setSliderBounds(juce::Slider& slider, int x, int y, int width, int height, juce::Label* label = nullptr) noexcept;
-
 	// Impostazioni comuni per combo box + attachment
 	void setComboBoxParams(juce::ComboBox& comboBox, std::unique_ptr<ComboBoxAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::StringArray choices, juce::Component* parent = nullptr) noexcept;
 
-	// Impostazioni grafiche per combo box (non usata)
-	/*void setComboBoxBounds(juce::ComboBox& comboBox, juce::Rectangle<int> size) noexcept;
-	void setComboBoxBounds(juce::ComboBox& comboBox, int x, int y, int width, int height) noexcept;*/
-
 	// Impostazioni comuni per button (create per coerenza con le altre, ma non usate)
 	void setButton(juce::Button& button, const juce::String& buttonText, juce::Component* parent = nullptr) noexcept;
-	// void setButtonBounds(juce::Button& button, juce::Rectangle<int> size) noexcept;*/
 
 	// Bounds interni ridotti dal padding di contenitore
 	juce::Rectangle<int> getBoundsWithPadding(juce::Component* parent = nullptr, int paddingOverride = 0) noexcept;

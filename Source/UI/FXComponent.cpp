@@ -86,7 +86,6 @@ void FXComponent::resized()
 
 	// Posizionamento controlli di testata
 	fxType.setBounds(x0, startY, colW, headerH);
-	// utils::setComboBoxBounds(fxType, x0, startY, colW, headerH);
 	bypass.setBounds(x1, startY, colW, headerH);
 	wetLS.setBounds(x2, startY, colW, headerH);
 

@@ -58,12 +58,6 @@ namespace Gui
 		nextPresetButton.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.1f)).reduced(4));
 		deleteButton.setBounds(bounds.reduced(4));
 
-		/*utils::setButtonBounds(saveButton, bounds.removeFromLeft(container.proportionOfWidth(0.2f)).reduced(4));
-		utils::setButtonBounds(previousPresetButton, bounds.removeFromLeft(container.proportionOfWidth(0.1f)).reduced(4));
-		utils::setComboBoxBounds(presetList, bounds.removeFromLeft(container.proportionOfWidth(0.4f)).reduced(4));
-		utils::setButtonBounds(nextPresetButton, bounds.removeFromLeft(container.proportionOfWidth(0.1f)).reduced(4));
-		utils::setButtonBounds(deleteButton, bounds.reduced(4));*/
-
 		if (dialogBox)
 			dialogBox->setBounds(0, 0, getWidth(), getHeight());
 	}
