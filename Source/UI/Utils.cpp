@@ -12,7 +12,7 @@
 
 namespace utils
 {
-	void setSliderParams(juce::Slider& slider, std::unique_ptr<SliderAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::Label& label, juce::Component* parent, SliderStyle style) noexcept
+	/*void setSliderParams(juce::Slider& slider, std::unique_ptr<SliderAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::Label& label, juce::Component* parent, SliderStyle style) noexcept
 	{
 		setSliderParams(slider, attachment, apvts, paramID, &label, parent, style);
 	}
@@ -53,7 +53,7 @@ namespace utils
 		{
 			slider.setBounds(x, y, width, height);
 		}
-	}
+	}*/
 
 	void setComboBoxParams(juce::ComboBox& comboBox, std::unique_ptr<ComboBoxAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::StringArray choices, juce::Component* parent) noexcept
 	{
@@ -63,7 +63,7 @@ namespace utils
 			parent->addAndMakeVisible(comboBox);
 	}
 
-	void setComboBoxBounds(juce::ComboBox& comboBox, juce::Rectangle<int> size) noexcept
+	/*void setComboBoxBounds(juce::ComboBox& comboBox, juce::Rectangle<int> size) noexcept
 	{
 		setComboBoxBounds(comboBox, size.getX(), size.getY(), size.getWidth(), size.getHeight());
 	}
@@ -71,7 +71,7 @@ namespace utils
 	void setComboBoxBounds(juce::ComboBox& comboBox, int x, int y, int width, int height) noexcept
 	{
 		comboBox.setBounds(x, y, width, height);
-	}
+	}*/
 
 	void setButton(juce::Button& button, const juce::String& buttonText, juce::Component* parent) noexcept
 	{
@@ -86,10 +86,10 @@ namespace utils
 		}
 	}
 
-	void setButtonBounds(juce::Button& button, juce::Rectangle<int> size) noexcept
+	/*void setButtonBounds(juce::Button& button, juce::Rectangle<int> size) noexcept
 	{
 		button.setBounds(size);
-	}
+	}*/
 
 	juce::Rectangle<int> getBoundsWithPadding(juce::Component* parent, int paddingOverride) noexcept
 	{
@@ -158,7 +158,8 @@ namespace utils
 		const int startX = content.getX();
 		const int startY = content.getY();
 
-		setComboBoxBounds(comboBox, startX, startY, totalWidth, height);
+		//setComboBoxBounds(comboBox, startX, startY, totalWidth, height);
+		comboBox.setBounds(startX, startY, totalWidth, height);
 
 		const int rowY = comboBox.getBottom() + padding;
 		const int rowH = content.getBottom() - rowY; // tutto lo spazio rimanente

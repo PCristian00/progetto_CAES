@@ -27,6 +27,31 @@ namespace utils
 	// Altezza dell'area riservata al titolo/bordo
 	inline int titleAreaHeight() noexcept { return 2 * padding; }
 
+
+	//// Impostazioni comuni per slider + label + attachment (Rimpiazzate dalla struct LabeledSlider)
+	//void setSliderParams(juce::Slider& slider, std::unique_ptr<SliderAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::Label& label, juce::Component* parent = nullptr, SliderStyle style = SliderStyle::LinearBarVertical) noexcept;
+	//void setSliderParams(juce::Slider& slider, std::unique_ptr<SliderAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::Label* label = nullptr, juce::Component* parent = nullptr, SliderStyle style = SliderStyle::LinearBarVertical) noexcept;
+	//void setSliderBounds(juce::Slider& slider, int x, int y, int width, int height, juce::Label& label) noexcept;
+	//void setSliderBounds(juce::Slider& slider, int x, int y, int width, int height, juce::Label* label = nullptr) noexcept;
+
+	// Impostazioni comuni per combo box + attachment
+	void setComboBoxParams(juce::ComboBox& comboBox, std::unique_ptr<ComboBoxAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::StringArray choices, juce::Component* parent = nullptr) noexcept;
+
+	// Impostazioni grafiche per combo box (non usata)
+	/*void setComboBoxBounds(juce::ComboBox& comboBox, juce::Rectangle<int> size) noexcept;
+	void setComboBoxBounds(juce::ComboBox& comboBox, int x, int y, int width, int height) noexcept;*/
+
+	// Impostazioni comuni per button (create per coerenza con le altre, ma non usate)
+	void setButton(juce::Button& button, const juce::String& buttonText, juce::Component* parent = nullptr) noexcept;
+	// void setButtonBounds(juce::Button& button, juce::Rectangle<int> size) noexcept;*/
+
+	// Bounds interni ridotti dal padding di contenitore
+	juce::Rectangle<int> getBoundsWithPadding(juce::Component* parent = nullptr, int paddingOverride = 0) noexcept;
+	// Area contenuti: bounds con padding, meno l'area del titolo/bordo, e con rientro interno
+	juce::Rectangle<int> getContentArea(juce::Component* parent) noexcept;
+	// Disegna bordo con titolo
+	void drawBorders(juce::Graphics& g, juce::Component* parent, juce::Colour colour, juce::String title = "") noexcept;
+
 	// Struttura riutilizzabile Slider + Label + Attachment
 	struct LabeledSlider
 	{
@@ -116,29 +141,8 @@ namespace utils
 		juce::Label& getLabel()  noexcept { return label; }
 	};
 
-	void setSliderParams(juce::Slider& slider, std::unique_ptr<SliderAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::Label& label, juce::Component* parent = nullptr, SliderStyle style = SliderStyle::LinearBarVertical) noexcept;
-	void setSliderParams(juce::Slider& slider, std::unique_ptr<SliderAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::Label* label = nullptr, juce::Component* parent = nullptr, SliderStyle style = SliderStyle::LinearBarVertical) noexcept;
-
-	void setSliderBounds(juce::Slider& slider, int x, int y, int width, int height, juce::Label& label) noexcept;
-	void setSliderBounds(juce::Slider& slider, int x, int y, int width, int height, juce::Label* label = nullptr) noexcept;
-
-	void setComboBoxParams(juce::ComboBox& comboBox, std::unique_ptr<ComboBoxAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::StringArray choices, juce::Component* parent = nullptr) noexcept;
-
-	void setComboBoxBounds(juce::ComboBox& comboBox, juce::Rectangle<int> size) noexcept;
-	void setComboBoxBounds(juce::ComboBox& comboBox, int x, int y, int width, int height) noexcept;
-
-	void setButton(juce::Button& button, const juce::String& buttonText, juce::Component* parent = nullptr) noexcept;
-	void setButtonBounds(juce::Button& button, juce::Rectangle<int> size) noexcept;
-
-	// Bounds interni ridotti dal padding di contenitore
-	juce::Rectangle<int> getBoundsWithPadding(juce::Component* parent = nullptr, int paddingOverride = 0) noexcept;
-
-	// Area contenuti: bounds con padding, meno l'area del titolo/bordo, e con rientro interno
-	juce::Rectangle<int> getContentArea(juce::Component* parent) noexcept;
-
-	void drawBorders(juce::Graphics& g, juce::Component* parent, juce::Colour colour, juce::String title = "") noexcept;
-
+	// Mostra una riga di sliders etichettati (LabeledSlider), distribuiti uniformemente
 	void layoutVisibleRow(int x, int y, int totalWidth, int height, std::initializer_list<LabeledSlider*> sliders) noexcept;
-
+	// Mostra una riga di sliders etichettati (LabeledSlider) preceduti da una combo box, distribuiti uniformemente
 	void comboAndSliderRow(juce::ComboBox& comboBox, std::initializer_list<LabeledSlider*> sliders, juce::Component* parent, int x = Xstart, int y = Ystart, int totalWidth = 0, int height = 0) noexcept;
 }

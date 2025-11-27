@@ -32,10 +32,10 @@ FXComponent::FXComponent(juce::AudioProcessorValueTreeState& state)
 	fxType.addListener(this);
 
 	fxType.onChange = [this]
-	{
-		updateVisibility();
-		resized();
-	};
+		{
+			updateVisibility();
+			resized();
+		};
 
 	addAndMakeVisible(bypass);
 	bypassAttachment = std::make_unique<APVTS::ButtonAttachment>(apvts, parameters::FX_BYPASS, bypass);
@@ -85,7 +85,8 @@ void FXComponent::resized()
 	const int x2 = x1 + colW + utils::padding;
 
 	// Posizionamento controlli di testata
-	utils::setComboBoxBounds(fxType, x0, startY, colW, headerH);
+	fxType.setBounds(x0, startY, colW, headerH);
+	// utils::setComboBoxBounds(fxType, x0, startY, colW, headerH);
 	bypass.setBounds(x1, startY, colW, headerH);
 	wetLS.setBounds(x2, startY, colW, headerH);
 
