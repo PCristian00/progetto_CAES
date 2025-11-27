@@ -12,6 +12,7 @@
 
 namespace utils
 {
+	// DA RIMUOVERE : ora usato il DropDown in FXComponent
 	void setComboBoxParams(juce::ComboBox& comboBox, std::unique_ptr<ComboBoxAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts, juce::String paramID, juce::StringArray choices, juce::Component* parent) noexcept
 	{
 		comboBox.addItemList(choices, 1);

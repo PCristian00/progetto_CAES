@@ -14,6 +14,7 @@
 
 FXComponent::FXComponent(juce::AudioProcessorValueTreeState& state)
 	: apvts(state)
+	, fxType(apvts, parameters::FX_TYPE, *this, { "None", "Chorus", "Flanger", "Reverb" })
 	, wetLS("Wet", apvts, parameters::FX_WET, *this, juce::Slider::LinearBar, true)
 	, chRateLS("Ch Rate", apvts, parameters::CH_RATE, *this, juce::Slider::LinearBarVertical, true)
 	, chDepthLS("Ch Depth", apvts, parameters::CH_DEPTH, *this, juce::Slider::LinearBarVertical, true)
@@ -27,11 +28,11 @@ FXComponent::FXComponent(juce::AudioProcessorValueTreeState& state)
 	, rvDampLS("Rev Damp", apvts, parameters::RV_DAMP, *this, juce::Slider::LinearBarVertical, true)
 	, rvWidthLS("Rev Width", apvts, parameters::RV_WIDTH, *this, juce::Slider::LinearBarVertical, true)
 {
-	utils::setComboBoxParams(fxType, fxTypeAttachment, apvts, parameters::FX_TYPE,
-		{ "None", "Chorus", "Flanger", "Reverb" }, this);
-	fxType.addListener(this);
+	/*utils::setComboBoxParams(fxType, fxTypeAttachment, apvts, parameters::FX_TYPE,
+		{ "None", "Chorus", "Flanger", "Reverb" }, this);*/
+	fxType.cBox.addListener(this);
 
-	fxType.onChange = [this]
+	fxType.cBox.onChange = [this]
 		{
 			updateVisibility();
 			resized();
@@ -45,13 +46,13 @@ FXComponent::FXComponent(juce::AudioProcessorValueTreeState& state)
 
 void FXComponent::comboBoxChanged(juce::ComboBox* c)
 {
-	if (c == &fxType)
+	if (c == &fxType.cBox)
 		updateVisibility();
 }
 
 void FXComponent::updateVisibility()
 {
-	const int type = fxType.getSelectedId() - 1; // 0=None,1=Chorus,2=Flanger,3=Reverb
+	const int type = fxType.cBox.getSelectedId() - 1; // 0=None,1=Chorus,2=Flanger,3=Reverb
 	const bool showCh = (type == 1);
 	const bool showFl = (type == 2);
 	const bool showRv = (type == 3);
