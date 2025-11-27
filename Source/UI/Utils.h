@@ -45,7 +45,7 @@ namespace utils
 	{
 		juce::Slider slider;
 		juce::Label  label;
-		std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attachment;
+		std::unique_ptr<SliderAttachment> attachment;
 
 		explicit LabeledSlider(const juce::String& labelText = {})
 		{
@@ -81,7 +81,7 @@ namespace utils
 
 		void attach(juce::AudioProcessorValueTreeState& state, const juce::String& paramID)
 		{
-			attachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(state, paramID, slider);
+			attachment = std::make_unique<SliderAttachment>(state, paramID, slider);
 		}
 
 		void configure(juce::Slider::SliderStyle style,
@@ -127,6 +127,119 @@ namespace utils
 
 		juce::Slider& getSlider() noexcept { return slider; }
 		juce::Label& getLabel()  noexcept { return label; }
+	};
+
+	struct DropDown
+	{
+		juce::ComboBox comboBox;
+		std::unique_ptr<ComboBoxAttachment> attachment;
+		juce::StringArray choices;
+
+		explicit DropDown()
+		{
+			comboBox.setJustificationType(juce::Justification::centred);
+		}
+
+		DropDown(juce::AudioProcessorValueTreeState& state, const juce::String& paramID)
+			: DropDown()
+		{
+			attach(state, paramID);
+		}
+
+		DropDown(juce::AudioProcessorValueTreeState& state, const juce::String& paramID, juce::Component& parent)
+			: DropDown(state, paramID)
+		{
+			addTo(parent);
+		}
+
+		DropDown(juce::AudioProcessorValueTreeState& state,
+			const juce::String& paramID,
+			juce::Component& parent,
+			const juce::StringArray& items,
+			juce::LookAndFeel* laf = nullptr,
+			int firstItemId = 1)
+			: DropDown(state, paramID, parent)
+		{
+			configure(items, laf, firstItemId);
+		}
+
+		void addTo(juce::Component& parent)
+		{
+			parent.addAndMakeVisible(comboBox);
+		}
+
+		void attach(juce::AudioProcessorValueTreeState& state, const juce::String& paramID)
+		{
+			attachment = std::make_unique<ComboBoxAttachment>(state, paramID, comboBox);
+		}
+
+		// Configurazione rapida: scelte + LookAndFeel (opzionale) + giustificazione
+		void configure(const juce::StringArray& items = {},
+			juce::LookAndFeel* laf = nullptr,
+			int firstItemId = 1,
+			juce::Justification justification = juce::Justification::centred)
+		{
+			if (!items.isEmpty())
+				setChoices(items, true, firstItemId);
+
+			comboBox.setJustificationType(justification);
+
+			if (laf != nullptr)
+				comboBox.setLookAndFeel(laf);
+		}
+
+		// Imposta l'elenco scelte (sostituisce quelle esistenti se richiesto)
+		void setChoices(const juce::StringArray& items, bool clearExisting = true, int firstItemId = 1)
+		{
+			if (clearExisting)
+				comboBox.clear(juce::dontSendNotification);
+
+			choices = items;
+			if (!choices.isEmpty())
+				comboBox.addItemList(choices, firstItemId);
+		}
+
+		// Aggiunge una scelta singola (con id opzionale)
+		void addChoice(const juce::String& item, int itemId = 0)
+		{
+			choices.add(item);
+			const int newId = itemId > 0 ? itemId : (comboBox.getNumItems() + 1);
+			comboBox.addItem(item, newId);
+		}
+
+		// Placeholder utili
+		void setPlaceholderWhenNothingSelected(const juce::String& text)
+		{
+			comboBox.setTextWhenNothingSelected(text);
+		}
+
+		void setPlaceholderWhenNoChoices(const juce::String& text)
+		{
+			comboBox.setTextWhenNoChoicesAvailable(text);
+		}
+
+		// Layout: nessuna label, l'area va direttamente alla combo
+		void setBounds(const juce::Rectangle<int>& area)
+		{
+			comboBox.setBounds(area);
+		}
+
+		void setBounds(int x, int y, int width, int height)
+		{
+			setBounds(juce::Rectangle<int>(x, y, width, height));
+		}
+
+		void setVisible(bool v)
+		{
+			comboBox.setVisible(v);
+		}
+
+		void setEnabled(bool e)
+		{
+			comboBox.setEnabled(e);
+		}
+
+		juce::ComboBox& getComboBox() noexcept { return comboBox; }
 	};
 
 	// Mostra una riga di sliders etichettati (LabeledSlider), distribuiti uniformemente
