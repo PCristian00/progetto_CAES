@@ -198,6 +198,9 @@ namespace utils
 			choices = items;
 			if (!choices.isEmpty())
 				cBox.addItemList(choices, firstItemId);
+
+			if (cBox.getSelectedId() == 0 && cBox.getNumItems() > 0)
+				cBox.setSelectedId(firstItemId, juce::dontSendNotification);
 		}
 
 		// Aggiunge una scelta singola (con id opzionale)
@@ -206,6 +209,9 @@ namespace utils
 			choices.add(item);
 			const int newId = itemId > 0 ? itemId : (cBox.getNumItems() + 1);
 			cBox.addItem(item, newId);
+
+			if (cBox.getSelectedId() == 0)
+				cBox.setSelectedId(newId, juce::dontSendNotification);
 		}
 
 		// Placeholder utili
