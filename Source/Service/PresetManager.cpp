@@ -105,7 +105,7 @@ namespace Service {
 				child.setProperty("value", normalized, nullptr);
 			}
 
-			// Rimuove proprietà non standard
+			// Rimuove proprieta' non standard
 			stripParamNodeToIdAndValue(child);
 		}
 	}
@@ -284,7 +284,7 @@ namespace Service {
 			if (paramTree.isValid())
 				paramTree.copyPropertiesFrom(paramChildToLoad, nullptr);
 
-			// Ripulisci il nodo nello stato da proprietà extra
+			// Ripulisci il nodo nello stato da proprieta' extra
 			if (paramTree.isValid())
 				stripParamNodeToIdAndValue(paramTree);
 		}

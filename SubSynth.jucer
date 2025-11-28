@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="IN6TnE" name="SubSynth" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
-              companyName="univpm" version="1.1.0">
+              companyName="univpm" version="1.1.1">
   <MAINGROUP id="nUzka3" name="SubSynth">
     <GROUP id="{11D3644D-AD7F-BC34-2D8E-F448FCDB550C}" name="Resources">
       <FILE id="UwOo8l" name="default.preset" compile="0" resource="1" file="Source/Resources/default.preset"/>

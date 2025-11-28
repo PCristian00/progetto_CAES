@@ -22,7 +22,7 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 	modAdsr("Mod Envelope", audioProcessor.apvts, parameters::MOD_ATTACK_PARAM_ID, parameters::MOD_DECAY_PARAM_ID, parameters::MOD_SUSTAIN_PARAM_ID, parameters::MOD_RELEASE_PARAM_ID),
 	fx(audioProcessor.apvts)
 {
-	setSize(800, 600);
+	setSize(900, 600);
 	addAndMakeVisible(presetPanel);
 
 	addAndMakeVisible(adsr);
