@@ -60,10 +60,12 @@ void DialogBox::resized()
 
 	message.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.6f)).reduced(4));
 
-	if (rightButton.isVisible())
-		utils::setButtonBounds(rightButton, bounds.removeFromRight(buttonWidth).reduced(4));
-	if (leftButton.isVisible())
-		utils::setButtonBounds(leftButton, bounds.removeFromRight(buttonWidth).reduced(4));
+	if (rightButton.isVisible()) {
+		rightButton.setBounds(bounds.removeFromRight(buttonWidth).reduced(4));
+	}
+	if (leftButton.isVisible()) {
+		leftButton.setBounds(bounds.removeFromRight(buttonWidth).reduced(4));
+	}
 }
 
 void DialogBox::buttonClicked(juce::Button* button) {

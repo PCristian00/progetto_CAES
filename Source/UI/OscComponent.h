@@ -11,6 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "Utils.h"
 
 //==============================================================================
 /*
@@ -25,18 +26,12 @@ public:
 	void resized() override;
 
 private:
+	using LabeledSlider = utils::LabeledSlider;
 
-	juce::ComboBox oscWaveSelector;
-	std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> oscWaveSelectorAttachment;
+	utils::DropDown oscWaveSelector;
 
-	juce::Slider fmFreqSlider;
-	juce::Slider fmDepthSlider;
-
-	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> fmFreqSliderAttachment;
-	juce::Label fmFreqLabel{ "FM Freq", "FM Freq" };
-
-	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> fmDepthSliderAttachment;
-	juce::Label fmDepthLabel{ "FM Depth", "FM Depth" };
+	LabeledSlider fmFreqLS;
+	LabeledSlider fmDepthLS;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(OscComponent)
 };

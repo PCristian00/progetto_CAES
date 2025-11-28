@@ -37,7 +37,7 @@ namespace Service {
 			valueTreeState.state.setProperty(presetNameProperty, "", nullptr);
 
 		currentPreset.referTo(valueTreeState.state.getPropertyAsValue(presetNameProperty, nullptr));
-
+	
 		// Pulisce eventuali parametri orfani ancora presenti nello stato
 		purgeUnknownParameters();
 	}
@@ -71,6 +71,45 @@ namespace Service {
 		return true;
 	}
 
+	// Consenti solo id e value
+	static bool isAllowedParamProp(const juce::Identifier& name) noexcept
+	{
+		return name == juce::Identifier("id") || name == juce::Identifier("value");
+	}
+
+	static void stripParamNodeToIdAndValue(juce::ValueTree& node) noexcept
+	{
+		for (int i = node.getNumProperties() - 1; i >= 0; --i)
+		{
+			auto name = node.getPropertyName(i);
+			if (!isAllowedParamProp(name))
+				node.removeProperty(name, nullptr);
+		}
+	}
+
+	// Forza value a normalizzato numerico [0..1] dall'oggetto parametro
+	static void normalizeParamValuesToStandard(juce::ValueTree& treeRoot, juce::AudioProcessorValueTreeState& apvts)
+	{
+		for (int i = 0; i < treeRoot.getNumChildren(); ++i)
+		{
+			auto child = treeRoot.getChild(i);
+			if (!child.hasProperty("id"))
+				continue;
+
+			const juce::String paramID = child.getProperty("id").toString();
+			if (auto* p = dynamic_cast<juce::RangedAudioParameter*>(apvts.getParameter(paramID)))
+			{
+				// Prende il valore normalizzato corrente del parametro
+				const float normalized = p->getValue();
+				// Imposta "value" come numero (var double/float), non stringa
+				child.setProperty("value", normalized, nullptr);
+			}
+
+			// Rimuove proprieta' non standard
+			stripParamNodeToIdAndValue(child);
+		}
+	}
+
 	void PresetManager::savePreset(const juce::String& presetName)
 	{
 		if (!isValidUserPresetName(presetName))
@@ -79,13 +118,19 @@ namespace Service {
 			return;
 		}
 
-		// Garantisce che lo stato corrente non contenga parametri orfani
+		// Pulisce orfani
 		purgeUnknownParameters();
 
 		currentPreset.setValue(presetName);
 
 		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
-		writeValueTreeToFile(valueTreeState.copyState(), presetFile);
+
+		// Copia dello stato e normalizzazione ai valori standard APVTS
+		auto treeToWrite = valueTreeState.copyState();
+		normalizeParamValuesToStandard(treeToWrite, valueTreeState);
+
+		// Scrittura con helper esistente
+		writeValueTreeToFile(treeToWrite, presetFile);
 	}
 
 	bool PresetManager::isEmbeddedPreset(const String& presetName) const
@@ -157,6 +202,10 @@ namespace Service {
 				auto paramTree = valueTreeState.state.getChildWithProperty("id", paramID);
 				if (paramTree.isValid())
 					paramTree.copyPropertiesFrom(paramChild, nullptr);
+
+				// Subito dopo la copia, ripulisci il nodo nello stato
+				if (paramTree.isValid())
+					stripParamNodeToIdAndValue(paramTree);
 			}
 
 			currentPreset.setValue(presetName);
@@ -226,8 +275,6 @@ namespace Service {
 
 		const auto valueTreeToLoad = juce::ValueTree::fromXml(*xml);
 
-		// valueTreeState.replaceState(valueTreeToLoad);
-
 		for (int i = 0; i < valueTreeToLoad.getNumChildren(); i++)
 		{
 			const auto paramChildToLoad = valueTreeToLoad.getChild(i);
@@ -236,6 +283,10 @@ namespace Service {
 
 			if (paramTree.isValid())
 				paramTree.copyPropertiesFrom(paramChildToLoad, nullptr);
+
+			// Ripulisci il nodo nello stato da proprieta' extra
+			if (paramTree.isValid())
+				stripParamNodeToIdAndValue(paramTree);
 		}
 
 		currentPreset.setValue(presetName);
@@ -327,7 +378,7 @@ namespace Service {
 
 			juce::String id = (child.getProperty("id")).toString();
 
-			// Se l'APVTS non ha un parametro con questo id, il nodo è orfano
+			// Se l'APVTS non ha un parametro con questo id, il nodo e' orfano
 			if (valueTreeState.getParameter(id) == nullptr)
 				toRemove.add(child);
 		}

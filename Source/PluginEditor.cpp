@@ -19,9 +19,10 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 	gain(audioProcessor.apvts, parameters::GAIN_PARAM_ID),
 	osc(audioProcessor.apvts, parameters::OSCILLATOR_PARAM_ID),
 	filter(audioProcessor.apvts, parameters::FILTER_TYPE_PARAM_ID, parameters::FILTER_CUTOFF_PARAM_ID, parameters::FILTER_RESONANCE_PARAM_ID),
-	modAdsr("Mod Envelope", audioProcessor.apvts, parameters::MOD_ATTACK_PARAM_ID, parameters::MOD_DECAY_PARAM_ID, parameters::MOD_SUSTAIN_PARAM_ID, parameters::MOD_RELEASE_PARAM_ID)
+	modAdsr("Mod Envelope", audioProcessor.apvts, parameters::MOD_ATTACK_PARAM_ID, parameters::MOD_DECAY_PARAM_ID, parameters::MOD_SUSTAIN_PARAM_ID, parameters::MOD_RELEASE_PARAM_ID),
+	fx(audioProcessor.apvts)
 {
-	setSize(800, 600);
+	setSize(900, 600);
 	addAndMakeVisible(presetPanel);
 
 	addAndMakeVisible(adsr);
@@ -29,6 +30,7 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 	addAndMakeVisible(osc);
 	addAndMakeVisible(filter);
 	addAndMakeVisible(modAdsr);
+	addAndMakeVisible(fx);
 }
 
 SubSynthAudioProcessorEditor::~SubSynthAudioProcessorEditor() {}
@@ -46,10 +48,13 @@ void SubSynthAudioProcessorEditor::resized()
 
 	auto height = getHeight() - presetPanel.getHeight();
 
-	adsr.setBounds(0, presetPanel.getBottom(), getWidth() / 2, height / 5 * 2);
-	gain.setBounds(0, adsr.getBottom(), getWidth() / 2, height / 5);
-	modAdsr.setBounds(0, gain.getBottom(), getWidth() / 2, height / 5 * 2);
+	adsr.setBounds(0, presetPanel.getBottom(), getWidth() / 3, height / 5 * 2);
+	gain.setBounds(0, adsr.getBottom(), getWidth() / 3, height / 5);
+	modAdsr.setBounds(0, gain.getBottom(), getWidth() / 3, height / 5 * 2);
 
-	osc.setBounds(gain.getRight(), presetPanel.getBottom(), getWidth() / 2, height / 2);
-	filter.setBounds(osc.getX(), osc.getBottom(), getWidth() / 2, height / 2);
+	osc.setBounds(gain.getRight(), presetPanel.getBottom(), getWidth() / 3, height / 2);
+	filter.setBounds(osc.getX(), osc.getBottom(), getWidth() / 3, height / 2);
+	fx.setBounds(filter.getRight(), presetPanel.getBottom(), getWidth() / 3, height);
+
+
 }

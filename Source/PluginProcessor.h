@@ -14,6 +14,7 @@
 
 #include "Parameters.h"
 #include "Service/PresetManager.h"
+#include "Data/FXData.h"
 
 //==============================================================================
 /**
@@ -68,8 +69,9 @@ private:
 	//juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
 
 	juce::Synthesiser synth;
-	std::unique_ptr<Service::PresetManager> presetManager; // { apvts };
+	std::unique_ptr<Service::PresetManager> presetManager;
 
+	FXData fx;
 	//==============================================================================
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SubSynthAudioProcessor)
 };
