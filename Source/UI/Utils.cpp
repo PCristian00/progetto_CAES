@@ -89,14 +89,16 @@ namespace utils
 		if (totalWidth == 0)
 			totalWidth = content.getWidth();
 
-		const int startX = content.getX();
-		const int startY = content.getY();
+		if (x == 0)
+			x = content.getX();
+		if (y == 0)
+			y = content.getY();
 
-		dd.setBounds(startX, startY, totalWidth, height);
+		dd.setBounds(x, y, totalWidth, height);
 
 		const int rowY = dd.cBox.getBottom() + padding;
 		const int rowH = content.getBottom() - rowY; // tutto lo spazio rimanente
 
-		layoutVisibleRow(startX, rowY, totalWidth, rowH, sliders);
+		layoutVisibleRow(x, rowY, totalWidth, rowH, sliders);
 	}
 }
