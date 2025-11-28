@@ -23,6 +23,8 @@ void SynthVoice::startNote(int midiNoteNumber,
 	juce::SynthesiserSound* sound,
 	int currentPitchWheelPosition)
 {
+	juce::ignoreUnused(sound, currentPitchWheelPosition);
+
 	osc.setFrequency(midiNoteNumber);
 	adsr.noteOn();
 	modAdsr.noteOn();
