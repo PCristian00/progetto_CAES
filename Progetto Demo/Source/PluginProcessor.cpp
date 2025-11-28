@@ -165,26 +165,26 @@ bool JuceSynthFrameworkAudioProcessor::isBusesLayoutSupported (const BusesLayout
 
 void JuceSynthFrameworkAudioProcessor::updateFilter()
 {
-    int menuChoice = *tree.getRawParameterValue("filterType");
-    int freq = *tree.getRawParameterValue("filterCutoff");
-    int res = *tree.getRawParameterValue("filterRes");
-    
+    const int menuChoice = static_cast<int>(*tree.getRawParameterValue("filterType"));
+    const float freq = tree.getRawParameterValue("filterCutoff")->load();
+    const float res  = tree.getRawParameterValue("filterRes")->load();
+
     if (menuChoice == 0)
     {
         stateVariableFilter.state->type = dsp::StateVariableFilter::Parameters<float>::Type::lowPass;
-        stateVariableFilter.state->setCutOffFrequency(lastSampleRate, freq, res);
+        stateVariableFilter.state->setCutOffFrequency(static_cast<float>(lastSampleRate), freq, res);
     }
-    
+
     if (menuChoice == 1)
     {
         stateVariableFilter.state->type = dsp::StateVariableFilter::Parameters<float>::Type::highPass;
-        stateVariableFilter.state->setCutOffFrequency(lastSampleRate, freq, res);
+        stateVariableFilter.state->setCutOffFrequency(static_cast<float>(lastSampleRate), freq, res);
     }
-    
+
     if (menuChoice == 2)
     {
         stateVariableFilter.state->type = dsp::StateVariableFilter::Parameters<float>::Type::bandPass;
-        stateVariableFilter.state->setCutOffFrequency(lastSampleRate, freq, res);
+        stateVariableFilter.state->setCutOffFrequency(static_cast<float>(lastSampleRate), freq, res);
     }
 }
 
