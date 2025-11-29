@@ -71,58 +71,6 @@ namespace Service {
 		return true;
 	}
 
-	// Consenti solo id e value
-	static bool isAllowedParamProp(const juce::Identifier& name) noexcept
-	{
-		return name == juce::Identifier("id") || name == juce::Identifier("value");
-	}
-
-	static void stripParamNodeToIdAndValue(juce::ValueTree& node) noexcept
-	{
-		for (int i = node.getNumProperties() - 1; i >= 0; --i)
-		{
-			auto name = node.getPropertyName(i);
-			if (!isAllowedParamProp(name))
-				node.removeProperty(name, nullptr);
-		}
-	}
-
-	// Mantiene i valori "reali" nel tree e rimuove metadata extra
-	static void sanitizeParamNodesForSave(juce::ValueTree& treeRoot) noexcept
-	{
-		for (int i = 0; i < treeRoot.getNumChildren(); ++i)
-		{
-			auto child = treeRoot.getChild(i);
-
-			// Assicura che "value" rimanga numerico (non stringa)
-			if (child.hasProperty("value"))
-			{
-				const auto v = child.getProperty("value");
-				if (v.isString())
-				{
-					// Prova a convertirlo a numero se possibile
-					const auto s = v.toString();
-					const double num = s.getDoubleValue();
-					child.setProperty("value", num, nullptr);
-				}
-			}
-
-			stripParamNodeToIdAndValue(child);
-		}
-	}
-
-	// Rileva se un valore salvato probabilmente è normalizzato [0..1] mentre il range del parametro non lo è
-	static bool looksLikeNormalizedForParam(const juce::RangedAudioParameter* p, double v) noexcept
-	{
-		if (p == nullptr)
-			return false;
-
-		const auto range = p->getNormalisableRange();
-		const bool in01 = (v >= 0.0 && v <= 1.0);
-		const bool paramNotUnitRange = (range.start != 0.0f || range.end != 1.0f);
-		return in01 && paramNotUnitRange;
-	}
-
 	void PresetManager::savePreset(const juce::String& presetName)
 	{
 		if (!isValidUserPresetName(presetName))
@@ -131,19 +79,13 @@ namespace Service {
 			return;
 		}
 
-		// Pulisce orfani
+		// Garantisce che lo stato corrente non contenga parametri orfani
 		purgeUnknownParameters();
 
 		currentPreset.setValue(presetName);
 
 		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
-
-		// Copia dello stato mantenendo i valori reali e riducendo ai soli id/value
-		auto treeToWrite = valueTreeState.copyState();
-		sanitizeParamNodesForSave(treeToWrite);
-
-		// Scrittura
-		writeValueTreeToFile(treeToWrite, presetFile);
+		writeValueTreeToFile(valueTreeState.copyState(), presetFile);
 	}
 
 	bool PresetManager::isEmbeddedPreset(const String& presetName) const
@@ -213,30 +155,8 @@ namespace Service {
 				const auto paramChild = vt.getChild(c);
 				const auto paramID = paramChild.getProperty("id");
 				auto paramTree = valueTreeState.state.getChildWithProperty("id", paramID);
-
-				if (!paramTree.isValid())
-					continue;
-
-				// Migrazione: se "value" sembra normalizzato [0..1] e il parametro non ha range unitario, converti a valore reale
-				if (paramChild.hasProperty("value"))
-				{
-					const double stored = static_cast<double>(paramChild.getProperty("value"));
-					if (auto* p = dynamic_cast<juce::RangedAudioParameter*>(valueTreeState.getParameter(paramID.toString())))
-					{
-						const double corrected = looksLikeNormalizedForParam(p, stored)
-							? static_cast<double>(p->convertFrom0to1(static_cast<float>(stored)))
-							: stored;
-
-						paramTree.setProperty("value", corrected, nullptr);
-					}
-					else
-					{
-						paramTree.setProperty("value", stored, nullptr);
-					}
-				}
-
-				// Pulisci il nodo nello stato
-				stripParamNodeToIdAndValue(paramTree);
+				if (paramTree.isValid())
+					paramTree.copyPropertiesFrom(paramChild, nullptr);
 			}
 
 			currentPreset.setValue(presetName);
@@ -306,35 +226,16 @@ namespace Service {
 
 		const auto valueTreeToLoad = juce::ValueTree::fromXml(*xml);
 
+		// valueTreeState.replaceState(valueTreeToLoad);
+
 		for (int i = 0; i < valueTreeToLoad.getNumChildren(); i++)
 		{
 			const auto paramChildToLoad = valueTreeToLoad.getChild(i);
 			const auto paramID = paramChildToLoad.getProperty("id");
 			auto paramTree = valueTreeState.state.getChildWithProperty("id", paramID);
 
-			if (!paramTree.isValid())
-				continue;
-
-			// Migrazione valori salvati normalizzati -> reali
-			if (paramChildToLoad.hasProperty("value"))
-			{
-				const double stored = static_cast<double>(paramChildToLoad.getProperty("value"));
-				if (auto* p = dynamic_cast<juce::RangedAudioParameter*>(valueTreeState.getParameter(paramID.toString())))
-				{
-					const double corrected = looksLikeNormalizedForParam(p, stored)
-						? static_cast<double>(p->convertFrom0to1(static_cast<float>(stored)))
-						: stored;
-
-					paramTree.setProperty("value", corrected, nullptr);
-				}
-				else
-				{
-					paramTree.setProperty("value", stored, nullptr);
-				}
-			}
-
-			// Ripulisci il nodo nello stato da proprieta' extra
-			stripParamNodeToIdAndValue(paramTree);
+			if (paramTree.isValid())
+				paramTree.copyPropertiesFrom(paramChildToLoad, nullptr);
 		}
 
 		currentPreset.setValue(presetName);
