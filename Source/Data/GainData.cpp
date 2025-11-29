@@ -28,10 +28,10 @@ void GainData::prepare(const juce::dsp::ProcessSpec& spec)
 }
 
 // Compatibilità: prepara costruendo un ProcessSpec e inoltrando
-void GainData::prepare(double sampleRate, int samplesPerBlock)
+void GainData::prepare(double newSampleRate, int samplesPerBlock)
 {
     juce::dsp::ProcessSpec spec;
-    spec.sampleRate = sampleRate;
+    spec.sampleRate = newSampleRate;
     spec.maximumBlockSize = static_cast<juce::uint32>(samplesPerBlock);
     spec.numChannels = 2;
 

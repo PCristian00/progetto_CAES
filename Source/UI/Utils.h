@@ -248,5 +248,5 @@ namespace utils
 	// Mostra una riga di sliders etichettati (LabeledSlider), distribuiti uniformemente
 	void layoutVisibleRow(int x, int y, int totalWidth, int height, std::initializer_list<LabeledSlider*> sliders) noexcept;
 	// Mostra una riga di sliders etichettati (LabeledSlider) preceduti da una combo box, distribuiti uniformemente
-	void comboAndSliderRow(utils::DropDown& dd, std::initializer_list<LabeledSlider*> sliders, juce::Component* parent, int x = Xstart, int y = Ystart, int totalWidth = 0, int height = 0) noexcept;
+	void comboAndSliderRow(utils::DropDown& dd, std::initializer_list<LabeledSlider*> sliders, juce::Component* parent, int x = 0, int y = 0, int totalWidth = 0, int height = 0) noexcept;
 }

@@ -37,9 +37,10 @@ void OscData::setWaveType(const int choice)
 
 void OscData::setFrequency(const int midiNoteNumber)
 {
-	auto currentFreq = juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber) + fmMod;
-	juce::dsp::Oscillator<float>::setFrequency(currentFreq >= 0 ? currentFreq : -currentFreq);
-	lastMidiNote = midiNoteNumber;
+    const float baseHz = static_cast<float>(juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber));
+    const float currentFreq = baseHz + fmMod;
+    juce::dsp::Oscillator<float>::setFrequency(currentFreq >= 0.0f ? currentFreq : -currentFreq);
+    lastMidiNote = midiNoteNumber;
 }
 
 // Aggiunta modulazione FM.

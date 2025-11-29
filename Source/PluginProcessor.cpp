@@ -120,7 +120,7 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 			float sustain = apvts.getRawParameterValue(parameters::SUSTAIN_PARAM_ID)->load();
 			float release = apvts.getRawParameterValue(parameters::RELEASE_PARAM_ID)->load();
 			float gain = apvts.getRawParameterValue(parameters::GAIN_PARAM_ID)->load();
-			int oscChoice = apvts.getRawParameterValue(parameters::OSCILLATOR_PARAM_ID)->load();
+			const int oscChoice = static_cast<int>(apvts.getRawParameterValue(parameters::OSCILLATOR_PARAM_ID)->load());
 			float fmFreq = apvts.getRawParameterValue(parameters::FM_FREQUENCY_PARAM_ID)->load();
 			float fmDepth = apvts.getRawParameterValue(parameters::FM_DEPTH_PARAM_ID)->load();
 			float filterType = apvts.getRawParameterValue(parameters::FILTER_TYPE_PARAM_ID)->load();
@@ -131,11 +131,11 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 			float modSustain = apvts.getRawParameterValue(parameters::MOD_SUSTAIN_PARAM_ID)->load();
 			float modRelease = apvts.getRawParameterValue(parameters::MOD_RELEASE_PARAM_ID)->load();
 
-			voice->getOscillator().setWaveType(oscChoice); // impostazione tipo di onda
-			voice->getOscillator().setFmParams(fmDepth, fmFreq); // impostazione FM (frequenza e profondità)
-			voice->updateADSR(attack, decay, sustain, release, gain); // aggiornamento inviluppo ampiezza
-			voice->updateFilter((int)filterType, filterCutOff, filterResonance); // aggiornamento filtro
-			voice->updateModADSR(modAttack, modDecay, modSustain, modRelease); // aggiornamento inviluppo modulazione
+			voice->getOscillator().setWaveType(oscChoice);
+			voice->getOscillator().setFmParams(fmDepth, fmFreq);
+			voice->updateADSR(attack, decay, sustain, release, gain);
+			voice->updateFilter(static_cast<int>(filterType), filterCutOff, filterResonance);
+			voice->updateModADSR(modAttack, modDecay, modSustain, modRelease);
 		}
 
 	// Render dry
