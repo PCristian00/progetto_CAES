@@ -10,8 +10,15 @@
 
 #include "ADSRData.h"
 
-// FORSE RINOMINA IN update
-void ADSRData::updateADSR(const float attack, const float decay, const float sustain, const float release)
+/**
+ * Aggiorna i parametri dell'ADSR e li applica al processore.
+ *
+ * @param attack Attacco.
+ * @param decay Decadimento.
+ * @param sustain Sostegno.
+ * @param release Rilascio.
+ */
+void ADSRData::update(const float attack, const float decay, const float sustain, const float release)
 {
 	adsrParams.attack = attack;
 	adsrParams.decay = decay;

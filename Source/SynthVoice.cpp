@@ -108,7 +108,7 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outpu
  */
 void SynthVoice::updateADSR(const float attack, const float decay, const float sustain, const float release, const float gainValue)
 {
-	adsr.updateADSR(attack, decay, sustain, release);
+	adsr.update(attack, decay, sustain, release);
 	gain.setGainLinear(gainValue);
 
 	if (debugAmpEnvEnabled)
@@ -145,7 +145,7 @@ void SynthVoice::updateFilter(int type, float cutoff, float resonance)
  */
 void SynthVoice::updateModADSR(const float attack, const float decay, const float sustain, const float release)
 {
-	modAdsr.updateADSR(attack, decay, sustain, release);
+	modAdsr.update(attack, decay, sustain, release);
 
 	if (debugModEnvEnabled)
 		DBG("[ModADSR] updateModADSR A=" << attack << " D=" << decay << " S=" << sustain << " R=" << release);
