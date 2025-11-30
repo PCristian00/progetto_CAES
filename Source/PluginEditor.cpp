@@ -19,11 +19,11 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 	: AudioProcessorEditor(&p),
 	audioProcessor(p),
 	presetPanel(p.getPresetManager()),
-	adsr("Amp Envelope", audioProcessor.apvts, parameters::ATTACK_PARAM_ID, parameters::DECAY_PARAM_ID, parameters::SUSTAIN_PARAM_ID, parameters::RELEASE_PARAM_ID),
-	gain(audioProcessor.apvts, parameters::GAIN_PARAM_ID),
-	osc(audioProcessor.apvts, parameters::OSCILLATOR_PARAM_ID),
-	filter(audioProcessor.apvts, parameters::FILTER_TYPE_PARAM_ID, parameters::FILTER_CUTOFF_PARAM_ID, parameters::FILTER_RESONANCE_PARAM_ID),
-	modAdsr("Mod Envelope", audioProcessor.apvts, parameters::MOD_ATTACK_PARAM_ID, parameters::MOD_DECAY_PARAM_ID, parameters::MOD_SUSTAIN_PARAM_ID, parameters::MOD_RELEASE_PARAM_ID),
+	adsr("Amp Envelope", audioProcessor.apvts, parameters::ATTACK, parameters::DECAY, parameters::SUSTAIN, parameters::RELEASE),
+	gain(audioProcessor.apvts, parameters::GAIN),
+	osc(audioProcessor.apvts, parameters::OSCILLATOR_TYPE),
+	filter(audioProcessor.apvts, parameters::FILTER_TYPE, parameters::FILTER_CUTOFF, parameters::FILTER_RESONANCE),
+	modAdsr("Mod Envelope", audioProcessor.apvts, parameters::MOD_ATTACK, parameters::MOD_DECAY, parameters::MOD_SUSTAIN, parameters::MOD_RELEASE),
 	fx(audioProcessor.apvts)
 {
 	setSize(900, 600);

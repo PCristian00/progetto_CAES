@@ -154,21 +154,21 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	for (int i = 0; i < synth.getNumVoices(); ++i)
 		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
 		{
-			float attack = apvts.getRawParameterValue(parameters::ATTACK_PARAM_ID)->load();
-			float decay = apvts.getRawParameterValue(parameters::DECAY_PARAM_ID)->load();
-			float sustain = apvts.getRawParameterValue(parameters::SUSTAIN_PARAM_ID)->load();
-			float release = apvts.getRawParameterValue(parameters::RELEASE_PARAM_ID)->load();
-			float gain = apvts.getRawParameterValue(parameters::GAIN_PARAM_ID)->load();
-			const int oscChoice = static_cast<int>(apvts.getRawParameterValue(parameters::OSCILLATOR_PARAM_ID)->load());
-			float fmFreq = apvts.getRawParameterValue(parameters::FM_FREQUENCY_PARAM_ID)->load();
-			float fmDepth = apvts.getRawParameterValue(parameters::FM_DEPTH_PARAM_ID)->load();
-			float filterType = apvts.getRawParameterValue(parameters::FILTER_TYPE_PARAM_ID)->load();
-			float filterCutOff = apvts.getRawParameterValue(parameters::FILTER_CUTOFF_PARAM_ID)->load();
-			float filterResonance = apvts.getRawParameterValue(parameters::FILTER_RESONANCE_PARAM_ID)->load();
-			float modAttack = apvts.getRawParameterValue(parameters::MOD_ATTACK_PARAM_ID)->load();
-			float modDecay = apvts.getRawParameterValue(parameters::MOD_DECAY_PARAM_ID)->load();
-			float modSustain = apvts.getRawParameterValue(parameters::MOD_SUSTAIN_PARAM_ID)->load();
-			float modRelease = apvts.getRawParameterValue(parameters::MOD_RELEASE_PARAM_ID)->load();
+			float attack = apvts.getRawParameterValue(parameters::ATTACK)->load();
+			float decay = apvts.getRawParameterValue(parameters::DECAY)->load();
+			float sustain = apvts.getRawParameterValue(parameters::SUSTAIN)->load();
+			float release = apvts.getRawParameterValue(parameters::RELEASE)->load();
+			float gain = apvts.getRawParameterValue(parameters::GAIN)->load();
+			const int oscChoice = static_cast<int>(apvts.getRawParameterValue(parameters::OSCILLATOR_TYPE)->load());
+			float fmFreq = apvts.getRawParameterValue(parameters::FM_FREQUENCY)->load();
+			float fmDepth = apvts.getRawParameterValue(parameters::FM_DEPTH)->load();
+			float filterType = apvts.getRawParameterValue(parameters::FILTER_TYPE)->load();
+			float filterCutOff = apvts.getRawParameterValue(parameters::FILTER_CUTOFF)->load();
+			float filterResonance = apvts.getRawParameterValue(parameters::FILTER_RESONANCE)->load();
+			float modAttack = apvts.getRawParameterValue(parameters::MOD_ATTACK)->load();
+			float modDecay = apvts.getRawParameterValue(parameters::MOD_DECAY)->load();
+			float modSustain = apvts.getRawParameterValue(parameters::MOD_SUSTAIN)->load();
+			float modRelease = apvts.getRawParameterValue(parameters::MOD_RELEASE)->load();
 
 			voice->getOscillator().setWaveType(oscChoice);
 			voice->getOscillator().setFmParams(fmDepth, fmFreq);

@@ -14,25 +14,25 @@
 namespace parameters
 {
 	// Oscillator: IDs
-	static constexpr const char* OSCILLATOR_PARAM_ID = "OSC";
+	static constexpr const char* OSCILLATOR_TYPE = "OSC_TYPE";	// 0=Sine, 1=Saw, 2=Square
 	// FM: IDs
-	static constexpr const char* FM_FREQUENCY_PARAM_ID = "FMFREQ";
-	static constexpr const char* FM_DEPTH_PARAM_ID = "FMDEPTH";
+	static constexpr const char* FM_FREQUENCY = "FM_FREQ";
+	static constexpr const char* FM_DEPTH = "FM_DEPTH";
 	// ADSR: IDs
-	static constexpr const char* ATTACK_PARAM_ID = "ATTACK";
-	static constexpr const char* DECAY_PARAM_ID = "DECAY";
-	static constexpr const char* SUSTAIN_PARAM_ID = "SUSTAIN";
-	static constexpr const char* RELEASE_PARAM_ID = "RELEASE";
-	static constexpr const char* GAIN_PARAM_ID = "GAIN";
+	static constexpr const char* ATTACK = "ATTACK";
+	static constexpr const char* DECAY = "DECAY";
+	static constexpr const char* SUSTAIN = "SUSTAIN";
+	static constexpr const char* RELEASE = "RELEASE";
+	static constexpr const char* GAIN = "GAIN";
 	// Filter: IDs
-	static constexpr const char* FILTER_TYPE_PARAM_ID = "FILTERTYPE";
-	static constexpr const char* FILTER_CUTOFF_PARAM_ID = "FILTERCUTOFF";
-	static constexpr const char* FILTER_RESONANCE_PARAM_ID = "FILTERRESONANCE";
+	static constexpr const char* FILTER_TYPE = "FILTER_TYPE";	// 0=Low-pass, 1=Band-pass, 2=High-pass
+	static constexpr const char* FILTER_CUTOFF = "FILTER_CUTOFF";
+	static constexpr const char* FILTER_RESONANCE = "FILTER_RESONANCE";
 	// Filter ADSR
-	static constexpr const char* MOD_ATTACK_PARAM_ID = "MODATTACK";
-	static constexpr const char* MOD_DECAY_PARAM_ID = "MODDECAY";
-	static constexpr const char* MOD_SUSTAIN_PARAM_ID = "MODSUSTAIN";
-	static constexpr const char* MOD_RELEASE_PARAM_ID = "MODRELEASE";
+	static constexpr const char* MOD_ATTACK = "MOD_ATTACK";
+	static constexpr const char* MOD_DECAY = "MOD_DECAY";
+	static constexpr const char* MOD_SUSTAIN = "MOD_SUSTAIN";
+	static constexpr const char* MOD_RELEASE = "MOD_RELEASE";
 
 	// FX: IDs
 	static constexpr const char* FX_TYPE = "FX_TYPE";     // 0=None, 1=Chorus, 2=Flanger, 3=Reverb
@@ -58,26 +58,26 @@ namespace parameters
 		std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
 
 		// Combobox: switch oscillator
-		params.push_back(std::make_unique<juce::AudioParameterChoice>(OSCILLATOR_PARAM_ID, "Oscillator", juce::StringArray{ "Sine", "Saw", "Square" }, 0));
+		params.push_back(std::make_unique<juce::AudioParameterChoice>(OSCILLATOR_TYPE, "Oscillator", juce::StringArray{ "Sine", "Saw", "Square" }, 0));
 		// FM parameters
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(FM_FREQUENCY_PARAM_ID, "FM Frequency", juce::NormalisableRange<float>{0.0f, 1000.0f, 0.01f, 0.3f}, 5.0f));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(FM_DEPTH_PARAM_ID, "FM Depth", juce::NormalisableRange<float>{0.0f, 1000.0f, 0.01f, 0.3f}, 0.0f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(FM_FREQUENCY, "FM Frequency", juce::NormalisableRange<float>{0.0f, 1000.0f, 0.01f, 0.3f}, 5.0f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(FM_DEPTH, "FM Depth", juce::NormalisableRange<float>{0.0f, 1000.0f, 0.01f, 0.3f}, 0.0f));
 		// Gain parameter
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(GAIN_PARAM_ID, "Gain", 0.0f, 1.0f, 0.5f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(GAIN, "Gain", 0.0f, 1.0f, 0.5f));
 		// ADSR parameters
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(ATTACK_PARAM_ID, "Attack", 0.1f, 1.0f, 0.1f));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(DECAY_PARAM_ID, "Decay", 0.1f, 1.0f, 0.1f));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(SUSTAIN_PARAM_ID, "Sustain", 0.1f, 1.0f, 1.0f));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(RELEASE_PARAM_ID, "Release", 0.1f, 3.0f, 0.4f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(ATTACK, "Attack", 0.1f, 1.0f, 0.1f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(DECAY, "Decay", 0.1f, 1.0f, 0.1f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(SUSTAIN, "Sustain", 0.1f, 1.0f, 1.0f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(RELEASE, "Release", 0.1f, 3.0f, 0.4f));
 		// Filter parameters
-		params.push_back(std::make_unique<juce::AudioParameterChoice>(FILTER_TYPE_PARAM_ID, "Filter Type", juce::StringArray{ "Low-Pass", "Band-Pass", "High-Pass" }, 0));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(FILTER_CUTOFF_PARAM_ID, "Filter Cutoff", juce::NormalisableRange<float>{20.0f, 20000.0f, 0.1f, 0.6f}, 200.0f));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(FILTER_RESONANCE_PARAM_ID, "Filter Resonance", juce::NormalisableRange<float>{1.0f, 10.0f, 0.1f}, 1.0f));
+		params.push_back(std::make_unique<juce::AudioParameterChoice>(FILTER_TYPE, "Filter Type", juce::StringArray{ "Low-Pass", "Band-Pass", "High-Pass" }, 0));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(FILTER_CUTOFF, "Filter Cutoff", juce::NormalisableRange<float>{20.0f, 20000.0f, 0.1f, 0.6f}, 200.0f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(FILTER_RESONANCE, "Filter Resonance", juce::NormalisableRange<float>{1.0f, 10.0f, 0.1f}, 1.0f));
 		// Filter ADSR parameters
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(MOD_ATTACK_PARAM_ID, "Mod Attack", 0.1f, 1.0f, 0.1f));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(MOD_DECAY_PARAM_ID, "Mod Decay", 0.1f, 1.0f, 0.1f));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(MOD_SUSTAIN_PARAM_ID, "Mod Sustain", 0.1f, 1.0f, 1.0f));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(MOD_RELEASE_PARAM_ID, "Mod Release", 0.1f, 3.0f, 0.4f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(MOD_ATTACK, "Mod Attack", 0.1f, 1.0f, 0.1f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(MOD_DECAY, "Mod Decay", 0.1f, 1.0f, 0.1f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(MOD_SUSTAIN, "Mod Sustain", 0.1f, 1.0f, 1.0f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(MOD_RELEASE, "Mod Release", 0.1f, 3.0f, 0.4f));
 
 		// FX
 		params.push_back(std::make_unique<juce::AudioParameterChoice>(FX_TYPE, "FX Type", juce::StringArray{ "None", "Chorus", "Flanger", "Reverb" }, 0));
