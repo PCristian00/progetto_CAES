@@ -10,11 +10,11 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "UI/PresetPanel.h"
 #include "UI/ADSRComponent.h"
 #include "UI/GainComponent.h"
 #include "UI/OscComponent.h"
 #include "UI/FilterComponent.h"
-#include "UI/PresetPanel.h"
 #include "UI/FXComponent.h"
 //==============================================================================
 /**
@@ -35,12 +35,13 @@ private:
 
 	SubSynthAudioProcessor& audioProcessor;
 
-	OscComponent osc;
+	Gui::PresetPanel presetPanel;
+
 	ADSRComponent adsr;
 	GainComponent gain;
+	OscComponent osc;
 	FilterComponent filter;
 	ADSRComponent modAdsr;
-	Gui::PresetPanel presetPanel;
 	FXComponent fx;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SubSynthAudioProcessorEditor)

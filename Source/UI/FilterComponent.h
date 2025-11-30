@@ -13,10 +13,6 @@
 #include <JuceHeader.h>
 #include "Utils.h"
 
-//==============================================================================
-///
-/*
-*/
 class FilterComponent : public juce::Component
 {
 public:
@@ -31,8 +27,7 @@ private:
 
 	utils::DropDown filterTypeSelector;
 
-	LabeledSlider filterCutOffLS;
-	LabeledSlider filterResonanceLS;
+	LabeledSlider filterCutOffLS, filterResonanceLS;
 
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FilterComponent)

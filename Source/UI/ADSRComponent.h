@@ -13,9 +13,6 @@
 #include <JuceHeader.h>
 #include "Utils.h"
 
-//==============================================================================
-/*
-*/
 class ADSRComponent : public juce::Component
 {
 public:

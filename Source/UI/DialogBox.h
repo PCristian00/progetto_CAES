@@ -12,11 +12,6 @@
 
 #include <JuceHeader.h>
 
-//==============================================================================
-/*
-*/
-
-//==============================================================================
 // Semplice dialog con uno o due pulsanti.
 // Costruttore 1: messaggio + testo bottone sinistro (accept) + testo bottone destro (close) + callback sinistro.
 //                Il destro chiude la dialog (se presente).

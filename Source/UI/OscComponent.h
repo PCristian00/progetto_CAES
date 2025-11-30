@@ -13,9 +13,6 @@
 #include <JuceHeader.h>
 #include "Utils.h"
 
-//==============================================================================
-/*
-*/
 class OscComponent : public juce::Component
 {
 public:
@@ -30,8 +27,7 @@ private:
 
 	utils::DropDown oscWaveSelector;
 
-	LabeledSlider fmFreqLS;
-	LabeledSlider fmDepthLS;
+	LabeledSlider fmFreqLS, fmDepthLS;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(OscComponent)
 };

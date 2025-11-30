@@ -16,10 +16,6 @@
 #include "Service/PresetManager.h"
 #include "Data/FXData.h"
 
-//==============================================================================
-/**
-*/
-
 class SubSynthAudioProcessor : public juce::AudioProcessor
 {
 public:
@@ -65,8 +61,6 @@ public:
 	juce::AudioProcessorValueTreeState apvts;
 
 private:
-
-	//juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
 
 	juce::Synthesiser synth;
 	std::unique_ptr<Service::PresetManager> presetManager;

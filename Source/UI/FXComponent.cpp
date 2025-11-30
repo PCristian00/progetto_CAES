@@ -16,7 +16,7 @@
  * Pannello FX: selezione tipo effetto, bypass, wet e parametri specifici.
  * Configura visibilità dinamica dei controlli in base al tipo selezionato.
  */
-FXComponent::FXComponent(juce::AudioProcessorValueTreeState& state)
+FXComponent::FXComponent(APVTS& state)
 	: apvts(state)
 	, fxType(apvts, parameters::FX_TYPE, *this, { "None", "Chorus", "Flanger", "Reverb" })
 	, wetLS("Wet", apvts, parameters::FX_WET, *this, juce::Slider::LinearBar, true)

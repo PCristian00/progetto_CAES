@@ -14,9 +14,10 @@
 class FXComponent : public juce::Component, private juce::ComboBox::Listener
 {
 	using LabeledSlider = utils::LabeledSlider;
+	using APVTS = juce::AudioProcessorValueTreeState;
 
 public:
-	FXComponent(juce::AudioProcessorValueTreeState& apvts);
+	FXComponent(APVTS& apvts);
 	~FXComponent() override = default;
 
 	void paint(juce::Graphics&) override;
@@ -24,27 +25,17 @@ public:
 
 private:
 	void comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged) override;
-	void updateVisibility();
+	void updateVisibility();	
 
-	juce::AudioProcessorValueTreeState& apvts;
+	APVTS& apvts;
 
 	utils::DropDown fxType;
-	juce::ToggleButton bypass{ "Bypass" };
 
-	using APVTS = juce::AudioProcessorValueTreeState;
-	
-	std::unique_ptr<APVTS::ButtonAttachment>   bypassAttachment;
+	juce::ToggleButton bypass{ "Bypass" };
+	std::unique_ptr<APVTS::ButtonAttachment>   bypassAttachment;	
 
 	LabeledSlider wetLS;
-	LabeledSlider chRateLS;
-	LabeledSlider chDepthLS;
-	LabeledSlider chDelayLS;
-	LabeledSlider chFeedbackLS;
-	LabeledSlider flRateLS;
-	LabeledSlider flDepthLS;
-	LabeledSlider flDelayLS;
-	LabeledSlider flFeedbackLS;
-	LabeledSlider rvSizeLS;
-	LabeledSlider rvDampLS;
-	LabeledSlider rvWidthLS;
+	LabeledSlider chRateLS, chDepthLS, chDelayLS, chFeedbackLS; // Slider Chorus
+	LabeledSlider flRateLS, flDepthLS, flDelayLS, flFeedbackLS; // Slider Flanger
+	LabeledSlider rvSizeLS, rvDampLS, rvWidthLS; // Slider Reverb
 };

@@ -38,7 +38,7 @@ public:
 	void setModEnvelopeDebug(bool enabled) { debugModEnvEnabled = enabled; }
 	void setAmpEnvelopeDebug(bool enabled) { debugAmpEnvEnabled = enabled; }
 
-	// Imposta ogni quanti blocchi stampare ( >=1 )
+	// Imposta ogni quanti blocchi stampare (>=1)
 	void setEnvelopeDebugRates(int ampEveryBlocks, int modEveryBlocks)
 	{
 		if (ampEveryBlocks > 0) ampPrintEvery = ampEveryBlocks;
@@ -51,7 +51,6 @@ private:
 
 	GainData gain;
 	OscData osc;
-
 	ADSRData adsr;     // amp envelope
 	FilterData filter;
 	ADSRData modAdsr;  // filter envelope

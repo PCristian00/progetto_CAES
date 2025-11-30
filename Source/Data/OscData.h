@@ -16,14 +16,8 @@ class OscData :public juce::dsp::Oscillator<float>
 public:
 	void prepare(juce::dsp::ProcessSpec& spec);
 	void setWaveType(const int choice);
-
 	void setFrequency(const int midiNoteNumber);
-
-	// Forse rimuovere?
-	// void getNextAudioBlock(juce::dsp::AudioBlock<float>& block);
-
 	float processSample(float input);
-
 	void setFmParams(const float depth, const float freq);
 
 private:

@@ -12,9 +12,6 @@
 #include <JuceHeader.h>
 #include "Utils.h"
 
-//==============================================================================
-/*
-*/
 class GainComponent : public juce::Component
 {
 public:

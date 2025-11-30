@@ -15,9 +15,8 @@ class FilterData
 {
 public:
 
-	void prepareToPlay(double sampleRate, int samplesPerBlock, int numChannels); // , int outputChannels);
+	void prepareToPlay(double sampleRate, int samplesPerBlock, int numChannels);
 	void process(juce::AudioBuffer<float>& buffer);
-	// Elaborazione per-sample (consigliata per modulazione per-sample)
 	float processSample(int channel, float inputSample);
 
 	// modulator è tipicamente [0..1] e scala la cutoff

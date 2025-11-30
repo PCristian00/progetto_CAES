@@ -26,6 +26,7 @@ namespace Gui
 
 	private:
 		void loadPresetList();
+
 		void buttonClicked(juce::Button* button) override;
 		void comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged) override;
 
