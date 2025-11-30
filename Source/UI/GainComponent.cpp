@@ -21,12 +21,18 @@ GainComponent::GainComponent(juce::AudioProcessorValueTreeState& apvtsIn, juce::
 
 GainComponent::~GainComponent() = default;
 
+/**
+ * Sfondo e bordo con titolo "Gain".
+ */
 void GainComponent::paint(juce::Graphics& g)
 {
 	g.fillAll(juce::Colours::black);
 	utils::drawBorders(g, this, juce::Colours::orange, "Gain");
 }
 
+/**
+ * Layout: lo slider occupa tutta l'area contenuti.
+ */
 void GainComponent::resized()
 {
 	const auto content = utils::getContentArea(this);

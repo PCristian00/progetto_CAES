@@ -10,6 +10,13 @@
 
 #include "FilterData.h"
 
+/**
+ * Prepara il filtro con lo spec fornito e resetta stato interno.
+ *
+ * @param sampleRate SR.
+ * @param samplesPerBlock dimensione blocco.
+ * @param numChannels numero canali.
+ */
 void FilterData::prepareToPlay(double sampleRate, int samplesPerBlock, int numChannels)
 {
 	filter.reset();
@@ -23,6 +30,10 @@ void FilterData::prepareToPlay(double sampleRate, int samplesPerBlock, int numCh
 	isPrepared = true;
 }
 
+/**
+ * Processa un buffer intero in-place.
+ * Precondizione: prepareToPlay chiamato.
+ */
 void FilterData::process(juce::AudioBuffer<float>& buffer)
 {
 	jassert(isPrepared); // make sure the filter is prepared before processing
@@ -32,12 +43,24 @@ void FilterData::process(juce::AudioBuffer<float>& buffer)
 	filter.process(context);
 }
 
+/**
+ * Processa un singolo sample (per canale) e ritorna il valore filtrato.
+ */
 float FilterData::processSample(int channel, float inputSample)
 {
 	jassert(isPrepared);
 	return filter.processSample(channel, inputSample);
 }
 
+/**
+ * Aggiorna i parametri del filtro in base al tipo e modulatore.
+ * Limita la frequenza risultante tra 20 Hz e 20 kHz.
+ *
+ * @param filterType 0=LP,1=BP,2=HP.
+ * @param cutoffFreq frequenza base.
+ * @param resonance risonanza.
+ * @param modulator fattore modulazione (scala la cutoff).
+ */
 void FilterData::updateParameters(int filterType, float cutoffFreq, float resonance, float modulator)
 {
 	switch (filterType)
@@ -60,6 +83,9 @@ void FilterData::updateParameters(int filterType, float cutoffFreq, float resona
 	filter.setResonance(resonance);
 }
 
+/**
+ * Reset dello stato del filtro.
+ */
 void FilterData::reset()
 {
 	filter.reset();

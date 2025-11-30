@@ -26,12 +26,18 @@ ADSRComponent::ADSRComponent(juce::String name,
 {
 }
 
+/**
+ * Sfondo e bordo con titolo del componente ADSR (il nome del componente passato al costruttore).
+ */
 void ADSRComponent::paint(juce::Graphics& g)
 {
 	g.fillAll(juce::Colours::black);
 	utils::drawBorders(g, this, juce::Colours::white, componentName);
 }
 
+/**
+ * Layout: distribuisce uniformemente i 4 slider (Attack, Decay, Sustain, Release).
+ */
 void ADSRComponent::resized()
 {
 	const auto content = utils::getContentArea(this);
