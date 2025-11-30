@@ -11,6 +11,10 @@
 #include "Parameters.h"
 
 //==============================================================================
+/**
+ * Costruisce l'editor: crea pannelli e attacca controlli agli APVTS params.
+ * Imposta dimensioni e aggiunge i componenti visibili.
+ */
 SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcessor& p)
 	: AudioProcessorEditor(&p),
 	audioProcessor(p),
@@ -35,11 +39,17 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 
 SubSynthAudioProcessorEditor::~SubSynthAudioProcessorEditor() {}
 
+/**
+ * Sfondo editor.
+ */
 void SubSynthAudioProcessorEditor::paint(juce::Graphics& g)
 {
 	g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
 }
 
+/**
+ * Layout dei componenti: suddivide in 3 colonne e più righe.
+ */
 void SubSynthAudioProcessorEditor::resized()
 {
 

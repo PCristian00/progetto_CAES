@@ -14,6 +14,10 @@
 #include "../Parameters.h"
 
 //==============================================================================
+/**
+ * Pannello Oscillatore: selezione forma d'onda e controlli FM (freq, depth).
+ * Collega slider e combo agli parametri APVTS.
+ */
 OscComponent::OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::String waveSelectorId)
 	: fmFreqLS("FM Freq", apvts, parameters::FM_FREQUENCY_PARAM_ID, *this, juce::Slider::LinearBarVertical, true)
 	, fmDepthLS("FM Depth", apvts, parameters::FM_DEPTH_PARAM_ID, *this, juce::Slider::LinearBarVertical, true)
@@ -30,6 +34,9 @@ void OscComponent::paint(juce::Graphics& g)
 	utils::drawBorders(g, this, juce::Colours::darkgoldenrod, "Oscillator");
 }
 
+/**
+ * Layout: combo onda + riga di slider FM.
+ */
 void OscComponent::resized()
 {
 	utils::comboAndSliderRow(oscWaveSelector, { &fmFreqLS, &fmDepthLS }, this);

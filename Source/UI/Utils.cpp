@@ -12,6 +12,10 @@
 
 namespace utils
 {
+    /**
+     * Configura un Button (testo e cursore) e lo aggiunge al parent.
+     * Se il parent implementa Button::Listener, lo registra come listener.
+     */
 	void setButton(juce::Button& button, const juce::String& buttonText, juce::Component* parent) noexcept
 	{
 		button.setButtonText(buttonText);
@@ -25,6 +29,9 @@ namespace utils
 		}
 	}
 
+    /**
+     * Restituisce i bounds del parent ridotti dal padding (override opzionale).
+     */
 	juce::Rectangle<int> getBoundsWithPadding(juce::Component* parent, int paddingOverride) noexcept
 	{
 		if (!parent)
@@ -34,7 +41,9 @@ namespace utils
 		return parent->getLocalBounds().reduced(usePadding);
 	}
 
-	// Area contenuti uniforme: padding esterno + rimozione dell'area del titolo + rientro interno
+    /**
+     * Area contenuti: bounds con padding, meno titolo, con rientro interno.
+     */
 	juce::Rectangle<int> getContentArea(juce::Component* parent) noexcept
 	{
 		auto bounds = getBoundsWithPadding(parent);
@@ -43,6 +52,9 @@ namespace utils
 		return bounds;
 	}
 
+    /**
+     * Disegna bordo e titolo sopra l'area dei contenuti.
+     */
 	void drawBorders(juce::Graphics& g, juce::Component* parent, juce::Colour colour, juce::String title) noexcept
 	{
 		auto bounds = getBoundsWithPadding(parent);
@@ -56,6 +68,14 @@ namespace utils
 			static_cast<float>(padding) / 5.0f);
 	}
 
+    /**
+     * Dispone in riga gli slider visibili, distribuendo uniformemente la larghezza.
+     *
+     * @param x,y posizione di partenza.
+     * @param totalWidth larghezza totale disponibile.
+     * @param height altezza degli slider.
+     * @param sliders lista di LabeledSlider*.
+     */
 	void layoutVisibleRow(int x, int y, int totalWidth, int height, std::initializer_list<LabeledSlider*> sliders) noexcept
 	{
 		int visibleCount = 0;
@@ -80,6 +100,10 @@ namespace utils
 		}
 	}
 
+    /**
+     * Dispone una combo box e, sotto, una riga di slider visibili.
+     * Se dimensioni non specificate, calcola da content area.
+     */
 	void comboAndSliderRow(utils::DropDown& dd, std::initializer_list<LabeledSlider*> sliders, juce::Component* parent, int x, int y, int totalWidth, int height) noexcept
 	{
 		auto content = getContentArea(parent);

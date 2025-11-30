@@ -13,7 +13,11 @@
 
 namespace Gui
 {
-	PresetPanel::PresetPanel(Service::PresetManager& pm) : presetManager(pm)
+    /**
+     * Pannello gestione preset: salva/cancella, naviga, e seleziona dalla lista.
+     * Inizializza pulsanti e combo, carica la lista.
+     */
+    PresetPanel::PresetPanel(Service::PresetManager& pm) : presetManager(pm)
 	{
 		utils::setButton(saveButton, "Save", this);
 		utils::setButton(deleteButton, "Delete", this);
@@ -42,11 +46,17 @@ namespace Gui
 		if (dialogBox) dialogBox->close();
 	}
 
+    /**
+     * Sfondo pannello.
+     */
 	void PresetPanel::paint(juce::Graphics& g)
 	{
 		g.fillAll(juce::Colours::black);
 	}
 
+    /**
+     * Layout: pulsanti + combo, eventuale dialog overlay.
+     */
 	void PresetPanel::resized()
 	{
 		const auto container = getLocalBounds().reduced(4);
@@ -62,6 +72,9 @@ namespace Gui
 			dialogBox->setBounds(0, 0, getWidth(), getHeight());
 	}
 
+    /**
+     * Popola la lista di preset (factory e utente), selezionando l'attuale.
+     */
 	void PresetPanel::loadPresetList()
 	{
 		presetList.clear(juce::dontSendNotification);
@@ -79,6 +92,9 @@ namespace Gui
 		checkPreset(presetManager.getCurrentPreset());
 	}
 
+    /**
+     * Gestione click pulsanti: salva/cancella/naviga preset, poi aggiorna lista e UI.
+     */
 	void PresetPanel::buttonClicked(juce::Button* button)
 	{
 		if (button == &saveButton)
@@ -141,6 +157,9 @@ namespace Gui
 		checkPreset(presetManager.getCurrentPreset());
 	}
 
+    /**
+     * Cambio selezione nella combo: carica preset selezionato e aggiorna UI.
+     */
 	void PresetPanel::comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged)
 	{
 		if (comboBoxThatHasChanged == &presetList)
@@ -151,6 +170,10 @@ namespace Gui
 		}
 	}
 
+    /**
+     * Aggiorna abilitazione pulsante Delete e colori della lista
+     * in base al tipo di preset (embedded/user) o assenza selezione.
+     */
 	void PresetPanel::checkPreset(juce::String preset)
 	{
 		if (presetManager.isEmbeddedPreset(preset))
@@ -173,6 +196,9 @@ namespace Gui
 			}
 	}
 
+    /**
+     * Mostra un dialog di conferma/avviso modale (overlay).
+     */
 	void PresetPanel::showDialogBox(juce::String msg, juce::String confirmText, juce::String returnText, std::function<void()> onAccept)
 	{
 		if (dialogBox)

@@ -12,6 +12,10 @@
 #include "../Parameters.h"
 #include "Utils.h"
 
+/**
+ * Pannello FX: selezione tipo effetto, bypass, wet e parametri specifici.
+ * Configura visibilità dinamica dei controlli in base al tipo selezionato.
+ */
 FXComponent::FXComponent(juce::AudioProcessorValueTreeState& state)
 	: apvts(state)
 	, fxType(apvts, parameters::FX_TYPE, *this, { "None", "Chorus", "Flanger", "Reverb" })
@@ -42,12 +46,18 @@ FXComponent::FXComponent(juce::AudioProcessorValueTreeState& state)
 	updateVisibility();
 }
 
+/**
+ * Listener della combo FX type: aggiorna visibilità.
+ */
 void FXComponent::comboBoxChanged(juce::ComboBox* c)
 {
 	if (c == &fxType.cBox)
 		updateVisibility();
 }
 
+/**
+ * Mostra/nasconde group di slider in base al tipo FX selezionato.
+ */
 void FXComponent::updateVisibility()
 {
 	const int type = fxType.cBox.getSelectedId() - 1; // 0=None,1=Chorus,2=Flanger,3=Reverb
@@ -75,12 +85,18 @@ void FXComponent::updateVisibility()
 		ls->setVisible(showRv);
 }
 
+/**
+ * Sfondo e bordo pannello FX.
+ */
 void FXComponent::paint(juce::Graphics& g)
 {
 	g.fillAll(juce::Colours::black);
 	utils::drawBorders(g, this, juce::Colours::deeppink, "FX");
 }
 
+/**
+ * Layout: testata (tipo, bypass, wet) e riga parametri specifici.
+ */
 void FXComponent::resized()
 {
 	const auto content = utils::getContentArea(this);

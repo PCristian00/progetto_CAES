@@ -11,7 +11,12 @@
 
 #include "GainData.h"
 
-// Preparazione usando ProcessSpec (chiamata fatta da SynthVoice::prepareToPlay)
+/**
+ * Prepara il gain e la smussatura (SmoothedValue) con lo stesso ProcessSpec.
+ * Imposta sample rate, prepara la base class e inizializza il valore smussato.
+ *
+ * @param spec ProcessSpec con sampleRate, maximumBlockSize, numChannels.
+ */
 void GainData::prepare(const juce::dsp::ProcessSpec& spec)
 {
     currentSampleRate = spec.sampleRate;
@@ -27,7 +32,12 @@ void GainData::prepare(const juce::dsp::ProcessSpec& spec)
     smoothedGain.setCurrentAndTargetValue(initial);
 }
 
-// Compatibilità: prepara costruendo un ProcessSpec e inoltrando
+/**
+ * Overload di prepare: costruisce il ProcessSpec e inoltra alla versione principale.
+ *
+ * @param newSampleRate sample rate.
+ * @param samplesPerBlock dimensione massima del blocco.
+ */
 void GainData::prepare(double newSampleRate, int samplesPerBlock)
 {
     juce::dsp::ProcessSpec spec;
@@ -38,7 +48,11 @@ void GainData::prepare(double newSampleRate, int samplesPerBlock)
     prepare(spec);
 }
 
-// Imposta il target; SmoothedValue effettuerà il ramp internamente
+/**
+ * Imposta il gain lineare come target per SmoothedValue e allinea la base class.
+ *
+ * @param newGain nuovo valore lineare del gain.
+ */
 void GainData::setGainLinear(const float newGain)
 {
     // Aggiorna il target smussato
@@ -48,6 +62,11 @@ void GainData::setGainLinear(const float newGain)
     juce::dsp::Gain<float>::setGainLinear(newGain);
 }
 
+/**
+ * Restituisce il prossimo valore smussato del gain (per-sample).
+ *
+ * @return gain smussato corrente.
+ */
 float GainData::getNextSmoothedGain()
 {
     return smoothedGain.getNextValue();

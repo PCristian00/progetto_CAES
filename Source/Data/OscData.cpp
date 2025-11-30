@@ -10,12 +10,26 @@
 
 #include "OscData.h"
 
+/**
+ * Prepara l'oscillatore principale e quello di modulazione FM.
+ * Deve essere chiamata prima di generare qualunque sample.
+ *
+ * @param spec ProcessSpec con sampleRate, maximumBlockSize, numChannels.
+ */
 void OscData::prepare(juce::dsp::ProcessSpec& spec)
 {
 	fmOsc.prepare(spec);
 	juce::dsp::Oscillator<float>::prepare(spec);
 }
 
+/**
+ * Imposta la forma d'onda dell'oscillatore principale.
+ * Indici:
+ * 0 = Sine, 1 = Saw, 2 = Square.
+ *
+ * @param choice indice forma d'onda (0..2).
+ * In caso di indice non valido: jassertfalse.
+ */
 void OscData::setWaveType(const int choice)
 {
 	switch (choice)
@@ -35,31 +49,42 @@ void OscData::setWaveType(const int choice)
 	}
 }
 
+/**
+ * Aggiorna la frequenza in base alla nota MIDI corrente (+ eventuale modulazione FM).
+ * Conserva il numero di nota per riallineare la frequenza dopo cambi FM.
+ *
+ * @param midiNoteNumber numero di nota MIDI (0..127 tipicamente).
+ */
 void OscData::setFrequency(const int midiNoteNumber)
 {
-    const float baseHz = static_cast<float>(juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber));
-    const float currentFreq = baseHz + fmMod;
-    juce::dsp::Oscillator<float>::setFrequency(currentFreq >= 0.0f ? currentFreq : -currentFreq);
-    lastMidiNote = midiNoteNumber;
+	const float baseHz = static_cast<float>(juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber));
+	const float currentFreq = baseHz + fmMod;
+	juce::dsp::Oscillator<float>::setFrequency(currentFreq >= 0.0f ? currentFreq : -currentFreq);
+	lastMidiNote = midiNoteNumber;
 }
 
-// Aggiunta modulazione FM.
-// ATTENZIONE: metodo diverso dal tutorial, che usa AudioBlock invece di singoli sample
-float OscData::processSample(float input) {
-
+/**
+ * Genera un singolo sample dall'oscillatore applicando modulazione FM.
+ * La modulazione modifica la frequenza istantanea tramite fmOsc.
+ *
+ * @param input sample di tempo (tipicamente ignorato dall'oscillatore di JUCE, spesso 0.0f).
+ * @return sample generato dall'oscillatore principale.
+ */
+float OscData::processSample(float input)
+{
 	fmMod = fmOsc.processSample(input) * fmDepth; // Modulation depth
 	return juce::dsp::Oscillator<float>::processSample(input);
 }
 
-void OscData::setFmParams(const float depth, const float freq) {
+/**
+ * Imposta i parametri della modulazione FM (frequenza e profondità) e riallinea la frequenza totale.
+ *
+ * @param depth profondità modulazione (scalare applicato al segnale di fmOsc).
+ * @param freq  frequenza in Hz dell'oscillatore FM.
+ */
+void OscData::setFmParams(const float depth, const float freq)
+{
 	fmOsc.setFrequency(freq);
 	fmDepth = depth;
 	setFrequency(lastMidiNote);
 }
-
-// ATTENZIONE: Fatto cos nel tutorial, ma nel codice attuale non viene utilizzato (uso i sample e non gli AudioBlock)
-// Forse dopo rinominare in process (come in GainData) per fare estensione del metodo originario
-//void OscData::getNextAudioBlock(juce::dsp::AudioBlock<float>& block)
-//{
-//	process(juce::dsp::ProcessContextReplacing<float>(block));
-//}

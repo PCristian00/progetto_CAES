@@ -33,8 +33,14 @@ SubSynthAudioProcessor::SubSynthAudioProcessor()
 
 SubSynthAudioProcessor::~SubSynthAudioProcessor() {}
 
+/**
+ * Nome del plugin.
+ */
 const juce::String SubSynthAudioProcessor::getName() const { return JucePlugin_Name; }
 
+/**
+ * Supporto input MIDI.
+ */
 bool SubSynthAudioProcessor::acceptsMidi() const {
 #if JucePlugin_WantsMidiInput
 	return true;
@@ -43,6 +49,9 @@ bool SubSynthAudioProcessor::acceptsMidi() const {
 #endif
 }
 
+/**
+ * Supporto output MIDI.
+ */
 bool SubSynthAudioProcessor::producesMidi() const {
 #if JucePlugin_ProducesMidiOutput
 	return true;
@@ -51,6 +60,9 @@ bool SubSynthAudioProcessor::producesMidi() const {
 #endif
 }
 
+/**
+ * Plugin di tipo effetto MIDI?
+ */
 bool SubSynthAudioProcessor::isMidiEffect() const {
 #if JucePlugin_IsMidiEffect
 	return true;
@@ -59,14 +71,26 @@ bool SubSynthAudioProcessor::isMidiEffect() const {
 #endif
 }
 
+/**
+ * Tail length (nessuna coda).
+ */
 double SubSynthAudioProcessor::getTailLengthSeconds() const { return 0.0; }
 
+/**
+ * Programmi (non usati).
+ */
 int SubSynthAudioProcessor::getNumPrograms() { return 1; }
 int SubSynthAudioProcessor::getCurrentProgram() { return 0; }
 void SubSynthAudioProcessor::setCurrentProgram(int) {}
 const juce::String SubSynthAudioProcessor::getProgramName(int) { return {}; }
 void SubSynthAudioProcessor::changeProgramName(int, const juce::String&) {}
 
+/**
+ * Preparazione audio: imposta SR su synth/voices e prepara FX.
+ *
+ * @param sampleRate SR.
+ * @param samplesPerBlock blocco.
+ */
 void SubSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
 	synth.setCurrentPlaybackSampleRate(sampleRate);
@@ -82,9 +106,15 @@ void SubSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 	fx.prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
 }
 
+/**
+ * Rilascio risorse (non necessario).
+ */
 void SubSynthAudioProcessor::releaseResources() {}
 
 #ifndef JucePlugin_PreferredChannelConfigurations
+/**
+ * Supporto layout bus (mono/stereo).
+ */
 bool SubSynthAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
 {
 #if JucePlugin_IsMidiEffect
@@ -103,6 +133,15 @@ bool SubSynthAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) 
 }
 #endif
 
+/**
+ * Processo per blocco:
+ * - Aggiorna parametri voce da APVTS
+ * - Renderizza synth (dry)
+ * - Aggiorna parametri FX e applica post-synth
+ *
+ * @param buffer audio.
+ * @param midiMessages buffer MIDI.
+ */
 void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	juce::ScopedNoDenormals noDenormals;
@@ -179,10 +218,19 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	fx.process(buffer);
 }
 
+/**
+ * Editor supportato.
+ */
 bool SubSynthAudioProcessor::hasEditor() const { return true; }
 
+/**
+ * Crea l'editor principale.
+ */
 juce::AudioProcessorEditor* SubSynthAudioProcessor::createEditor() { return new SubSynthAudioProcessorEditor(*this); }
 
+/**
+ * Salvataggio stato plugin in XML, aggiungendo 'version'.
+ */
 void SubSynthAudioProcessor::getStateInformation(juce::MemoryBlock& destData) {
 	auto state = apvts.copyState();
 
@@ -193,6 +241,9 @@ void SubSynthAudioProcessor::getStateInformation(juce::MemoryBlock& destData) {
 	copyXmlToBinary(*xml, destData);
 }
 
+/**
+ * Ripristino stato da XML: garantisce proprietà obbligatorie e rimpiazza lo stato.
+ */
 void SubSynthAudioProcessor::setStateInformation(const void* data, int sizeInBytes) {
 	const auto xmlState = getXmlFromBinary(data, sizeInBytes);
 	if (xmlState == nullptr)
@@ -208,4 +259,7 @@ void SubSynthAudioProcessor::setStateInformation(const void* data, int sizeInByt
 	apvts.replaceState(newTree);
 }
 
+/**
+ * Factory del processor.
+ */
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() { return new SubSynthAudioProcessor(); }

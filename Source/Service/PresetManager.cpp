@@ -13,10 +13,16 @@
 namespace Service {
 
 	const File PresetManager::defaultDirectory{ File::getSpecialLocation(File::commonDocumentsDirectory).getChildFile(ProjectInfo::companyName).getChildFile(ProjectInfo::projectName) };
-
 	const String PresetManager::extension{ "preset" };
 	const String PresetManager::presetNameProperty{ "presetName" };
 
+	/**
+	 * Costruttore: prepara directory preset utente, collega il ValueTree dell'APVTS
+	 * e garantisce la presenza della property presetName. Rimuove eventuali nodi
+	 * parametri orfani dallo stato.
+	 *
+	 * @param apvts riferimento all'AudioProcessorValueTreeState da serializzare.
+	 */
 	PresetManager::PresetManager(juce::AudioProcessorValueTreeState& apvts)
 		: valueTreeState(apvts)
 	{
@@ -32,21 +38,28 @@ namespace Service {
 
 		valueTreeState.state.addListener(this);
 
-		// Garantisce che la property esista
 		if (!valueTreeState.state.hasProperty(presetNameProperty))
 			valueTreeState.state.setProperty(presetNameProperty, "", nullptr);
 
 		currentPreset.referTo(valueTreeState.state.getPropertyAsValue(presetNameProperty, nullptr));
-
-		// Pulisce eventuali parametri orfani ancora presenti nello stato
 		purgeUnknownParameters();
 	}
 
+	/**
+	 * Distruttore: rimuove il listener dal ValueTree.
+	 */
 	PresetManager::~PresetManager()
 	{
 		valueTreeState.state.removeListener(this);
 	}
 
+	/**
+	 * Scrive un ValueTree su file come XML, aggiungendo una property 'version'
+	 * se assente.
+	 *
+	 * @param vt   ValueTree da serializzare.
+	 * @param file file di destinazione (verrà sovrascritto).
+	 */
 	static void writeValueTreeToFile(const juce::ValueTree& vt, const File& file)
 	{
 		auto copy = vt;
@@ -61,16 +74,28 @@ namespace Service {
 		}
 	}
 
+	/**
+	 * Verifica se un nome preset utente è valido (non vuoto e non confligge
+	 * con i factory embedded).
+	 *
+	 * @param presetName nome da validare.
+	 * @return true se utilizzabile.
+	 */
 	bool PresetManager::isValidUserPresetName(const String& presetName) const
 	{
 		if (presetName.isEmpty())
 			return false;
-		// Se esiste un embedded con lo stesso nome blocchiamo
 		if (isEmbeddedPreset(presetName))
 			return false;
 		return true;
 	}
 
+	/**
+	 * Salva lo stato corrente dell'APVTS come preset utente con il nome fornito.
+	 * Se il nome non è valido, abortisce. Prima rimuove parametri orfani.
+	 *
+	 * @param presetName nome file (senza estensione).
+	 */
 	void PresetManager::savePreset(const juce::String& presetName)
 	{
 		if (!isValidUserPresetName(presetName))
@@ -79,15 +104,18 @@ namespace Service {
 			return;
 		}
 
-		// Garantisce che lo stato corrente non contenga parametri orfani
 		purgeUnknownParameters();
-
 		currentPreset.setValue(presetName);
 
 		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
 		writeValueTreeToFile(valueTreeState.copyState(), presetFile);
 	}
 
+	/**
+	 * Ritorna true se il nome corrisponde a un preset embedded (factory).
+	 *
+	 * @param presetName nome da testare.
+	 */
 	bool PresetManager::isEmbeddedPreset(const String& presetName) const
 	{
 		if (presetName.isEmpty())
@@ -106,6 +134,13 @@ namespace Service {
 		return false;
 	}
 
+	/**
+	 * Converte risorsa embedded (bytes) in ValueTree.
+	 *
+	 * @param data puntatore ai dati XML.
+	 * @param size lunghezza in byte.
+	 * @return ValueTree valido o vuoto se parsing fallisce.
+	 */
 	juce::ValueTree PresetManager::valueTreeFromEmbeddedXml(const void* data, size_t size) const
 	{
 		if (data == nullptr || size == 0)
@@ -121,6 +156,12 @@ namespace Service {
 		return juce::ValueTree::fromXml(*xml);
 	}
 
+	/**
+	 * Carica un preset embedded (factory) copiando le proprietà dei parametri
+	 * presenti nel ValueTree sullo stato corrente.
+	 *
+	 * @param presetName nome del preset factory.
+	 */
 	void PresetManager::loadEmbeddedPreset(const String& presetName)
 	{
 		for (int i = 0; i < BinaryData::namedResourceListSize; ++i)
@@ -167,6 +208,11 @@ namespace Service {
 		jassertfalse;
 	}
 
+	/**
+	 * Elimina un preset utente (non factory). Se è il corrente azzera currentPreset.
+	 *
+	 * @param presetName nome da eliminare.
+	 */
 	void PresetManager::deletePreset(const String& presetName)
 	{
 		if (presetName.isEmpty())
@@ -196,6 +242,11 @@ namespace Service {
 			currentPreset.setValue("");
 	}
 
+	/**
+	 * Carica un preset (utente o factory) copiando le proprietà dei parametri.
+	 *
+	 * @param presetName nome del preset.
+	 */
 	void PresetManager::loadPreset(const juce::String& presetName)
 	{
 		if (presetName.isEmpty())
@@ -226,8 +277,6 @@ namespace Service {
 
 		const auto valueTreeToLoad = juce::ValueTree::fromXml(*xml);
 
-		// valueTreeState.replaceState(valueTreeToLoad);
-
 		for (int i = 0; i < valueTreeToLoad.getNumChildren(); i++)
 		{
 			const auto paramChildToLoad = valueTreeToLoad.getChild(i);
@@ -241,6 +290,11 @@ namespace Service {
 		currentPreset.setValue(presetName);
 	}
 
+	/**
+	 * Carica il preset successivo nella lista combinata (factory + user).
+	 *
+	 * @return indice caricato, -1 se non ci sono preset.
+	 */
 	int PresetManager::loadNextPreset()
 	{
 		const auto presets = getAllPresets();
@@ -253,6 +307,11 @@ namespace Service {
 		return nextIndex;
 	}
 
+	/**
+	 * Carica il preset precedente nella lista combinata (factory + user).
+	 *
+	 * @return indice caricato, -1 se non ci sono preset.
+	 */
 	int PresetManager::loadPreviousPreset()
 	{
 		const auto presets = getAllPresets();
@@ -265,6 +324,9 @@ namespace Service {
 		return previousIndex;
 	}
 
+	/**
+	 * Ritorna lista ordinata dei preset utente (nomi senza estensione).
+	 */
 	juce::StringArray PresetManager::getUserPresets() const
 	{
 		juce::StringArray presets;
@@ -275,6 +337,9 @@ namespace Service {
 		return presets;
 	}
 
+	/**
+	 * Ritorna lista ordinata dei preset embedded (factory).
+	 */
 	juce::StringArray PresetManager::getEmbeddedPresets() const
 	{
 		juce::StringArray names;
@@ -291,6 +356,9 @@ namespace Service {
 		return names;
 	}
 
+	/**
+	 * Ritorna lista combinata (factory + user) senza ordinamento aggiuntivo.
+	 */
 	juce::StringArray PresetManager::getAllPresets() const
 	{
 		auto embedded = getEmbeddedPresets();
@@ -301,19 +369,30 @@ namespace Service {
 		return combined;
 	}
 
+	/**
+	 * @return nome del preset correntemente caricato (stringa vuota se nessuno).
+	 */
 	juce::String PresetManager::getCurrentPreset() const
 	{
 		return currentPreset.toString();
 	}
 
+	/**
+	 * Listener: chiamato se il ValueTree radice viene "reindirizzato".
+	 * Aggiorna il riferimento a presetName e rimuove parametri orfani.
+	 *
+	 * @param treeWhichHasBeenChanged nuovo ValueTree radice.
+	 */
 	void PresetManager::valueTreeRedirected(juce::ValueTree& treeWhichHasBeenChanged)
 	{
 		currentPreset.referTo(treeWhichHasBeenChanged.getPropertyAsValue(presetNameProperty, nullptr));
-
-		// Se lo stato viene reindirizzato/sostituito, puliamolo da parametri orfani
 		purgeUnknownParameters();
 	}
 
+	/**
+	 * Rimuove dal ValueTree dello stato parametri che non esistono più
+	 * nell'APVTS (evita salvataggi incoerenti).
+	 */
 	void PresetManager::purgeUnknownParameters()
 	{
 		juce::Array<juce::ValueTree> toRemove;
@@ -321,13 +400,10 @@ namespace Service {
 		for (int i = 0; i < valueTreeState.state.getNumChildren(); ++i)
 		{
 			const auto child = valueTreeState.state.getChild(i);
-
 			if (!child.hasProperty("id"))
 				continue;
 
 			juce::String id = (child.getProperty("id")).toString();
-
-			// Se l'APVTS non ha un parametro con questo id, il nodo e' orfano
 			if (valueTreeState.getParameter(id) == nullptr)
 				toRemove.add(child);
 		}

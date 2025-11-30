@@ -27,7 +27,7 @@ namespace utils
 	// Altezza dell'area riservata al titolo/bordo
 	inline int titleAreaHeight() noexcept { return 2 * padding; }
 
-	// Impostazioni comuni per button (create per coerenza con le altre, ma non usate)
+	// Impostazioni comuni per button
 	void setButton(juce::Button& button, const juce::String& buttonText, juce::Component* parent = nullptr) noexcept;
 
 	// Bounds interni ridotti dal padding di contenitore
@@ -38,12 +38,18 @@ namespace utils
 	void drawBorders(juce::Graphics& g, juce::Component* parent, juce::Colour colour, juce::String title = "") noexcept;
 
 	// Struttura riutilizzabile Slider + Label + Attachment
+	/**
+	 * LabeledSlider: incapsula uno Slider con la sua Label e l'attachment APVTS.
+	 * Fornisce costruttori rapidi per: sola label, label+attachment, aggiunta al parent,
+	 * configurazione stile/LookAndFeel. Espone metodi per layout e visibilità.
+	 */
 	struct LabeledSlider
 	{
 		juce::Slider slider;
 		juce::Label  label;
 		std::unique_ptr<SliderAttachment> attachment;
 
+		/** Costruttore base: crea label (se testo non vuoto) e slider con TextBoxBelow. */
 		explicit LabeledSlider(const juce::String& labelText = {})
 		{
 			label.setText(labelText, juce::dontSendNotification);
@@ -70,17 +76,20 @@ namespace utils
 			configure(style, showTextBox, laf);
 		}
 
+		/** Aggiunge label e slider al parent. */
 		void addTo(juce::Component& parent)
 		{
 			parent.addAndMakeVisible(label);
 			parent.addAndMakeVisible(slider);
 		}
 
+		/** Collega lo slider al parametro APVTS tramite SliderAttachment. */
 		void attach(juce::AudioProcessorValueTreeState& state, const juce::String& paramID)
 		{
 			attachment = std::make_unique<SliderAttachment>(state, paramID, slider);
 		}
 
+		/** Configura stile slider, visibilità del text box e LookAndFeel opzionale. */
 		void configure(juce::Slider::SliderStyle style,
 			bool showTextBox = true,
 			juce::LookAndFeel* laf = nullptr)
@@ -105,38 +114,50 @@ namespace utils
 			slider.setBounds(r);
 		}
 
+		/** Overload di setBounds con coordinate intere. */
 		void setBounds(int x, int y, int width, int height, int labelHeight = padding * 2, int gap = static_cast<int> (padding / 2))
 		{
 			setBounds(juce::Rectangle<int>(x, y, width, height), labelHeight, gap);
 		}
 
+		/** Imposta visibilità coerente di label e slider. */
 		void setVisible(bool v)
 		{
 			label.setVisible(v);
 			slider.setVisible(v);
 		}
 
+		/** Abilita/disabilita label e slider. */
 		void setEnabled(bool e)
 		{
 			label.setEnabled(e);
 			slider.setEnabled(e);
 		}
 
+		/** Accesso diretto allo slider. */
 		juce::Slider& getSlider() noexcept { return slider; }
+		/** Accesso diretto alla label. */
 		juce::Label& getLabel()  noexcept { return label; }
 	};
 
+	/**
+	 * DropDown: wrapper per ComboBox con attachment APVTS e gestione scelte.
+	 * Fornisce configurazione rapida (items + LookAndFeel), placeholder,
+	 * aggiunta dinamica di elementi e layout semplice.
+	 */
 	struct DropDown
 	{
 		juce::ComboBox cBox;
 		std::unique_ptr<ComboBoxAttachment> attachment;
 		juce::StringArray choices;
 
+		/** Costruttore base: inizializza giustificazione centrata. */
 		explicit DropDown()
 		{
 			cBox.setJustificationType(juce::Justification::centred);
 		}
 
+		/** Costruttore con attachment immediato al parametro APVTS. */
 		DropDown(juce::AudioProcessorValueTreeState& state, const juce::String& paramID)
 			: DropDown()
 		{
@@ -160,17 +181,19 @@ namespace utils
 			configure(items, laf, firstItemId);
 		}
 
+		/** Aggiunge la combo al parent e la rende visibile. */
 		void addTo(juce::Component& parent)
 		{
 			parent.addAndMakeVisible(cBox);
 		}
 
+		/** Collega la ComboBox al parametro APVTS. */
 		void attach(juce::AudioProcessorValueTreeState& state, const juce::String& paramID)
 		{
 			attachment = std::make_unique<ComboBoxAttachment>(state, paramID, cBox);
 		}
 
-		// Configurazione rapida: scelte + LookAndFeel (opzionale) + giustificazione
+		/** Configurazione rapida: scelte + LookAndFeel (opzionale) + giustificazione. */
 		void configure(const juce::StringArray& items = {},
 			juce::LookAndFeel* laf = nullptr,
 			int firstItemId = 1,
@@ -185,7 +208,7 @@ namespace utils
 				cBox.setLookAndFeel(laf);
 		}
 
-		// Imposta l'elenco scelte (sostituisce quelle esistenti se richiesto)
+		/** Imposta l'elenco scelte (sostituisce quelle esistenti se richiesto). */
 		void setChoices(const juce::StringArray& items, bool clearExisting = true, int firstItemId = 1)
 		{
 			if (clearExisting)
@@ -199,7 +222,7 @@ namespace utils
 				cBox.setSelectedId(firstItemId, juce::dontSendNotification);
 		}
 
-		// Aggiunge una scelta singola (con id opzionale)
+		/** Aggiunge una singola scelta con ID opzionale (autocalcolato se 0). */
 		void addChoice(const juce::String& item, int itemId = 0)
 		{
 			choices.add(item);
@@ -210,38 +233,43 @@ namespace utils
 				cBox.setSelectedId(newId, juce::dontSendNotification);
 		}
 
-		// Placeholder utili
+		/** Testo placeholder quando nulla è selezionato. */
 		void setPlaceholderWhenNothingSelected(const juce::String& text)
 		{
 			cBox.setTextWhenNothingSelected(text);
 		}
 
+		/** Testo placeholder quando non ci sono scelte disponibili. */
 		void setPlaceholderWhenNoChoices(const juce::String& text)
 		{
 			cBox.setTextWhenNoChoicesAvailable(text);
 		}
 
-		// Layout: nessuna label, l'area va direttamente alla combo
+		/** Layout: nessuna label, l'area va direttamente alla combo. */
 		void setBounds(const juce::Rectangle<int>& area)
 		{
 			cBox.setBounds(area);
 		}
 
+		/** Overload setBounds con coordinate. */
 		void setBounds(int x, int y, int width, int height)
 		{
 			setBounds(juce::Rectangle<int>(x, y, width, height));
 		}
 
+		/** Imposta visibilità combo. */
 		void setVisible(bool v)
 		{
 			cBox.setVisible(v);
 		}
 
+		/** Abilita/disabilita combo. */
 		void setEnabled(bool e)
 		{
 			cBox.setEnabled(e);
 		}
 
+		/** Accesso diretto alla ComboBox. */
 		juce::ComboBox& getComboBox() noexcept { return cBox; }
 	};
 

@@ -13,6 +13,10 @@
 #include "Utils.h"
 
 //==============================================================================
+/**
+ * Pannello Filtro: selezione tipo e controlli cutoff/risonanza.
+ * Collega i controlli agli APVTS params.
+ */
 FilterComponent::FilterComponent(juce::AudioProcessorValueTreeState& apvts, juce::String filterTypeSelectorId, juce::String filterCutOffId, juce::String filterResonanceId)
 	: filterCutOffLS("Filter Cutoff", apvts, filterCutOffId, *this, juce::Slider::LinearBarVertical, true)
 	, filterResonanceLS("Filter Resonance", apvts, filterResonanceId, *this, juce::Slider::LinearBarVertical, true)
@@ -28,6 +32,9 @@ void FilterComponent::paint(juce::Graphics& g)
 	utils::drawBorders(g, this, juce::Colours::darkorchid, "Filter");
 }
 
+/**
+ * Layout: combo tipo + riga slider (cutoff, resonance).
+ */
 void FilterComponent::resized()
 {
 	utils::comboAndSliderRow(filterTypeSelector, { &filterCutOffLS, &filterResonanceLS }, this);

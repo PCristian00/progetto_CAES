@@ -13,11 +13,23 @@
 SynthVoice::SynthVoice() {}
 SynthVoice::~SynthVoice() {}
 
+/**
+ * Indica se la voce puo' riprodurre il suono fornito.
+ * Per ora accetta qualunque SynthesiserSound.
+ */
 bool SynthVoice::canPlaySound(juce::SynthesiserSound* sound)
 {
 	return dynamic_cast<juce::SynthesiserSound*>(sound) != nullptr;
 }
 
+/**
+ * Avvia una nota: imposta la frequenza dell'oscillatore e attiva gli inviluppi.
+ *
+ * @param midiNoteNumber numero di nota MIDI.
+ * @param velocity velocità/ampiezza iniziale.
+ * @param sound suono (non usato).
+ * @param currentPitchWheelPosition pitch wheel (non usato).
+ */
 void SynthVoice::startNote(int midiNoteNumber,
 	float velocity,
 	juce::SynthesiserSound* sound,
@@ -35,6 +47,12 @@ void SynthVoice::startNote(int midiNoteNumber,
 		DBG("[ModADSR] startNote MIDI=" << midiNoteNumber << " vel=" << velocity);
 }
 
+/**
+ * Ferma una nota: rilascia gli inviluppi (tail-off se consentito).
+ *
+ * @param velocity velocita' di rilascio.
+ * @param allowTailOff consente coda naturale dell'inviluppo.
+ */
 void SynthVoice::stopNote(float velocity, bool allowTailOff)
 {
 	adsr.noteOff();
@@ -46,8 +64,18 @@ void SynthVoice::stopNote(float velocity, bool allowTailOff)
 		DBG("[ModADSR] stopNote vel=" << velocity << " tailOff=" << (allowTailOff ? "true" : "false"));
 }
 
+/**
+ * Controller MIDI (non usato).
+ */
 void SynthVoice::controllerMoved(int, int) {}
 
+/**
+ * Prepara la voce: osc, inviluppi, filtro e gain.
+ *
+ * @param sampleRate SR del playback.
+ * @param samplesPerBlock dimensione blocco.
+ * @param outputChannels numero canali in uscita.
+ */
 void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outputChannels)
 {
 	juce::dsp::ProcessSpec spec;
@@ -69,6 +97,15 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outpu
 		DBG("[ModADSR] prepareToPlay sr=" << sampleRate << " block=" << samplesPerBlock);
 }
 
+/**
+ * Aggiorna parametri dell'ADSR ampiezza e il gain complessivo.
+ *
+ * @param attack A.
+ * @param decay D.
+ * @param sustain S.
+ * @param release R.
+ * @param gainValue gain lineare.
+ */
 void SynthVoice::updateADSR(const float attack, const float decay, const float sustain, const float release, const float gainValue)
 {
 	adsr.updateADSR(attack, decay, sustain, release);
@@ -78,6 +115,14 @@ void SynthVoice::updateADSR(const float attack, const float decay, const float s
 		DBG("[AmpADSR] updateADSR A=" << attack << " D=" << decay << " S=" << sustain << " R=" << release << " Gain=" << gainValue);
 }
 
+/**
+ * Aggiorna i parametri base del filtro (tipo, cutoff, risonanza).
+ * La modulazione verrà applicata per-sample in renderNextBlock.
+ *
+ * @param type tipo filtro.
+ * @param cutoff cutoff in Hz.
+ * @param resonance risonanza (Q).
+ */
 void SynthVoice::updateFilter(int type, float cutoff, float resonance)
 {
 	filterType = type;
@@ -90,6 +135,14 @@ void SynthVoice::updateFilter(int type, float cutoff, float resonance)
 		DBG("[ModADSR] BaseFilter type=" << filterType << " cutoff=" << filterCutoff << " res=" << filterResonance);
 }
 
+/**
+ * Aggiorna i parametri dell'inviluppo di modulazione (Mod ADSR).
+ *
+ * @param attack A.
+ * @param decay D.
+ * @param sustain S.
+ * @param release R.
+ */
 void SynthVoice::updateModADSR(const float attack, const float decay, const float sustain, const float release)
 {
 	modAdsr.updateADSR(attack, decay, sustain, release);
@@ -98,6 +151,16 @@ void SynthVoice::updateModADSR(const float attack, const float decay, const floa
 		DBG("[ModADSR] updateModADSR A=" << attack << " D=" << decay << " S=" << sustain << " R=" << release);
 }
 
+/**
+ * Renderizza il prossimo blocco audio:
+ * - Genera sample dall'oscillatore, applica ADSR amp e gain smussato
+ * - Aggiorna filtro per-sample con modulazione proveniente dal Mod ADSR
+ * - Somma il risultato nei canali di output
+ *
+ * @param outputBuffer buffer destinazione.
+ * @param startSample indice di partenza.
+ * @param numSamples numero di campioni da generare.
+ */
 void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 	int startSample,
 	int numSamples)
@@ -175,5 +238,8 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 	}
 }
 
+/**
+ * Pitch wheel (non gestito).
+ */
 void SynthVoice::pitchWheelMoved(int) {}
 
