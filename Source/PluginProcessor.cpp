@@ -28,7 +28,10 @@ SubSynthAudioProcessor::SubSynthAudioProcessor()
 	presetManager = std::make_unique<Service::PresetManager>(apvts);
 
 	synth.addSound(new SynthSound());
-	synth.addVoice(new SynthVoice());
+
+	// Aggiungi voci al synth (8 voci per test).
+	for (int i = 0; i < 8; ++i)
+		synth.addVoice(new SynthVoice());
 }
 
 SubSynthAudioProcessor::~SubSynthAudioProcessor() {}
