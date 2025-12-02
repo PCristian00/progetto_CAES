@@ -48,7 +48,7 @@ void SubSynthAudioProcessorEditor::paint(juce::Graphics& g)
 }
 
 /**
- * Layout dei componenti: suddivide in 3 colonne e più righe.
+ * Layout dei componenti: suddivide in 3 colonne e piu' righe.
  */
 void SubSynthAudioProcessorEditor::resized()
 {

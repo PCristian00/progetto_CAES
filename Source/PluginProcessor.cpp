@@ -242,7 +242,7 @@ void SubSynthAudioProcessor::getStateInformation(juce::MemoryBlock& destData) {
 }
 
 /**
- * Ripristino stato da XML: garantisce proprietà obbligatorie e rimpiazza lo stato.
+ * Ripristino stato da XML: garantisce proprieta' obbligatorie e rimpiazza lo stato.
  */
 void SubSynthAudioProcessor::setStateInformation(const void* data, int sizeInBytes) {
 	const auto xmlState = getXmlFromBinary(data, sizeInBytes);

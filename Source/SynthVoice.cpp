@@ -26,7 +26,7 @@ bool SynthVoice::canPlaySound(juce::SynthesiserSound* sound)
  * Avvia una nota: imposta la frequenza dell'oscillatore e attiva gli inviluppi.
  *
  * @param midiNoteNumber numero di nota MIDI.
- * @param velocity velocità/ampiezza iniziale.
+ * @param velocity velocita'/ampiezza iniziale.
  * @param sound suono (non usato).
  * @param currentPitchWheelPosition pitch wheel (non usato).
  */
@@ -117,7 +117,7 @@ void SynthVoice::updateADSR(const float attack, const float decay, const float s
 
 /**
  * Aggiorna i parametri base del filtro (tipo, cutoff, risonanza).
- * La modulazione verrà applicata per-sample in renderNextBlock.
+ * La modulazione verra' applicata per-sample in renderNextBlock.
  *
  * @param type tipo filtro.
  * @param cutoff cutoff in Hz.

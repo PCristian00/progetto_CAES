@@ -41,7 +41,7 @@ namespace utils
 	/**
 	 * LabeledSlider: incapsula uno Slider con la sua Label e l'attachment APVTS.
 	 * Fornisce costruttori rapidi per: sola label, label+attachment, aggiunta al parent,
-	 * configurazione stile/LookAndFeel. Espone metodi per layout e visibilità.
+	 * configurazione stile/LookAndFeel. Espone metodi per layout e visibilita'.
 	 */
 	struct LabeledSlider
 	{
@@ -89,7 +89,7 @@ namespace utils
 			attachment = std::make_unique<SliderAttachment>(state, paramID, slider);
 		}
 
-		/** Configura stile slider, visibilità del text box e LookAndFeel opzionale. */
+		/** Configura stile slider, visibilita' del text box e LookAndFeel opzionale. */
 		void configure(juce::Slider::SliderStyle style,
 			bool showTextBox = true,
 			juce::LookAndFeel* laf = nullptr)
@@ -120,7 +120,7 @@ namespace utils
 			setBounds(juce::Rectangle<int>(x, y, width, height), labelHeight, gap);
 		}
 
-		/** Imposta visibilità coerente di label e slider. */
+		/** Imposta visibilita' coerente di label e slider. */
 		void setVisible(bool v)
 		{
 			label.setVisible(v);
@@ -233,7 +233,7 @@ namespace utils
 				cBox.setSelectedId(newId, juce::dontSendNotification);
 		}
 
-		/** Testo placeholder quando nulla è selezionato. */
+		/** Testo placeholder quando nulla e' selezionato. */
 		void setPlaceholderWhenNothingSelected(const juce::String& text)
 		{
 			cBox.setTextWhenNothingSelected(text);
@@ -257,7 +257,7 @@ namespace utils
 			setBounds(juce::Rectangle<int>(x, y, width, height));
 		}
 
-		/** Imposta visibilità combo. */
+		/** Imposta visibilita' combo. */
 		void setVisible(bool v)
 		{
 			cBox.setVisible(v);
