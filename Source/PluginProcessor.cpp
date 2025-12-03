@@ -30,7 +30,7 @@ SubSynthAudioProcessor::SubSynthAudioProcessor()
 	synth.addSound(new SynthSound());
 
 	// Aggiungi voci al synth (8 voci per test).
-	for (int i = 0; i < 8; ++i)
+	for (int i = 0; i < 48; ++i)
 		synth.addVoice(new SynthVoice());
 }
 

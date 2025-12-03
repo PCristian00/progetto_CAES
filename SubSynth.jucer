@@ -53,6 +53,10 @@
         <FILE id="JmTLRR" name="PresetPanel.h" compile="0" resource="0" file="Source/UI/PresetPanel.h"/>
         <FILE id="HdJFh0" name="Utils.cpp" compile="1" resource="0" file="Source/UI/Utils.cpp"/>
         <FILE id="f2zH1L" name="Utils.h" compile="0" resource="0" file="Source/UI/Utils.h"/>
+        <FILE id="reInof" name="VoiceComponent.cpp" compile="1" resource="0"
+              file="Source/UI/VoiceComponent.cpp"/>
+        <FILE id="Nhimhq" name="VoiceComponent.h" compile="0" resource="0"
+              file="Source/UI/VoiceComponent.h"/>
       </GROUP>
       <FILE id="Oh3b7h" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
