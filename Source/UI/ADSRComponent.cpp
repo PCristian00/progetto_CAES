@@ -32,7 +32,7 @@ ADSRComponent::ADSRComponent(juce::String name,
 void ADSRComponent::paint(juce::Graphics& g)
 {
 	g.fillAll(juce::Colours::black);
-	utils::drawBorders(g, this, juce::Colours::deepskyblue, componentName);
+	utils::drawBorders(g, this, juce::Colours::forestgreen, componentName);
 }
 
 /**

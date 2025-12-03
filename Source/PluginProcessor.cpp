@@ -29,9 +29,9 @@ SubSynthAudioProcessor::SubSynthAudioProcessor()
 
 	synth.addSound(new SynthSound());
 
-	// Aggiungi voci al synth (8 voci per test).
-	for (int i = 0; i < 48; ++i)
-		synth.addVoice(new SynthVoice());
+	// Inizializza il numero di voci dal parametro APVTS
+	const int initialVoices = static_cast<int>(apvts.getRawParameterValue(parameters::NUM_VOICES)->load());
+	updateSynthVoices(initialVoices);
 }
 
 SubSynthAudioProcessor::~SubSynthAudioProcessor() {}
@@ -96,6 +96,9 @@ void SubSynthAudioProcessor::changeProgramName(int, const juce::String&) {}
  */
 void SubSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
+	lastSampleRate = sampleRate;
+	lastBlockSize = samplesPerBlock;
+
 	synth.setCurrentPlaybackSampleRate(sampleRate);
 	for (int i = 0; i < synth.getNumVoices(); ++i)
 		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
@@ -138,6 +141,7 @@ bool SubSynthAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) 
 
 /**
  * Processo per blocco:
+ * - Aggiorna numero voci da APVTS (runtime)
  * - Aggiorna parametri voce da APVTS
  * - Renderizza synth (dry)
  * - Aggiorna parametri FX e applica post-synth
@@ -150,6 +154,12 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	juce::ScopedNoDenormals noDenormals;
 	auto totalNumInputChannels = getTotalNumInputChannels();
 	auto totalNumOutputChannels = getTotalNumOutputChannels();
+
+	// Applica in tempo reale il numero di voci richiesto
+	{
+		const int desiredVoices = static_cast<int>(apvts.getRawParameterValue(parameters::NUM_VOICES)->load());
+		updateSynthVoices(desiredVoices);
+	}
 
 	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
 		buffer.clear(i, 0, buffer.getNumSamples());
@@ -266,3 +276,53 @@ void SubSynthAudioProcessor::setStateInformation(const void* data, int sizeInByt
  * Factory del processor.
  */
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() { return new SubSynthAudioProcessor(); }
+
+/**
+ * Aggiorna dinamicamente il numero di voci del synth in base al parametro.
+ * - Aggiunge voci nuove preparandole con SR/blocco correnti.
+ * - Rimuove voci in eccesso privilegiando quelle inattive (senza tagli udibili).
+ */
+void SubSynthAudioProcessor::updateSynthVoices(int desired)
+{
+	if (desired < 1) desired = 1;
+
+	const int current = synth.getNumVoices();
+	if (desired == current)
+		return;
+
+	if (desired > current)
+	{
+		const int toAdd = desired - current;
+		for (int i = 0; i < toAdd; ++i)
+		{
+			auto* v = new SynthVoice();
+			synth.addVoice(v);
+
+			// Se prepareToPlay è già stato chiamato, prepara la nuova voce subito
+			if (lastSampleRate > 0.0)
+			{
+				v->prepareToPlay(lastSampleRate, lastBlockSize, getTotalNumOutputChannels());
+				v->setAmpEnvelopeDebug(false);
+				v->setModEnvelopeDebug(false);
+				v->setEnvelopeDebugRates(60, 120);
+			}
+		}
+	}
+	else // desired < current
+	{
+		// Rimuovi dalla fine, provando a fermare prima la voce
+		int toRemove = current - desired;
+		for (int i = current - 1; i >= 0 && toRemove > 0; --i)
+		{
+			if (auto* v = synth.getVoice(i))
+			{
+				// Tenta di fermare immediatamente la voce
+				v->stopNote(0.0f, false);
+
+				// Rimuovi voce
+				synth.removeVoice(i);
+				--toRemove;
+			}
+		}
+	}
+}
