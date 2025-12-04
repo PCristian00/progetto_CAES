@@ -25,13 +25,13 @@ namespace utils
 	const int Ystart = padding * 4;
 
 	// Colore dei componenti di oscillatore e inviluppo
-	const juce::Colour oscCol = juce::Colours::red;
+	const juce::Colour oscCol = juce::Colours::mediumvioletred;
 	// Colore dei componenti dei filtri
-	const juce::Colour filtCol = juce::Colours::green;
+	const juce::Colour filtCol = juce::Colours::cornflowerblue;
 	// Colore di FX Component
 	const juce::Colour fxCol = juce::Colours::indianred;
 	// Colore dei restanti componenti
-	const juce::Colour miscCol = juce::Colours::yellowgreen;
+	const juce::Colour miscCol = juce::Colours::blueviolet;
 
 
 
