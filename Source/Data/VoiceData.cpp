@@ -47,8 +47,8 @@ void VoiceData::applyParams(SynthVoice& voice,
     voice.getOscillator().setWaveType(oscChoice);
     voice.getOscillator().setFmParams(fmDepth, fmFreq);
 
-    voice.updateADSR(attack, decay, sustain, release);
+    voice.updateADSR(voice.getAmpADSR(), attack, decay, sustain, release);
     voice.setGainLinear(gain, activeVoices);
 	voice.updateFilter(filterType, filterCutOff, filterResonance);
-	voice.updateModADSR(modAttack, modDecay, modSustain, modRelease);
+    voice.updateADSR(voice.getModADSR(), modAttack, modDecay, modSustain, modRelease);
 }

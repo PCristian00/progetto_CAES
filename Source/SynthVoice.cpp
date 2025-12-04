@@ -98,19 +98,19 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outpu
 }
 
 /**
- * Aggiorna i parametri dell'ADSR ampiezza.
+ * Aggiorna i parametri di un inviluppo ADSR (amp o mod) passato.
  *
  * @param attack A.
  * @param decay D.
  * @param sustain S.
  * @param release R.
  */
-void SynthVoice::updateADSR(const float attack, const float decay, const float sustain, const float release)
+void SynthVoice::updateADSR(ADSRData& target, const float attack, const float decay, const float sustain, const float release)
 {
-	adsr.update(attack, decay, sustain, release);
+	target.update(attack, decay, sustain, release);
 
 	if (debugAmpEnvEnabled)
-        DBG("[AmpADSR] updateADSR A=" << attack << " D=" << decay << " S=" << sustain << " R=" << release);
+		DBG("[ADSR] updateADSR A=" << attack << " D=" << decay << " S=" << sustain << " R=" << release);
 }
 
 /**
@@ -118,7 +118,7 @@ void SynthVoice::updateADSR(const float attack, const float decay, const float s
  */
 void SynthVoice::setGainLinear(const float gainValue)
 {
-    gain.setGainLinear(gainValue);
+	gain.setGainLinear(gainValue);
 }
 
 /**
@@ -126,10 +126,10 @@ void SynthVoice::setGainLinear(const float gainValue)
  */
 void SynthVoice::setGainLinear(const float baseGainValue, int activeVoices)
 {
-    float scale = 1.0f;
-    if (activeVoices > 0)
-        scale = 1.0f / std::sqrt(static_cast<float>(activeVoices));
-    gain.setGainLinear(baseGainValue * scale);
+	float scale = 1.0f;
+	if (activeVoices > 0)
+		scale = 1.0f / std::sqrt(static_cast<float>(activeVoices));
+	gain.setGainLinear(baseGainValue * scale);
 }
 
 /**
@@ -149,35 +149,9 @@ void SynthVoice::updateFilter(int type, float cutoff, float resonance)
 	filter.updateParameters(filterType, filterCutoff, filterResonance, 1.0f);
 
 	if (debugModEnvEnabled)
-		DBG("[ModADSR] BaseFilter type=" << filterType << " cutoff=" << filterCutoff << " res=" << filterResonance);
+		DBG("BaseFilter type=" << filterType << " cutoff=" << filterCutoff << " res=" << filterResonance);
 }
 
-/**
- * Aggiorna i parametri dell'inviluppo di modulazione (Mod ADSR).
- *
- * @param attack A.
- * @param decay D.
- * @param sustain S.
- * @param release R.
- */
-void SynthVoice::updateModADSR(const float attack, const float decay, const float sustain, const float release)
-{
-	modAdsr.update(attack, decay, sustain, release);
-
-	if (debugModEnvEnabled)
-		DBG("[ModADSR] updateModADSR A=" << attack << " D=" << decay << " S=" << sustain << " R=" << release);
-}
-
-/**
- * Renderizza il prossimo blocco audio:
- * - Genera sample dall'oscillatore, applica ADSR amp e gain smussato
- * - Aggiorna filtro per-sample con modulazione proveniente dal Mod ADSR
- * - Somma il risultato nei canali di output
- *
- * @param outputBuffer buffer destinazione.
- * @param startSample indice di partenza.
- * @param numSamples numero di campioni da generare.
- */
 void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 	int startSample,
 	int numSamples)
