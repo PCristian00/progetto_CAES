@@ -15,6 +15,8 @@ namespace parameters
 {
 	// Oscillator: IDs
 	static constexpr const char* OSCILLATOR_TYPE = "OSC_TYPE";	// 0=Sine, 1=Saw, 2=Square
+	// Voices
+	static constexpr const char* NUM_VOICES = "NUM_VOICES";
 	// FM: IDs
 	static constexpr const char* FM_FREQUENCY = "FM_FREQ";
 	static constexpr const char* FM_DEPTH = "FM_DEPTH";
@@ -59,6 +61,8 @@ namespace parameters
 
 		// Combobox: switch oscillator
 		params.push_back(std::make_unique<juce::AudioParameterChoice>(OSCILLATOR_TYPE, "Oscillator", juce::StringArray{ "Sine", "Saw", "Square" }, 0));
+		// Voices
+		params.push_back(std::make_unique<juce::AudioParameterInt>(NUM_VOICES, "Number of Voices", 1, 48, 8));
 		// FM parameters
 		params.push_back(std::make_unique<juce::AudioParameterFloat>(FM_FREQUENCY, "FM Frequency", juce::NormalisableRange<float>{0.0f, 1000.0f, 0.01f, 0.3f}, 5.0f));
 		params.push_back(std::make_unique<juce::AudioParameterFloat>(FM_DEPTH, "FM Depth", juce::NormalisableRange<float>{0.0f, 1000.0f, 0.01f, 0.3f}, 0.0f));

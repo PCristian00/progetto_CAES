@@ -24,7 +24,8 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 	osc(audioProcessor.apvts, parameters::OSCILLATOR_TYPE),
 	filter(audioProcessor.apvts, parameters::FILTER_TYPE, parameters::FILTER_CUTOFF, parameters::FILTER_RESONANCE),
 	modAdsr("Mod Envelope", audioProcessor.apvts, parameters::MOD_ATTACK, parameters::MOD_DECAY, parameters::MOD_SUSTAIN, parameters::MOD_RELEASE),
-	fx(audioProcessor.apvts)
+	fx(audioProcessor.apvts),
+	voice(audioProcessor.apvts, parameters::NUM_VOICES)
 {
 	setSize(900, 600);
 	addAndMakeVisible(presetPanel);
@@ -35,6 +36,7 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 	addAndMakeVisible(filter);
 	addAndMakeVisible(modAdsr);
 	addAndMakeVisible(fx);
+	addAndMakeVisible(voice);
 }
 
 SubSynthAudioProcessorEditor::~SubSynthAudioProcessorEditor() {}
@@ -48,19 +50,18 @@ void SubSynthAudioProcessorEditor::paint(juce::Graphics& g)
 }
 
 /**
- * Layout dei componenti: suddivide in 3 colonne e più righe.
+ * Layout dei componenti: suddivide in 3 colonne e piu' righe.
  */
 void SubSynthAudioProcessorEditor::resized()
 {
-
-
 	presetPanel.setBounds(getLocalBounds().removeFromTop(proportionOfHeight(0.1f)));
 
 	auto height = getHeight() - presetPanel.getHeight();
 
-	adsr.setBounds(0, presetPanel.getBottom(), getWidth() / 3, height / 5 * 2);
-	gain.setBounds(0, adsr.getBottom(), getWidth() / 3, height / 5);
-	modAdsr.setBounds(0, gain.getBottom(), getWidth() / 3, height / 5 * 2);
+	adsr.setBounds(0, presetPanel.getBottom(), getWidth() / 3, height / 6 * 2);
+	gain.setBounds(0, adsr.getBottom(), getWidth() / 3, height / 6);
+	voice.setBounds(0, gain.getBottom(), getWidth() / 3, height / 6);
+	modAdsr.setBounds(0, voice.getBottom(), getWidth() / 3, height / 6 * 2);
 
 	osc.setBounds(gain.getRight(), presetPanel.getBottom(), getWidth() / 3, height / 2);
 	filter.setBounds(osc.getX(), osc.getBottom(), getWidth() / 3, height / 2);

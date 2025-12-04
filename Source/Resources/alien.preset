@@ -1,33 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Parameters presetName="ufo" version="1.1.1">
+<Parameters presetName="alien" version="1.1.3">
   <PARAM id="ATTACK" value="1.0"/>
   <PARAM id="CH_DELAY_MS" value="22.10000038146973"/>
   <PARAM id="CH_DEPTH" value="0.7799999713897705"/>
   <PARAM id="CH_FEEDBACK" value="0.8999999761581421"/>
   <PARAM id="CH_RATE" value="2.5"/>
   <PARAM id="DECAY" value="1.0"/>
-  <PARAM id="FILTERCUTOFF" value="1080.0"/>
-  <PARAM id="FILTERRESONANCE" value="2.700000047683716"/>
-  <PARAM id="FILTERTYPE" value="0.0"/>
+  <PARAM id="FILTER_CUTOFF" value="1080.0"/>
+  <PARAM id="FILTER_RESONANCE" value="2.700000047683716"/>
+  <PARAM id="FILTER_TYPE" value="0.0"/>
   <PARAM id="FL_DELAY_MS" value="1.5"/>
   <PARAM id="FL_DEPTH" value="0.3499999940395355"/>
   <PARAM id="FL_FEEDBACK" value="0.5999999642372131"/>
   <PARAM id="FL_RATE" value="1.399999976158142"/>
-  <PARAM id="FMDEPTH" value="215.0"/>
-  <PARAM id="FMFREQ" value="690.0"/>
+  <PARAM id="FM_DEPTH" value="215.0"/>
+  <PARAM id="FM_FREQ" value="690.0"/>
   <PARAM id="FX_BYPASS" value="0.0"/>
   <PARAM id="FX_TYPE" value="0.0"/>
   <PARAM id="FX_WET" value="0.550000011920929"/>
   <PARAM id="GAIN" value="0.5"/>
-  <PARAM id="MODATTACK" value="0.1000000014901161"/>
-  <PARAM id="MODDECAY" value="1.0"/>
-  <PARAM id="MODRELEASE" value="1.600000023841858"/>
-  <PARAM id="MODSUSTAIN" value="0.800000011920929"/>
-  <PARAM id="OSC" value="0.0"/>
+  <PARAM id="MOD_ATTACK" value="0.1000000014901161"/>
+  <PARAM id="MOD_DECAY" value="1.0"/>
+  <PARAM id="MOD_RELEASE" value="1.600000023841858"/>
+  <PARAM id="MOD_SUSTAIN" value="0.800000011920929"/>
+  <PARAM id="OSC_TYPE" value="0.0"/>
   <PARAM id="RELEASE" value="2.0"/>
   <PARAM id="RV_DAMP" value="0.199999988079071"/>
   <PARAM id="RV_SIZE" value="0.25"/>
   <PARAM id="RV_WIDTH" value="0.2999999821186066"/>
   <PARAM id="SUSTAIN" value="0.1000000014901161"/>
+  <PARAM id="NUM_VOICES" value="1.0"/>
 </Parameters>

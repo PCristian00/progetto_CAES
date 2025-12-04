@@ -7,24 +7,24 @@
   <PARAM id="CH_FEEDBACK" value="0.8999999761581421"/>
   <PARAM id="CH_RATE" value="1.299999952316284"/>
   <PARAM id="DECAY" value="0.2999999821186066"/>
-  <PARAM id="FILTERCUTOFF" value="1500.0"/>
-  <PARAM id="FILTERRESONANCE" value="1.0"/>
-  <PARAM id="FILTERTYPE" value="0.0"/>
+  <PARAM id="FILTER_CUTOFF" value="1500.0"/>
+  <PARAM id="FILTER_RESONANCE" value="1.0"/>
+  <PARAM id="FILTER_TYPE" value="0.0"/>
   <PARAM id="FL_DELAY_MS" value="1.5"/>
   <PARAM id="FL_DEPTH" value="0.3499999940395355"/>
   <PARAM id="FL_FEEDBACK" value="0.5999999642372131"/>
   <PARAM id="FL_RATE" value="1.399999976158142"/>
-  <PARAM id="FMDEPTH" value="5.0"/>
-  <PARAM id="FMFREQ" value="25.0"/>
+  <PARAM id="FM_DEPTH" value="5.0"/>
+  <PARAM id="FM_FREQ" value="25.0"/>
   <PARAM id="FX_BYPASS" value="0.0"/>
   <PARAM id="FX_TYPE" value="1.0"/>
   <PARAM id="FX_WET" value="0.2999999821186066"/>
   <PARAM id="GAIN" value="0.5"/>
-  <PARAM id="MODATTACK" value="0.1000000014901161"/>
-  <PARAM id="MODDECAY" value="0.1000000014901161"/>
-  <PARAM id="MODRELEASE" value="0.3999999761581421"/>
-  <PARAM id="MODSUSTAIN" value="0.2999999821186066"/>
-  <PARAM id="OSC" value="1.0"/>
+  <PARAM id="MOD_ATTACK" value="0.1000000014901161"/>
+  <PARAM id="MOD_DECAY" value="0.1000000014901161"/>
+  <PARAM id="MOD_RELEASE" value="0.3999999761581421"/>
+  <PARAM id="MOD_SUSTAIN" value="0.2999999821186066"/>
+  <PARAM id="OSC_TYPE" value="1.0"/>
   <PARAM id="RELEASE" value="0.3999999761581421"/>
   <PARAM id="RV_DAMP" value="0.199999988079071"/>
   <PARAM id="RV_SIZE" value="0.25"/>

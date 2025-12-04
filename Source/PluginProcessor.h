@@ -56,6 +56,8 @@ public:
 	void getStateInformation(juce::MemoryBlock& destData) override;
 	void setStateInformation(const void* data, int sizeInBytes) override;
 
+	void updateSynthVoices(int desired);
+
 	Service::PresetManager& getPresetManager() { return *presetManager; }
 
 	juce::AudioProcessorValueTreeState apvts;
@@ -66,6 +68,11 @@ private:
 	std::unique_ptr<Service::PresetManager> presetManager;
 
 	FXData fx;
+
+	// Stato per preparare nuove voci create a runtime
+	double lastSampleRate{ 0.0 };
+	int    lastBlockSize{ 0 };
+
 	//==============================================================================
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SubSynthAudioProcessor)
 };

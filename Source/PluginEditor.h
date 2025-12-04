@@ -16,6 +16,8 @@
 #include "UI/OscComponent.h"
 #include "UI/FilterComponent.h"
 #include "UI/FXComponent.h"
+#include "UI/VoiceComponent.h"
+
 //==============================================================================
 /**
 */
@@ -43,6 +45,7 @@ private:
 	FilterComponent filter;
 	ADSRComponent modAdsr;
 	FXComponent fx;
+	VoiceComponent voice;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SubSynthAudioProcessorEditor)
 };
