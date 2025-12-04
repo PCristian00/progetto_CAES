@@ -15,6 +15,7 @@
 #include "Parameters.h"
 #include "Service/PresetManager.h"
 #include "Data/FXData.h"
+#include "Data/LimiterData.h"
 
 class SubSynthAudioProcessor : public juce::AudioProcessor
 {
@@ -69,8 +70,8 @@ private:
 
 	FXData fx;
 
-    // limite di sicurezza per voci multiple
-    juce::dsp::Limiter<float> safetyLimiter;
+    // Limiter post chain
+    LimiterData limiter;
 
 	// Stato per preparare nuove voci create a runtime
 	double lastSampleRate{ 0.0 };

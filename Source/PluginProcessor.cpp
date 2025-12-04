@@ -112,18 +112,8 @@ void SubSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 
 	fx.prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
 
-	// Preparazione safety limiter
-	{
-		juce::dsp::ProcessSpec spec;
-		spec.sampleRate = sampleRate;
-		spec.maximumBlockSize = static_cast<juce::uint32>(samplesPerBlock);
-		spec.numChannels = static_cast<juce::uint32>(getTotalNumOutputChannels());
-		safetyLimiter.reset();
-		safetyLimiter.prepare(spec);
-		// valori default
-		safetyLimiter.setThreshold(-0.5f);   // dB
-		safetyLimiter.setRelease(50.0f);     // ms
-	}
+    // Preparazione limiter
+    limiter.prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
 }
 
 /**
@@ -253,20 +243,14 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	// Applica FX post-synth
 	fx.process(buffer);
 
-	// Aggiorna limiter dai parametri APVTS
-	{
-		const float thrDb = apvts.getRawParameterValue(parameters::LIM_THRESHOLD_DB)->load();
-		const float relMs = apvts.getRawParameterValue(parameters::LIM_RELEASE_MS)->load();
-		safetyLimiter.setThreshold(thrDb);
-		safetyLimiter.setRelease(relMs);
-	}
-
-	// processing finale del limiter
-	{
-		juce::dsp::AudioBlock<float> block(buffer);
-		juce::dsp::ProcessContextReplacing<float> ctx(block);
-		safetyLimiter.process(ctx);
-	}
+    // Aggiorna e applica limiter post chain
+    {
+        const float thrDb = apvts.getRawParameterValue(parameters::LIM_THRESHOLD_DB)->load();
+        const float relMs = apvts.getRawParameterValue(parameters::LIM_RELEASE_MS)->load();
+        limiter.setThreshold(thrDb);
+        limiter.setRelease(relMs);
+        limiter.process(buffer);
+    }
 }
 
 /**
