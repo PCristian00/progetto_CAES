@@ -28,7 +28,9 @@ public:
 	void pitchWheelMoved(int newPitchWheelValue) override;
 	void controllerMoved(int controllerNumber, int newControllerValue) override;
 	void prepareToPlay(double sampleRate, int samplesPerBlock, int outputChannels);
-	void updateADSR(const float attack, const float decay, const float sustain, const float release, const float gainValue);
+	void updateADSR(const float attack, const float decay, const float sustain, const float release);
+	void setGainLinear(const float gainValue);
+	void setGainLinear(const float baseGainValue, int activeVoices);
 	void updateFilter(int filterType, float cutoff, float resonance);
 	void updateModADSR(const float attack, const float decay, const float sustain, const float release);
 	OscData& getOscillator() { return osc; }

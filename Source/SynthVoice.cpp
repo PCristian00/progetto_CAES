@@ -98,21 +98,38 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outpu
 }
 
 /**
- * Aggiorna parametri dell'ADSR ampiezza e il gain complessivo.
+ * Aggiorna i parametri dell'ADSR ampiezza.
  *
  * @param attack A.
  * @param decay D.
  * @param sustain S.
  * @param release R.
- * @param gainValue gain lineare.
  */
-void SynthVoice::updateADSR(const float attack, const float decay, const float sustain, const float release, const float gainValue)
+void SynthVoice::updateADSR(const float attack, const float decay, const float sustain, const float release)
 {
 	adsr.update(attack, decay, sustain, release);
-	gain.setGainLinear(gainValue);
 
 	if (debugAmpEnvEnabled)
-		DBG("[AmpADSR] updateADSR A=" << attack << " D=" << decay << " S=" << sustain << " R=" << release << " Gain=" << gainValue);
+        DBG("[AmpADSR] updateADSR A=" << attack << " D=" << decay << " S=" << sustain << " R=" << release);
+}
+
+/**
+ * Imposta il gain lineare smussato.
+ */
+void SynthVoice::setGainLinear(const float gainValue)
+{
+    gain.setGainLinear(gainValue);
+}
+
+/**
+ * Imposta il gain lineare applicando uno scaling polifonico (1/sqrt(n)) se n>0.
+ */
+void SynthVoice::setGainLinear(const float baseGainValue, int activeVoices)
+{
+    float scale = 1.0f;
+    if (activeVoices > 0)
+        scale = 1.0f / std::sqrt(static_cast<float>(activeVoices));
+    gain.setGainLinear(baseGainValue * scale);
 }
 
 /**

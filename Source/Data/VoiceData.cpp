@@ -44,10 +44,11 @@ void VoiceData::applyParams(SynthVoice& voice,
 	const float modSustain = apvts.getRawParameterValue(parameters::MOD_SUSTAIN)->load();
 	const float modRelease = apvts.getRawParameterValue(parameters::MOD_RELEASE)->load();
 
-	voice.getOscillator().setWaveType(oscChoice);
-	voice.getOscillator().setFmParams(fmDepth, fmFreq);
+    voice.getOscillator().setWaveType(oscChoice);
+    voice.getOscillator().setFmParams(fmDepth, fmFreq);
 
-	voice.updateADSR(attack, decay, sustain, release, gain * polyGainScale);
+    voice.updateADSR(attack, decay, sustain, release);
+    voice.setGainLinear(gain * polyGainScale);
 	voice.updateFilter(filterType, filterCutOff, filterResonance);
 	voice.updateModADSR(modAttack, modDecay, modSustain, modRelease);
 }
