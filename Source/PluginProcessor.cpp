@@ -9,6 +9,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "Parameters.h"
+#include <cmath>
 
 SubSynthAudioProcessor::SubSynthAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -110,6 +111,19 @@ void SubSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 		}
 
 	fx.prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
+
+	// Preparazione safety limiter
+	{
+		juce::dsp::ProcessSpec spec;
+		spec.sampleRate = sampleRate;
+		spec.maximumBlockSize = static_cast<juce::uint32>(samplesPerBlock);
+		spec.numChannels = static_cast<juce::uint32>(getTotalNumOutputChannels());
+		safetyLimiter.reset();
+		safetyLimiter.prepare(spec);
+		// valori default
+		safetyLimiter.setThreshold(-0.5f);   // dB
+		safetyLimiter.setRelease(50.0f);     // ms
+	}
 }
 
 /**
@@ -164,6 +178,14 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
 		buffer.clear(i, 0, buffer.getNumSamples());
 
+	// Count active voices to scale gain only when stacking actually occurs
+	int activeVoices = 0;
+	for (int i = 0; i < synth.getNumVoices(); ++i)
+		if (auto* v = synth.getVoice(i); v != nullptr && v->isVoiceActive())
+			++activeVoices;
+
+	const float polyGainScale = activeVoices > 0 ? 1.0f / std::sqrt(static_cast<float>(activeVoices)) : 1.0f;
+
 	for (int i = 0; i < synth.getNumVoices(); ++i)
 		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
 		{
@@ -185,7 +207,8 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 
 			voice->getOscillator().setWaveType(oscChoice);
 			voice->getOscillator().setFmParams(fmDepth, fmFreq);
-			voice->updateADSR(attack, decay, sustain, release, gain);
+			// Separare updateADSR da GAIN
+			voice->updateADSR(attack, decay, sustain, release, gain * polyGainScale);
 			voice->updateFilter(static_cast<int>(filterType), filterCutOff, filterResonance);
 			voice->updateModADSR(modAttack, modDecay, modSustain, modRelease);
 		}
@@ -229,6 +252,13 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 
 	// Applica FX post-synth
 	fx.process(buffer);
+
+	// processing finale del limiter
+	{
+		juce::dsp::AudioBlock<float> block(buffer);
+		juce::dsp::ProcessContextReplacing<float> ctx(block);
+		safetyLimiter.process(ctx);
+	}
 }
 
 /**

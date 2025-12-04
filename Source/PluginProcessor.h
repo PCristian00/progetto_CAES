@@ -69,6 +69,9 @@ private:
 
 	FXData fx;
 
+    // limite di sicurezza per voci multiple
+    juce::dsp::Limiter<float> safetyLimiter;
+
 	// Stato per preparare nuove voci create a runtime
 	double lastSampleRate{ 0.0 };
 	int    lastBlockSize{ 0 };
