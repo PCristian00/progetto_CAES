@@ -165,18 +165,16 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
 		buffer.clear(i, 0, buffer.getNumSamples());
 
-	// Count active voices to scale gain only when stacking actually occurs
-	int activeVoices = 0;
-	for (int i = 0; i < synth.getNumVoices(); ++i)
-		if (auto* v = synth.getVoice(i); v != nullptr && v->isVoiceActive())
-			++activeVoices;
-
-	const float polyGainScale = activeVoices > 0 ? 1.0f / std::sqrt(static_cast<float>(activeVoices)) : 1.0f;
+    // Count active voices (per polyphonic gain scaling handled by VoiceData/SynthVoice)
+    int activeVoices = 0;
+    for (int i = 0; i < synth.getNumVoices(); ++i)
+        if (auto* v = synth.getVoice(i); v != nullptr && v->isVoiceActive())
+            ++activeVoices;
 
     for (int i = 0; i < synth.getNumVoices(); ++i)
         if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
         {
-            voiceData.applyParams(*voice, apvts, polyGainScale);
+            voiceData.applyParams(*voice, apvts, activeVoices);
         }
 
 	// Render dry

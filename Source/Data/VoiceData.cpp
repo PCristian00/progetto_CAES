@@ -22,8 +22,8 @@ void VoiceData::prepareVoice(SynthVoice& voice, double sampleRate, int samplesPe
 
 /*Applica i parametri della voce dal ValueTreeState. */
 void VoiceData::applyParams(SynthVoice& voice,
-	const juce::AudioProcessorValueTreeState& apvts,
-	float polyGainScale)
+                            const juce::AudioProcessorValueTreeState& apvts,
+                            int activeVoices)
 {
 	const float attack = apvts.getRawParameterValue(parameters::ATTACK)->load();
 	const float decay = apvts.getRawParameterValue(parameters::DECAY)->load();
@@ -48,7 +48,7 @@ void VoiceData::applyParams(SynthVoice& voice,
     voice.getOscillator().setFmParams(fmDepth, fmFreq);
 
     voice.updateADSR(attack, decay, sustain, release);
-    voice.setGainLinear(gain * polyGainScale);
+    voice.setGainLinear(gain, activeVoices);
 	voice.updateFilter(filterType, filterCutOff, filterResonance);
 	voice.updateModADSR(modAttack, modDecay, modSustain, modRelease);
 }

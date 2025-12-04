@@ -19,5 +19,5 @@ public:
     VoiceData() = default;
 
     void prepareVoice(SynthVoice& voice, double sampleRate, int samplesPerBlock, int numOutputChannels);
-    void applyParams(SynthVoice& voice, const juce::AudioProcessorValueTreeState& apvts, float polyGainScale);
+    void applyParams(SynthVoice& voice, const juce::AudioProcessorValueTreeState& apvts, int activeVoices);
 };
