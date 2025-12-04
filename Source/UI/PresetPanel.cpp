@@ -57,11 +57,7 @@ namespace Gui
 
 		// Popup menu colors via owned LAF to avoid global changes
 		presetLaf = std::make_unique<juce::LookAndFeel_V4>();
-		presetLaf->setColour(juce::PopupMenu::backgroundColourId, base.withAlpha(0.85f));
-		presetLaf->setColour(juce::PopupMenu::textColourId, juce::Colours::white);
-		presetLaf->setColour(juce::PopupMenu::highlightedBackgroundColourId, base.brighter(0.3f));
-		presetLaf->setColour(juce::PopupMenu::highlightedTextColourId, juce::Colours::black);
-		presetLaf->setColour(juce::PopupMenu::headerTextColourId, base.brighter(0.8f));
+		utils::themeComboBox(presetList, base, presetLaf.get());
 		presetList.setLookAndFeel(presetLaf.get());
 
 		// Colori di default dopo il tema (per ripristino nelle logiche esistenti)
