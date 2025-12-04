@@ -19,11 +19,13 @@
  * Collega slider e combo agli parametri APVTS.
  */
 OscComponent::OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::String waveSelectorId)
-	: fmFreqLS("FM Freq", apvts, parameters::FM_FREQUENCY, *this, juce::Slider::LinearBarVertical, true)
-	, fmDepthLS("FM Depth", apvts, parameters::FM_DEPTH, *this, juce::Slider::LinearBarVertical, true)
+    : fmFreqLS("FM Freq", apvts, parameters::FM_FREQUENCY, *this, juce::Slider::LinearBarVertical, true)
+    , fmDepthLS("FM Depth", apvts, parameters::FM_DEPTH, *this, juce::Slider::LinearBarVertical, true)
 	, oscWaveSelector(apvts, waveSelectorId, *this, { "Sine","Saw","Square" })
 {
+    fmFreqLS.setUnitSuffix(" Hz");
 
+	// I restanti slider sono lineari e non hanno unita'
 }
 
 OscComponent::~OscComponent() {}

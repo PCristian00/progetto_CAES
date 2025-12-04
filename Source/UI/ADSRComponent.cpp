@@ -19,11 +19,16 @@ ADSRComponent::ADSRComponent(juce::String name,
 	juce::String sustainId,
 	juce::String releaseId)
 	: componentName(name)
-	, attackLS("Attack", apvts, attackId, *this, juce::Slider::LinearBarVertical, true)
-	, decayLS("Decay", apvts, decayId, *this, juce::Slider::LinearBarVertical, true)
-	, sustainLS("Sustain", apvts, sustainId, *this, juce::Slider::LinearBarVertical, true)
-	, releaseLS("Release", apvts, releaseId, *this, juce::Slider::LinearBarVertical, true)
+    , attackLS("Attack", apvts, attackId, *this, juce::Slider::LinearBarVertical, true)
+    , decayLS("Decay", apvts, decayId, *this, juce::Slider::LinearBarVertical, true)
+    , sustainLS("Sustain", apvts, sustainId, *this, juce::Slider::LinearBarVertical, true)
+    , releaseLS("Release", apvts, releaseId, *this, juce::Slider::LinearBarVertical, true)
 {
+    attackLS.setUnitSuffix(" s");
+    decayLS.setUnitSuffix(" s");
+    releaseLS.setUnitSuffix(" s");
+
+	// I restanti slider sono lineari e non hanno unita'
 }
 
 /**

@@ -120,6 +120,11 @@ namespace utils
 			setBounds(juce::Rectangle<int>(x, y, width, height), labelHeight, gap);
 		}
 
+		/** Aggiunge un suffisso al valore dello slider. Utile per unita' di misura. */
+		void setUnitSuffix(juce::String unit) {
+			this->slider.setTextValueSuffix(unit);
+		}
+
 		/** Imposta visibilita' coerente di label e slider. */
 		void setVisible(bool v)
 		{

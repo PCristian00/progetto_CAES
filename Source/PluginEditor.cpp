@@ -28,7 +28,7 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 	fx(audioProcessor.apvts),
 	voice(audioProcessor.apvts, parameters::NUM_VOICES)
 {
-	setSize(900, 800);
+	setSize(1080, 720);
 	addAndMakeVisible(presetPanel);
 
 	addAndMakeVisible(adsr);
@@ -96,7 +96,6 @@ void SubSynthAudioProcessorEditor::resized()
 		gain.setBounds(x, remainingY, colWidth, remainingH);
 
 		const int bottomRowY = gain.getBottom();
-		const int bottomRowH = h / 2;
 		const int halfW = colWidth / 2;
 		voice.setBounds(x, bottomRowY, halfW, remainingH);
 		limiter.setBounds(x + halfW, bottomRowY, halfW, remainingH);

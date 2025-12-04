@@ -43,6 +43,14 @@ FXComponent::FXComponent(APVTS& state)
 	addAndMakeVisible(bypass);
 	bypassAttachment = std::make_unique<APVTS::ButtonAttachment>(apvts, parameters::FX_BYPASS, bypass);
 
+
+	chRateLS.setUnitSuffix(" Hz");
+	chDelayLS.setUnitSuffix(" ms");
+	flRateLS.setUnitSuffix(" Hz");
+	flDelayLS.setUnitSuffix(" ms");
+
+	// I restanti slider sono lineari e non hanno unita'
+
 	updateVisibility();
 }
 

@@ -15,9 +15,11 @@
 LimiterComponent::LimiterComponent(juce::AudioProcessorValueTreeState& apvts,
                                    juce::String thresholdId,
                                    juce::String releaseMsId)
-    : threshLS("Threshold (dB)", apvts, thresholdId, *this, juce::Slider::LinearBarVertical, true)
-    , releaseLS("Release (ms)", apvts, releaseMsId, *this, juce::Slider::LinearBarVertical, true)
+    : threshLS("Threshold", apvts, thresholdId, *this, juce::Slider::LinearBarVertical, true)
+    , releaseLS("Release", apvts, releaseMsId, *this, juce::Slider::LinearBarVertical, true)
 {
+    threshLS.setUnitSuffix(" dB");
+    releaseLS.setUnitSuffix(" ms");
 }
 
 LimiterComponent::~LimiterComponent() = default;
