@@ -20,6 +20,10 @@ LimiterComponent::LimiterComponent(juce::AudioProcessorValueTreeState& apvts,
 {
     threshLS.setUnitSuffix(" dB");
     releaseLS.setUnitSuffix(" ms");
+
+    // Theme colour based on border colour
+    threshLS.setThemeColour(utils::miscCol);
+    releaseLS.setThemeColour(utils::miscCol);
 }
 
 LimiterComponent::~LimiterComponent() = default;

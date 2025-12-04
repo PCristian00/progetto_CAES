@@ -26,6 +26,11 @@ OscComponent::OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::Stri
 	fmFreqLS.setUnitSuffix(" Hz");
 
 	// I restanti slider sono lineari e non hanno unita'
+
+	// Theme colours based on border colour
+	fmFreqLS.setThemeColour(utils::oscCol);
+	fmDepthLS.setThemeColour(utils::oscCol);
+	oscWaveSelector.setThemeColour(utils::oscCol);
 }
 
 OscComponent::~OscComponent() {}

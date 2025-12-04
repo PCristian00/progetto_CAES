@@ -52,6 +52,21 @@ FXComponent::FXComponent(APVTS& state)
 	// I restanti slider sono lineari e non hanno unita'
 
 	updateVisibility();
+
+	// Theme colours based on border colour
+	fxType.setThemeColour(utils::fxCol);
+	wetLS.setThemeColour(utils::fxCol);
+	chRateLS.setThemeColour(utils::fxCol);
+	chDepthLS.setThemeColour(utils::fxCol);
+	chDelayLS.setThemeColour(utils::fxCol);
+	chFeedbackLS.setThemeColour(utils::fxCol);
+	flRateLS.setThemeColour(utils::fxCol);
+	flDepthLS.setThemeColour(utils::fxCol);
+	flDelayLS.setThemeColour(utils::fxCol);
+	flFeedbackLS.setThemeColour(utils::fxCol);
+	rvSizeLS.setThemeColour(utils::fxCol);
+	rvDampLS.setThemeColour(utils::fxCol);
+	rvWidthLS.setThemeColour(utils::fxCol);
 }
 
 /**

@@ -154,6 +154,23 @@ namespace utils
 		juce::Slider& getSlider() noexcept { return slider; }
 		/** Accesso diretto alla label. */
 		juce::Label& getLabel()  noexcept { return label; }
+
+		/** Applica una tema colore allo slider/label basato sul colore del bordo. */
+		void setThemeColour(juce::Colour base)
+		{
+			// Slider palette
+			slider.setColour(juce::Slider::thumbColourId, base);
+			slider.setColour(juce::Slider::trackColourId, base.darker(0.3f));
+			slider.setColour(juce::Slider::rotarySliderFillColourId, base);
+			slider.setColour(juce::Slider::rotarySliderOutlineColourId, base.darker(0.5f));
+			slider.setColour(juce::Slider::backgroundColourId, base.withAlpha(0.15f));
+			slider.setColour(juce::Slider::textBoxTextColourId, juce::Colours::white);
+			slider.setColour(juce::Slider::textBoxBackgroundColourId, base.withAlpha(0.25f));
+			slider.setColour(juce::Slider::textBoxOutlineColourId, base.darker(0.6f));
+
+			// Label text colour harmonised
+			label.setColour(juce::Label::textColourId, base.brighter(0.6f));
+		}
 	};
 
 	/**
@@ -166,6 +183,14 @@ namespace utils
 		juce::ComboBox cBox;
 		std::unique_ptr<ComboBoxAttachment> attachment;
 		juce::StringArray choices;
+		// LookAndFeel dedicato per permettere colori personalizzati del PopupMenu
+		std::unique_ptr<juce::LookAndFeel_V4> ownedLaf;
+
+		~DropDown()
+		{
+			if (ownedLaf && &cBox.getLookAndFeel() == ownedLaf.get())
+				cBox.setLookAndFeel(nullptr);
+		}
 
 		/** Costruttore base: inizializza giustificazione centrata. */
 		explicit DropDown()
@@ -287,6 +312,29 @@ namespace utils
 
 		/** Accesso diretto alla ComboBox. */
 		juce::ComboBox& getComboBox() noexcept { return cBox; }
+
+		/** Applica una tema colore alla combo basato sul colore del bordo. */
+		void setThemeColour(juce::Colour base)
+		{
+			cBox.setColour(juce::ComboBox::backgroundColourId, base.withAlpha(0.15f));
+			cBox.setColour(juce::ComboBox::textColourId, juce::Colours::white);
+			cBox.setColour(juce::ComboBox::outlineColourId, base.darker(0.5f));
+			cBox.setColour(juce::ComboBox::buttonColourId, base);
+			cBox.setColour(juce::ComboBox::arrowColourId, base.brighter(0.6f));
+
+			// Popup menu (tendina) colours: usa un LookAndFeel dedicato per non impattare globalmente
+			if (!ownedLaf)
+			{
+				ownedLaf = std::make_unique<juce::LookAndFeel_V4>();
+				cBox.setLookAndFeel(ownedLaf.get());
+			}
+
+			ownedLaf->setColour(juce::PopupMenu::backgroundColourId, base.withAlpha(0.25f));
+			ownedLaf->setColour(juce::PopupMenu::textColourId, juce::Colours::white);
+			ownedLaf->setColour(juce::PopupMenu::highlightedBackgroundColourId, base.brighter(0.3f));
+			ownedLaf->setColour(juce::PopupMenu::highlightedTextColourId, juce::Colours::black);
+			ownedLaf->setColour(juce::PopupMenu::headerTextColourId, base.brighter(0.8f));
+		}
 	};
 
 	// Mostra una riga di sliders etichettati (LabeledSlider), distribuiti uniformemente

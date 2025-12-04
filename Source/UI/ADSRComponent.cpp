@@ -29,6 +29,13 @@ ADSRComponent::ADSRComponent(juce::String name,
 	releaseLS.setUnitSuffix(" s");
 
 	// I restanti slider sono lineari e non hanno unita'
+
+	// Theme colour based on border colour
+	const auto borderColour = (componentName == "Amp Envelope") ? utils::oscCol : utils::filtCol;
+	attackLS.setThemeColour(borderColour);
+	decayLS.setThemeColour(borderColour);
+	sustainLS.setThemeColour(borderColour);
+	releaseLS.setThemeColour(borderColour);
 }
 
 /**

@@ -17,6 +17,8 @@ GainComponent::GainComponent(juce::AudioProcessorValueTreeState& apvtsIn, juce::
 	, paramID(gainID)
 	, gainLS("", apvts, paramID, *this, juce::Slider::LinearBar, true)
 {
+    // Theme colour based on border colour
+    gainLS.setThemeColour(utils::miscCol);
 }
 
 GainComponent::~GainComponent() = default;

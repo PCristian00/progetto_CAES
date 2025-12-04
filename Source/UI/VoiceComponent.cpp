@@ -13,6 +13,8 @@
 VoiceComponent::VoiceComponent(juce::AudioProcessorValueTreeState& apvts, juce::String voiceID) :
 	apvts(apvts), paramID(voiceID), numVoicesLS("", apvts, paramID, *this, juce::Slider::LinearBar, true)
 {
+    // Applica tema colore basato sul bordo del componente
+    numVoicesLS.setThemeColour(utils::miscCol);
 }
 
 VoiceComponent::~VoiceComponent() = default;

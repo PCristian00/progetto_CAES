@@ -24,6 +24,11 @@ FilterComponent::FilterComponent(juce::AudioProcessorValueTreeState& apvts, juce
 {
 	filterCutOffLS.setUnitSuffix(" Hz");
 	filterResonanceLS.setUnitSuffix(" Q");
+
+	// Theme colours based on border colour
+	filterCutOffLS.setThemeColour(utils::filtCol);
+	filterResonanceLS.setThemeColour(utils::filtCol);
+	filterTypeSelector.setThemeColour(utils::filtCol);
 }
 
 FilterComponent::~FilterComponent() {}
