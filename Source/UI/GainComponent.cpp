@@ -27,7 +27,7 @@ GainComponent::~GainComponent() = default;
 void GainComponent::paint(juce::Graphics& g)
 {
 	g.fillAll(juce::Colours::black);
-	utils::drawBorders(g, this, juce::Colours::orange, "Gain");
+	utils::drawBorders(g, this, utils::miscCol, "Gain");
 }
 
 /**

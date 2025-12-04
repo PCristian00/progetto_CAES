@@ -28,7 +28,7 @@ SubSynthAudioProcessorEditor::SubSynthAudioProcessorEditor(SubSynthAudioProcesso
 	fx(audioProcessor.apvts),
 	voice(audioProcessor.apvts, parameters::NUM_VOICES)
 {
-	setSize(1080, 720);
+	setSize(1080, 900);
 	addAndMakeVisible(presetPanel);
 
 	addAndMakeVisible(adsr);

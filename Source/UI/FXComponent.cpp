@@ -99,7 +99,7 @@ void FXComponent::updateVisibility()
 void FXComponent::paint(juce::Graphics& g)
 {
 	g.fillAll(juce::Colours::black);
-	utils::drawBorders(g, this, juce::Colours::deeppink, "FX");
+	utils::drawBorders(g, this, utils::fxCol, "FX");
 }
 
 /**

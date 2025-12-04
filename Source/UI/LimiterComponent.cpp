@@ -27,7 +27,7 @@ LimiterComponent::~LimiterComponent() = default;
 void LimiterComponent::paint(juce::Graphics& g)
 {
     g.fillAll(juce::Colours::black);
-    utils::drawBorders(g, this, juce::Colours::red, "Limiter");
+    utils::drawBorders(g, this, utils::miscCol, "Limiter");
 }
 
 void LimiterComponent::resized()

@@ -24,6 +24,17 @@ namespace utils
 	const int Xstart = static_cast<int>(padding * 1.5f);
 	const int Ystart = padding * 4;
 
+	// Colore dei componenti di oscillatore e inviluppo
+	const juce::Colour oscCol = juce::Colours::red;
+	// Colore dei componenti dei filtri
+	const juce::Colour filtCol = juce::Colours::green;
+	// Colore di FX Component
+	const juce::Colour fxCol = juce::Colours::indianred;
+	// Colore dei restanti componenti
+	const juce::Colour miscCol = juce::Colours::yellowgreen;
+
+
+
 	// Altezza dell'area riservata al titolo/bordo
 	inline int titleAreaHeight() noexcept { return 2 * padding; }
 
