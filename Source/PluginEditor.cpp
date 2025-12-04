@@ -58,20 +58,47 @@ void SubSynthAudioProcessorEditor::resized()
 {
 	presetPanel.setBounds(getLocalBounds().removeFromTop(proportionOfHeight(0.1f)));
 
-	auto height = getHeight() - presetPanel.getHeight();
+	const int panelBottom = presetPanel.getBottom();
+	const int totalWidth = getWidth();
+	const int totalHeightBelow = getHeight() - panelBottom;
+	const int colWidth = totalWidth / 3;
 
-	adsr.setBounds(0, presetPanel.getBottom(), getWidth() / 3, height / 6 * 2);
+	// Colonna sinistra: ADSR e Mod ADSR
+	{
+		const int x = 0;
+		const int y = panelBottom;
+		const int h = totalHeightBelow / 2;
+		adsr.setBounds(x, y, colWidth, h);
+		modAdsr.setBounds(x, adsr.getBottom(), colWidth, h);
+	}
 
-	gain.setBounds(0, adsr.getBottom(), getWidth() / 3, height / 6);
-	// 
+	// Colonna centrale: Oscillatore e Filtro
+	{
+		const int x = colWidth;
+		const int y = panelBottom;
+		const int h = totalHeightBelow / 2;
+		osc.setBounds(x, y, colWidth, h);
+		filter.setBounds(x, osc.getBottom(), colWidth, h);
+	}
 
-	voice.setBounds(0, gain.getBottom(), getWidth() / 6, height / 6);
-	limiter.setBounds(voice.getRight(), voice.getY(), getWidth() / 6, height / 6);
-	modAdsr.setBounds(0, voice.getBottom(), getWidth() / 3, height / 6 * 2);
+	// Colonna destra: FX, Gain, Voices, Limiter
+	{
+		const int x = colWidth * 2;
+		const int y = panelBottom;
+		const int h = totalHeightBelow / 2;
 
-	osc.setBounds(gain.getRight(), presetPanel.getBottom(), getWidth() / 3, height / 2);
-	filter.setBounds(osc.getX(), osc.getBottom(), getWidth() / 3, height / 2);
-	fx.setBounds(filter.getRight(), presetPanel.getBottom(), getWidth() / 3, height);
+		fx.setBounds(x, y, colWidth, h);
 
+		// Area rimanente sotto FX
+		const int remainingY = fx.getBottom();
+		const int remainingH = h / 2;
 
+		gain.setBounds(x, remainingY, colWidth, remainingH);
+
+		const int bottomRowY = gain.getBottom();
+		const int bottomRowH = h / 2;
+		const int halfW = colWidth / 2;
+		voice.setBounds(x, bottomRowY, halfW, remainingH);
+		limiter.setBounds(x + halfW, bottomRowY, halfW, remainingH);
+	}
 }
