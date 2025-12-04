@@ -16,6 +16,7 @@
 #include "Service/PresetManager.h"
 #include "Data/FXData.h"
 #include "Data/LimiterData.h"
+#include "Data/VoiceData.h"
 
 class SubSynthAudioProcessor : public juce::AudioProcessor
 {
@@ -70,8 +71,11 @@ private:
 
 	FXData fx;
 
-    // Limiter post chain
-    LimiterData limiter;
+	// Limiter post chain
+	LimiterData limiter;
+
+	// Gestore parametri voci
+	VoiceData voiceData;
 
 	// Stato per preparare nuove voci create a runtime
 	double lastSampleRate{ 0.0 };

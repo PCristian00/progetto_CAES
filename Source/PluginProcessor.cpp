@@ -100,15 +100,12 @@ void SubSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 	lastSampleRate = sampleRate;
 	lastBlockSize = samplesPerBlock;
 
-	synth.setCurrentPlaybackSampleRate(sampleRate);
-	for (int i = 0; i < synth.getNumVoices(); ++i)
-		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
-		{
-			voice->prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
-			voice->setAmpEnvelopeDebug(false);
-			voice->setModEnvelopeDebug(false);
-			voice->setEnvelopeDebugRates(60, 120);
-		}
+    synth.setCurrentPlaybackSampleRate(sampleRate);
+    for (int i = 0; i < synth.getNumVoices(); ++i)
+        if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
+        {
+            voiceData.prepareVoice(*voice, sampleRate, samplesPerBlock, getTotalNumOutputChannels());
+        }
 
 	fx.prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
 
@@ -176,32 +173,11 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 
 	const float polyGainScale = activeVoices > 0 ? 1.0f / std::sqrt(static_cast<float>(activeVoices)) : 1.0f;
 
-	for (int i = 0; i < synth.getNumVoices(); ++i)
-		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
-		{
-			float attack = apvts.getRawParameterValue(parameters::ATTACK)->load();
-			float decay = apvts.getRawParameterValue(parameters::DECAY)->load();
-			float sustain = apvts.getRawParameterValue(parameters::SUSTAIN)->load();
-			float release = apvts.getRawParameterValue(parameters::RELEASE)->load();
-			float gain = apvts.getRawParameterValue(parameters::GAIN)->load();
-			const int oscChoice = static_cast<int>(apvts.getRawParameterValue(parameters::OSCILLATOR_TYPE)->load());
-			float fmFreq = apvts.getRawParameterValue(parameters::FM_FREQUENCY)->load();
-			float fmDepth = apvts.getRawParameterValue(parameters::FM_DEPTH)->load();
-			float filterType = apvts.getRawParameterValue(parameters::FILTER_TYPE)->load();
-			float filterCutOff = apvts.getRawParameterValue(parameters::FILTER_CUTOFF)->load();
-			float filterResonance = apvts.getRawParameterValue(parameters::FILTER_RESONANCE)->load();
-			float modAttack = apvts.getRawParameterValue(parameters::MOD_ATTACK)->load();
-			float modDecay = apvts.getRawParameterValue(parameters::MOD_DECAY)->load();
-			float modSustain = apvts.getRawParameterValue(parameters::MOD_SUSTAIN)->load();
-			float modRelease = apvts.getRawParameterValue(parameters::MOD_RELEASE)->load();
-
-			voice->getOscillator().setWaveType(oscChoice);
-			voice->getOscillator().setFmParams(fmDepth, fmFreq);
-			// Separare updateADSR da GAIN
-			voice->updateADSR(attack, decay, sustain, release, gain * polyGainScale);
-			voice->updateFilter(static_cast<int>(filterType), filterCutOff, filterResonance);
-			voice->updateModADSR(modAttack, modDecay, modSustain, modRelease);
-		}
+    for (int i = 0; i < synth.getNumVoices(); ++i)
+        if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
+        {
+            voiceData.applyParams(*voice, apvts, polyGainScale);
+        }
 
 	// Render dry
 	synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
@@ -320,14 +296,11 @@ void SubSynthAudioProcessor::updateSynthVoices(int desired)
 			auto* v = new SynthVoice();
 			synth.addVoice(v);
 
-			// Se prepareToPlay è già stato chiamato, prepara la nuova voce subito
-			if (lastSampleRate > 0.0)
-			{
-				v->prepareToPlay(lastSampleRate, lastBlockSize, getTotalNumOutputChannels());
-				v->setAmpEnvelopeDebug(false);
-				v->setModEnvelopeDebug(false);
-				v->setEnvelopeDebugRates(60, 120);
-			}
+            // Se prepareToPlay è già stato chiamato, prepara la nuova voce subito
+            if (lastSampleRate > 0.0)
+            {
+                voiceData.prepareVoice(*v, lastSampleRate, lastBlockSize, getTotalNumOutputChannels());
+            }
 		}
 	}
 	else // desired < current
