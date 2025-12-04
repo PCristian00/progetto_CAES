@@ -58,7 +58,7 @@ namespace Service {
 	 * se assente.
 	 *
 	 * @param vt   ValueTree da serializzare.
-	 * @param file file di destinazione (verrà sovrascritto).
+	 * @param file file di destinazione (verra' sovrascritto).
 	 */
 	static void writeValueTreeToFile(const juce::ValueTree& vt, const File& file)
 	{
@@ -157,8 +157,38 @@ namespace Service {
 	}
 
 	/**
-	 * Carica un preset embedded (factory) copiando le proprietà dei parametri
-	 * presenti nel ValueTree sullo stato corrente.
+	 * Imposta i valori di default per tutti i parametri assenti nel ValueTree del preset caricato.
+	 */
+	void PresetManager::setMissingParamsToDefaults(const juce::ValueTree& loadedPresetTree)
+	{
+		// Per ogni parametro nello stato APVTS, se non presente nel preset, imposta default
+		for (int i = 0; i < valueTreeState.state.getNumChildren(); ++i)
+		{
+			auto stateChild = valueTreeState.state.getChild(i);
+			if (!stateChild.hasProperty("id"))
+				continue;
+
+			const juce::String id = stateChild.getProperty("id").toString();
+
+			// Se il preset contiene già il parametro, non fare nulla
+			const auto presetChild = loadedPresetTree.getChildWithProperty("id", id);
+			if (presetChild.isValid())
+				continue;
+
+			// Recupera il parametro dall'APVTS
+			if (auto* param = valueTreeState.getParameter(id))
+			{
+				const float defaultNorm = param->getDefaultValue();           // 0..1
+				const float defaultValue = param->convertFrom0to1(defaultNorm); // valore reale
+				stateChild.setProperty("value", defaultValue, nullptr);
+			}
+		}
+	}
+
+	/**
+	 * Carica un preset embedded (factory) copiando le proprieta' dei parametri
+	 * presenti nel ValueTree sullo stato corrente. Per i parametri mancanti,
+	 * applica i valori di default.
 	 *
 	 * @param presetName nome del preset factory.
 	 */
@@ -191,6 +221,7 @@ namespace Service {
 				return;
 			}
 
+			// Copia proprieta' dei parametri presenti
 			for (int c = 0; c < vt.getNumChildren(); ++c)
 			{
 				const auto paramChild = vt.getChild(c);
@@ -199,6 +230,9 @@ namespace Service {
 				if (paramTree.isValid())
 					paramTree.copyPropertiesFrom(paramChild, nullptr);
 			}
+
+			// Imposta default per parametri mancanti
+			setMissingParamsToDefaults(vt);
 
 			currentPreset.setValue(presetName);
 			return;
@@ -209,7 +243,7 @@ namespace Service {
 	}
 
 	/**
-	 * Elimina un preset utente (non factory). Se è il corrente azzera currentPreset.
+	 * Elimina un preset utente (non factory). Se e' il corrente azzera currentPreset.
 	 *
 	 * @param presetName nome da eliminare.
 	 */
@@ -244,6 +278,7 @@ namespace Service {
 
 	/**
 	 * Carica un preset (utente o factory) copiando le proprietà dei parametri.
+	 * Per i parametri mancanti, applica i valori di default.
 	 *
 	 * @param presetName nome del preset.
 	 */
@@ -277,6 +312,7 @@ namespace Service {
 
 		const auto valueTreeToLoad = juce::ValueTree::fromXml(*xml);
 
+		// Copia proprietà dei parametri presenti
 		for (int i = 0; i < valueTreeToLoad.getNumChildren(); i++)
 		{
 			const auto paramChildToLoad = valueTreeToLoad.getChild(i);
@@ -286,6 +322,9 @@ namespace Service {
 			if (paramTree.isValid())
 				paramTree.copyPropertiesFrom(paramChildToLoad, nullptr);
 		}
+
+		// Imposta default per parametri mancanti
+		setMissingParamsToDefaults(valueTreeToLoad);
 
 		currentPreset.setValue(presetName);
 	}

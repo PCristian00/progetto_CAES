@@ -23,7 +23,9 @@ OscComponent::OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::Stri
 	, fmDepthLS("FM Depth", apvts, parameters::FM_DEPTH, *this, juce::Slider::LinearBarVertical, true)
 	, oscWaveSelector(apvts, waveSelectorId, *this, { "Sine","Saw","Square" })
 {
+	fmFreqLS.setUnitSuffix(" Hz");
 
+	// I restanti slider sono lineari e non hanno unita'
 }
 
 OscComponent::~OscComponent() {}
@@ -31,7 +33,7 @@ OscComponent::~OscComponent() {}
 void OscComponent::paint(juce::Graphics& g)
 {
 	g.fillAll(juce::Colours::black);
-	utils::drawBorders(g, this, juce::Colours::darkgoldenrod, "Oscillator");
+	utils::drawBorders(g, this, utils::oscCol, "Oscillator");
 }
 
 /**

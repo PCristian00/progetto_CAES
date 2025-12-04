@@ -23,7 +23,7 @@ VoiceComponent::~VoiceComponent() = default;
 void VoiceComponent::paint(juce::Graphics& g)
 {
 	g.fillAll(juce::Colours::black);
-	utils::drawBorders(g, this, juce::Colours::lightpink, "Voices");
+	utils::drawBorders(g, this, utils::miscCol, "Voices");
 }
 /**
  * Layout: lo slider occupa tutta l'area contenuti.

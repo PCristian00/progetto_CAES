@@ -40,6 +40,9 @@ namespace parameters
 	static constexpr const char* FX_TYPE = "FX_TYPE";     // 0=None, 1=Chorus, 2=Flanger, 3=Reverb
 	static constexpr const char* FX_BYPASS = "FX_BYPASS";
 	static constexpr const char* FX_WET = "FX_WET";
+	// Limiter
+	static constexpr const char* LIM_THRESHOLD_DB = "LIM_THRESHOLD_DB"; // dB, e.g. -24..0
+	static constexpr const char* LIM_RELEASE_MS = "LIM_RELEASE_MS";     // ms, e.g. 10..200
 	// Chorus
 	static constexpr const char* CH_RATE = "CH_RATE";
 	static constexpr const char* CH_DEPTH = "CH_DEPTH";
@@ -104,6 +107,10 @@ namespace parameters
 		params.push_back(std::make_unique<juce::AudioParameterFloat>(RV_SIZE, "Reverb Size", juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f), 0.25f));
 		params.push_back(std::make_unique<juce::AudioParameterFloat>(RV_DAMP, "Reverb Damping", juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f), 0.4f));
 		params.push_back(std::make_unique<juce::AudioParameterFloat>(RV_WIDTH, "Reverb Width", juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f), 1.0f));
+
+		// Limiter params
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(LIM_THRESHOLD_DB, "Limiter Threshold (dB)", juce::NormalisableRange<float>(-24.0f, 0.0f, 0.1f, 1.0f), -0.5f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(LIM_RELEASE_MS, "Limiter Release (ms)", juce::NormalisableRange<float>(10.0f, 200.0f, 0.1f, 1.0f), 50.0f));
 
 		return { params.begin(), params.end() };
 	}

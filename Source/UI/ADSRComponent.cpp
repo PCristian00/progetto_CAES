@@ -24,6 +24,11 @@ ADSRComponent::ADSRComponent(juce::String name,
 	, sustainLS("Sustain", apvts, sustainId, *this, juce::Slider::LinearBarVertical, true)
 	, releaseLS("Release", apvts, releaseId, *this, juce::Slider::LinearBarVertical, true)
 {
+	attackLS.setUnitSuffix(" s");
+	decayLS.setUnitSuffix(" s");
+	releaseLS.setUnitSuffix(" s");
+
+	// I restanti slider sono lineari e non hanno unita'
 }
 
 /**
@@ -32,7 +37,11 @@ ADSRComponent::ADSRComponent(juce::String name,
 void ADSRComponent::paint(juce::Graphics& g)
 {
 	g.fillAll(juce::Colours::black);
-	utils::drawBorders(g, this, juce::Colours::forestgreen, componentName);
+
+	if (componentName == "Amp Envelope")
+		utils::drawBorders(g, this, utils::oscCol, componentName);
+	else
+		utils::drawBorders(g, this, utils::filtCol, componentName);
 }
 
 /**

@@ -18,10 +18,12 @@
  * Collega i controlli agli APVTS params.
  */
 FilterComponent::FilterComponent(juce::AudioProcessorValueTreeState& apvts, juce::String filterTypeSelectorId, juce::String filterCutOffId, juce::String filterResonanceId)
-	: filterCutOffLS("Filter Cutoff", apvts, filterCutOffId, *this, juce::Slider::LinearBarVertical, true)
-	, filterResonanceLS("Filter Resonance", apvts, filterResonanceId, *this, juce::Slider::LinearBarVertical, true)
+	: filterCutOffLS("Cutoff", apvts, filterCutOffId, *this, juce::Slider::LinearBarVertical, true)
+	, filterResonanceLS("Resonance", apvts, filterResonanceId, *this, juce::Slider::LinearBarVertical, true)
 	, filterTypeSelector(apvts, filterTypeSelectorId, *this, { "Low-Pass","Band-Pass","High-Pass" })
 {
+	filterCutOffLS.setUnitSuffix(" Hz");
+	filterResonanceLS.setUnitSuffix(" Q");
 }
 
 FilterComponent::~FilterComponent() {}
@@ -29,7 +31,7 @@ FilterComponent::~FilterComponent() {}
 void FilterComponent::paint(juce::Graphics& g)
 {
 	g.fillAll(juce::Colours::black);
-	utils::drawBorders(g, this, juce::Colours::darkorchid, "Filter");
+	utils::drawBorders(g, this, utils::filtCol, "Filter");
 }
 
 /**

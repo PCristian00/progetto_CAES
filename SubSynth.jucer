@@ -32,6 +32,10 @@
         <FILE id="HGArtF" name="OscData.h" compile="0" resource="0" file="Source/Data/OscData.h"/>
       </GROUP>
       <GROUP id="{44B03D67-D4FE-28C8-B1E5-1DEFA5966612}" name="UI">
+        <FILE id="jC5py5" name="LimiterComponent.cpp" compile="1" resource="0"
+              file="Source/UI/LimiterComponent.cpp"/>
+        <FILE id="gMqz3E" name="LimiterComponent.h" compile="0" resource="0"
+              file="Source/UI/LimiterComponent.h"/>
         <FILE id="tNeWsy" name="ADSRComponent.cpp" compile="1" resource="0"
               file="Source/UI/ADSRComponent.cpp"/>
         <FILE id="GkHhDp" name="ADSRComponent.h" compile="0" resource="0" file="Source/UI/ADSRComponent.h"/>

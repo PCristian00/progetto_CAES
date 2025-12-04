@@ -17,6 +17,7 @@
 #include "UI/FilterComponent.h"
 #include "UI/FXComponent.h"
 #include "UI/VoiceComponent.h"
+#include "UI/LimiterComponent.h"
 
 //==============================================================================
 /**
@@ -41,6 +42,7 @@ private:
 
 	ADSRComponent adsr;
 	GainComponent gain;
+    LimiterComponent limiter;
 	OscComponent osc;
 	FilterComponent filter;
 	ADSRComponent modAdsr;

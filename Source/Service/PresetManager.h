@@ -48,6 +48,7 @@ namespace Service {
 		juce::ValueTree valueTreeFromEmbeddedXml(const void* data, size_t size) const;
 
 		void purgeUnknownParameters();
+		void setMissingParamsToDefaults(const juce::ValueTree& loadedPresetTree);
 
 		juce::AudioProcessorValueTreeState& valueTreeState;
 		juce::Value currentPreset;
