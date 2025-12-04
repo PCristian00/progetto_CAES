@@ -32,6 +32,8 @@ namespace utils
 	const juce::Colour fxCol = juce::Colours::indianred;
 	// Colore dei restanti componenti
 	const juce::Colour miscCol = juce::Colours::blueviolet;
+	// Colore specifico per PresetPanel
+	const juce::Colour presetCol = juce::Colours::slateblue;
 
 
 
@@ -316,7 +318,7 @@ namespace utils
 		/** Applica una tema colore alla combo basato sul colore del bordo. */
 		void setThemeColour(juce::Colour base)
 		{
-			cBox.setColour(juce::ComboBox::backgroundColourId, base.withAlpha(0.15f));
+			cBox.setColour(juce::ComboBox::backgroundColourId, base.withAlpha(0.35f));
 			cBox.setColour(juce::ComboBox::textColourId, juce::Colours::white);
 			cBox.setColour(juce::ComboBox::outlineColourId, base.darker(0.5f));
 			cBox.setColour(juce::ComboBox::buttonColourId, base);
@@ -329,7 +331,7 @@ namespace utils
 				cBox.setLookAndFeel(ownedLaf.get());
 			}
 
-			ownedLaf->setColour(juce::PopupMenu::backgroundColourId, base.withAlpha(0.25f));
+			ownedLaf->setColour(juce::PopupMenu::backgroundColourId, base.withAlpha(0.85f));
 			ownedLaf->setColour(juce::PopupMenu::textColourId, juce::Colours::white);
 			ownedLaf->setColour(juce::PopupMenu::highlightedBackgroundColourId, base.brighter(0.3f));
 			ownedLaf->setColour(juce::PopupMenu::highlightedTextColourId, juce::Colours::black);

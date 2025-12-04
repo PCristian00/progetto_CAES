@@ -40,6 +40,7 @@ namespace Gui
 		std::unique_ptr<juce::FileChooser> fileChooser;
 		juce::Colour defaultListTextColour;
 		juce::Colour defaultListBgColour;
+		std::unique_ptr<juce::LookAndFeel_V4> presetLaf;
 
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PresetPanel)
 	};

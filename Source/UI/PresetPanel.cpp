@@ -24,11 +24,47 @@ namespace Gui
 		utils::setButton(previousPresetButton, "<", this);
 		utils::setButton(nextPresetButton, ">", this);
 		presetList.setTextWhenNothingSelected("Select Preset");
+		presetList.setJustificationType(juce::Justification::centred);
 		presetList.setMouseCursor(juce::MouseCursor::PointingHandCursor);
 		addAndMakeVisible(presetList);
 
-		// Usato per checkPreset, viene memorizzato il colore del testo di default per reimpostarlo in seguito
-		// Se serve, memorizzare i colori anche di sfondo e pulsanti
+		// Theme colours: usa un colore dedicato per il PresetPanel
+		const auto base = utils::presetCol;
+		// Buttons colour
+		saveButton.setColour(juce::TextButton::buttonColourId, base.withAlpha(0.25f));
+		saveButton.setColour(juce::TextButton::buttonOnColourId, base);
+		saveButton.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
+		saveButton.setColour(juce::TextButton::textColourOffId, juce::Colours::white);
+		deleteButton.setColour(juce::TextButton::buttonColourId, base.withAlpha(0.25f));
+		deleteButton.setColour(juce::TextButton::buttonOnColourId, base);
+		deleteButton.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
+		deleteButton.setColour(juce::TextButton::textColourOffId, juce::Colours::white);
+		previousPresetButton.setColour(juce::TextButton::buttonColourId, base.withAlpha(0.25f));
+		previousPresetButton.setColour(juce::TextButton::buttonOnColourId, base);
+		previousPresetButton.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
+		previousPresetButton.setColour(juce::TextButton::textColourOffId, juce::Colours::white);
+		nextPresetButton.setColour(juce::TextButton::buttonColourId, base.withAlpha(0.25f));
+		nextPresetButton.setColour(juce::TextButton::buttonOnColourId, base);
+		nextPresetButton.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
+		nextPresetButton.setColour(juce::TextButton::textColourOffId, juce::Colours::white);
+
+		// Combo colours
+		presetList.setColour(juce::ComboBox::backgroundColourId, base.withAlpha(0.35f));
+		presetList.setColour(juce::ComboBox::textColourId, juce::Colours::white);
+		presetList.setColour(juce::ComboBox::outlineColourId, base.darker(0.5f));
+		presetList.setColour(juce::ComboBox::buttonColourId, base);
+		presetList.setColour(juce::ComboBox::arrowColourId, base.brighter(0.6f));
+
+		// Popup menu colors via owned LAF to avoid global changes
+		presetLaf = std::make_unique<juce::LookAndFeel_V4>();
+		presetLaf->setColour(juce::PopupMenu::backgroundColourId, base.withAlpha(0.85f));
+		presetLaf->setColour(juce::PopupMenu::textColourId, juce::Colours::white);
+		presetLaf->setColour(juce::PopupMenu::highlightedBackgroundColourId, base.brighter(0.3f));
+		presetLaf->setColour(juce::PopupMenu::highlightedTextColourId, juce::Colours::black);
+		presetLaf->setColour(juce::PopupMenu::headerTextColourId, base.brighter(0.8f));
+		presetList.setLookAndFeel(presetLaf.get());
+
+		// Colori di default dopo il tema (per ripristino nelle logiche esistenti)
 		defaultListTextColour = presetList.findColour(presetList.textColourId);
 		defaultListBgColour = presetList.findColour(presetList.backgroundColourId);
 		presetList.addListener(this);
@@ -43,6 +79,8 @@ namespace Gui
 		previousPresetButton.removeListener(this);
 		nextPresetButton.removeListener(this);
 		presetList.removeListener(this);
+		if (presetLaf && &presetList.getLookAndFeel() == presetLaf.get())
+			presetList.setLookAndFeel(nullptr);
 		if (dialogBox) dialogBox->close();
 	}
 
