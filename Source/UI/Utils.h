@@ -72,6 +72,14 @@ namespace utils
 		}
 	}
 
+	inline void themeButton(juce::Button& button, juce::Colour base)
+	{
+		button.setColour(juce::TextButton::buttonColourId, base.withAlpha(0.25f));
+		button.setColour(juce::TextButton::buttonOnColourId, base);
+		button.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
+		button.setColour(juce::TextButton::textColourOffId, juce::Colours::white);
+	}
+
 	// Struttura riutilizzabile Slider + Label + Attachment
 	/**
 	 * LabeledSlider: incapsula uno Slider con la sua Label e l'attachment APVTS.
@@ -331,7 +339,7 @@ namespace utils
 			cBox.setLookAndFeel(ownedLaf.get());
 			// Applica i colori alla combo e alla tendina (PopupMenu) tramite helper
 			themeComboBox(cBox, base, ownedLaf.get());
-			
+
 		}
 
 		/** Imposta visibilita' combo. */

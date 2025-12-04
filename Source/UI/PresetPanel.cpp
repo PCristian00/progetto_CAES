@@ -13,11 +13,11 @@
 
 namespace Gui
 {
-    /**
-     * Pannello gestione preset: salva/cancella, naviga, e seleziona dalla lista.
-     * Inizializza pulsanti e combo, carica la lista.
-     */
-    PresetPanel::PresetPanel(Service::PresetManager& pm) : presetManager(pm)
+	/**
+	 * Pannello gestione preset: salva/cancella, naviga, e seleziona dalla lista.
+	 * Inizializza pulsanti e combo, carica la lista.
+	 */
+	PresetPanel::PresetPanel(Service::PresetManager& pm) : presetManager(pm)
 	{
 		utils::setButton(saveButton, "Save", this);
 		utils::setButton(deleteButton, "Delete", this);
@@ -30,32 +30,14 @@ namespace Gui
 
 		// Theme colours: usa un colore dedicato per il PresetPanel
 		const auto base = utils::presetCol;
-		// Buttons colour
-		saveButton.setColour(juce::TextButton::buttonColourId, base.withAlpha(0.25f));
-		saveButton.setColour(juce::TextButton::buttonOnColourId, base);
-		saveButton.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
-		saveButton.setColour(juce::TextButton::textColourOffId, juce::Colours::white);
-		deleteButton.setColour(juce::TextButton::buttonColourId, base.withAlpha(0.25f));
-		deleteButton.setColour(juce::TextButton::buttonOnColourId, base);
-		deleteButton.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
-		deleteButton.setColour(juce::TextButton::textColourOffId, juce::Colours::white);
-		previousPresetButton.setColour(juce::TextButton::buttonColourId, base.withAlpha(0.25f));
-		previousPresetButton.setColour(juce::TextButton::buttonOnColourId, base);
-		previousPresetButton.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
-		previousPresetButton.setColour(juce::TextButton::textColourOffId, juce::Colours::white);
-		nextPresetButton.setColour(juce::TextButton::buttonColourId, base.withAlpha(0.25f));
-		nextPresetButton.setColour(juce::TextButton::buttonOnColourId, base);
-		nextPresetButton.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
-		nextPresetButton.setColour(juce::TextButton::textColourOffId, juce::Colours::white);
 
-		// Combo colours
-		presetList.setColour(juce::ComboBox::backgroundColourId, base.withAlpha(0.35f));
-		presetList.setColour(juce::ComboBox::textColourId, juce::Colours::white);
-		presetList.setColour(juce::ComboBox::outlineColourId, base.darker(0.5f));
-		presetList.setColour(juce::ComboBox::buttonColourId, base);
-		presetList.setColour(juce::ComboBox::arrowColourId, base.brighter(0.6f));
+		// colorazione pulsanti
+		utils::themeButton(saveButton, base);
+		utils::themeButton(deleteButton, base);
+		utils::themeButton(previousPresetButton, base);
+		utils::themeButton(nextPresetButton, base);
 
-		// Popup menu colors via owned LAF to avoid global changes
+		// Colorazione lista preset
 		presetLaf = std::make_unique<juce::LookAndFeel_V4>();
 		utils::themeComboBox(presetList, base, presetLaf.get());
 		presetList.setLookAndFeel(presetLaf.get());
@@ -80,17 +62,17 @@ namespace Gui
 		if (dialogBox) dialogBox->close();
 	}
 
-    /**
-     * Sfondo pannello.
-     */
+	/**
+	 * Sfondo pannello.
+	 */
 	void PresetPanel::paint(juce::Graphics& g)
 	{
 		g.fillAll(juce::Colours::black);
 	}
 
-    /**
-     * Layout: pulsanti + combo, eventuale dialog overlay.
-     */
+	/**
+	 * Layout: pulsanti + combo, eventuale dialog overlay.
+	 */
 	void PresetPanel::resized()
 	{
 		const auto container = getLocalBounds().reduced(4);
@@ -106,9 +88,9 @@ namespace Gui
 			dialogBox->setBounds(0, 0, getWidth(), getHeight());
 	}
 
-    /**
-     * Popola la lista di preset (factory e utente), selezionando l'attuale.
-     */
+	/**
+	 * Popola la lista di preset (factory e utente), selezionando l'attuale.
+	 */
 	void PresetPanel::loadPresetList()
 	{
 		presetList.clear(juce::dontSendNotification);
@@ -126,9 +108,9 @@ namespace Gui
 		checkPreset(presetManager.getCurrentPreset());
 	}
 
-    /**
-     * Gestione click pulsanti: salva/cancella/naviga preset, poi aggiorna lista e UI.
-     */
+	/**
+	 * Gestione click pulsanti: salva/cancella/naviga preset, poi aggiorna lista e UI.
+	 */
 	void PresetPanel::buttonClicked(juce::Button* button)
 	{
 		if (button == &saveButton)
@@ -191,9 +173,9 @@ namespace Gui
 		checkPreset(presetManager.getCurrentPreset());
 	}
 
-    /**
-     * Cambio selezione nella combo: carica preset selezionato e aggiorna UI.
-     */
+	/**
+	 * Cambio selezione nella combo: carica preset selezionato e aggiorna UI.
+	 */
 	void PresetPanel::comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged)
 	{
 		if (comboBoxThatHasChanged == &presetList)
@@ -204,16 +186,16 @@ namespace Gui
 		}
 	}
 
-    /**
-     * Aggiorna abilitazione pulsante Delete e colori della lista
-     * in base al tipo di preset (embedded/user) o assenza selezione.
-     */
+	/**
+	 * Aggiorna abilitazione pulsante Delete e colori della lista
+	 * in base al tipo di preset (embedded/user) o assenza selezione.
+	 */
 	void PresetPanel::checkPreset(juce::String preset)
 	{
 		if (presetManager.isEmbeddedPreset(preset))
 		{
 			deleteButton.setEnabled(false);
-			presetList.setColour(presetList.textColourId, juce::Colours::greenyellow);
+			// presetList.setColour(presetList.textColourId, utils::presetCol);
 			presetList.setColour(presetList.backgroundColourId, juce::Colours::black);
 		}
 		else
@@ -230,9 +212,9 @@ namespace Gui
 			}
 	}
 
-    /**
-     * Mostra un dialog di conferma/avviso modale (overlay).
-     */
+	/**
+	 * Mostra un dialog di conferma/avviso modale (overlay).
+	 */
 	void PresetPanel::showDialogBox(juce::String msg, juce::String confirmText, juce::String returnText, std::function<void()> onAccept)
 	{
 		if (dialogBox)

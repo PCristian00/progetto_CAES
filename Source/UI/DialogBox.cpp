@@ -29,10 +29,15 @@ DialogBox::DialogBox(juce::String messageText, juce::String acceptButtonText, ju
 	message.setText(messageText, juce::dontSendNotification);
 	addAndMakeVisible(message);
 
-	if (acceptButtonText.isNotEmpty())
+	if (acceptButtonText.isNotEmpty()) {
 		utils::setButton(leftButton, acceptButtonText, this);
-	if (closeButtonText.isNotEmpty())
+		utils::themeButton(leftButton, utils::presetCol);
+
+	}
+	if (closeButtonText.isNotEmpty()) {
 		utils::setButton(rightButton, closeButtonText, this);
+		utils::themeButton(rightButton, utils::presetCol);
+	}
 
 	leftFunction = std::move(acceptFunction);
 	rightFunction = [this]() { this->close(); };
