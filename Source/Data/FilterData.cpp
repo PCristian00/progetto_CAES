@@ -36,7 +36,7 @@ void FilterData::prepareToPlay(double sampleRate, int samplesPerBlock, int numCh
  */
 void FilterData::process(juce::AudioBuffer<float>& buffer)
 {
-	jassert(isPrepared); // make sure the filter is prepared before processing
+	jassert(isPrepared);
 
 	juce::dsp::AudioBlock<float> block(buffer);
 	juce::dsp::ProcessContextReplacing<float> context(block);

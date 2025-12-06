@@ -91,13 +91,13 @@ void SubSynthAudioProcessorEditor::resized()
 
 		// Area rimanente sotto FX
 		const int remainingY = fx.getBottom();
-		const int remainingH = h / 2;
+		const int remainingH = h / 3;
 
 		gain.setBounds(x, remainingY, colWidth, remainingH);
 
 		const int bottomRowY = gain.getBottom();
-		const int halfW = colWidth / 2;
-		voice.setBounds(x, bottomRowY, halfW, remainingH);
-		limiter.setBounds(x + halfW, bottomRowY, halfW, remainingH);
+		const int halfW = colWidth / 3;
+		voice.setBounds(x, bottomRowY, halfW, remainingH * 2);
+		limiter.setBounds(x + halfW, bottomRowY, halfW * 2, remainingH * 2);
 	}
 }
