@@ -134,7 +134,7 @@ namespace utils
 	}
 
 	/**
-	 * Dispone una combo box e, sotto, una riga di slider visibili.
+	 * Dispone una DropDown e, sotto, una riga di slider visibili.
 	 * Se dimensioni non specificate, calcola da content area.
 	 */
 	void comboAndSliderRow(utils::DropDown& dd, std::initializer_list<LabeledSlider*> sliders, juce::Component* parent, int x, int y, int totalWidth, int height) noexcept

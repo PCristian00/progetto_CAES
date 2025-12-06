@@ -40,42 +40,17 @@ namespace utils
 	// Altezza dell'area riservata al titolo/bordo
 	inline int titleAreaHeight() noexcept { return 2 * padding; }
 
-	// Impostazioni comuni per button
 	void setButton(juce::Button& button, const juce::String& buttonText, juce::Component* parent = nullptr) noexcept;
 
-	// Bounds interni ridotti dal padding di contenitore
 	juce::Rectangle<int> getBoundsWithPadding(juce::Component* parent = nullptr, int paddingOverride = 0) noexcept;
-	// Area contenuti: bounds con padding, meno l'area del titolo/bordo, e con rientro interno
+
 	juce::Rectangle<int> getContentArea(juce::Component* parent) noexcept;
-	// Disegna bordo con titolo
+
 	void drawBorders(juce::Graphics& g, juce::Component* parent, juce::Colour colour, juce::String title = "") noexcept;
 
 
 	void themeComboBox(juce::ComboBox& combo, juce::Colour base, juce::LookAndFeel* laf = nullptr);
-	/*{
-		combo.setColour(juce::ComboBox::backgroundColourId, base.withAlpha(0.35f));
-		combo.setColour(juce::ComboBox::textColourId, juce::Colours::white);
-		combo.setColour(juce::ComboBox::outlineColourId, base.darker(0.5f));
-		combo.setColour(juce::ComboBox::buttonColourId, base);
-		combo.setColour(juce::ComboBox::arrowColourId, base.brighter(0.6f));
-
-		if (laf)
-		{
-			laf->setColour(juce::PopupMenu::backgroundColourId, base.withAlpha(0.85f));
-			laf->setColour(juce::PopupMenu::textColourId, juce::Colours::white);
-			laf->setColour(juce::PopupMenu::highlightedBackgroundColourId, base.brighter(0.3f));
-			laf->setColour(juce::PopupMenu::highlightedTextColourId, juce::Colours::black);
-			laf->setColour(juce::PopupMenu::headerTextColourId, base.brighter(0.8f));
-		}
-	}*/
-
 	void themeButton(juce::Button& button, juce::Colour base);
-	/*{
-		button.setColour(juce::TextButton::buttonColourId, base.withAlpha(0.25f));
-		button.setColour(juce::TextButton::buttonOnColourId, base);
-		button.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
-		button.setColour(juce::TextButton::textColourOffId, juce::Colours::white);
-	}*/
 
 	// Struttura riutilizzabile Slider + Label + Attachment
 	/**
@@ -356,8 +331,7 @@ namespace utils
 
 	};
 
-	// Mostra una riga di sliders etichettati (LabeledSlider), distribuiti uniformemente
 	void layoutVisibleRow(int x, int y, int totalWidth, int height, std::initializer_list<LabeledSlider*> sliders) noexcept;
-	// Mostra una riga di sliders etichettati (LabeledSlider) preceduti da una combo box, distribuiti uniformemente
+
 	void comboAndSliderRow(utils::DropDown& dd, std::initializer_list<LabeledSlider*> sliders, juce::Component* parent, int x = 0, int y = 0, int totalWidth = 0, int height = 0) noexcept;
 }
