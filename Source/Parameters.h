@@ -62,8 +62,8 @@ namespace parameters
 	{
 		std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
 
-		// Combobox: switch oscillator
-		params.push_back(std::make_unique<juce::AudioParameterChoice>(OSCILLATOR_TYPE, "Oscillator", juce::StringArray{ "Sine", "Saw", "Square" }, 0));
+        // Combobox: switch oscillator
+        params.push_back(std::make_unique<juce::AudioParameterChoice>(OSCILLATOR_TYPE, "Oscillator", juce::StringArray{ "Sine", "Saw", "Square", "Triangle" }, 0));
 		// Voices
 		params.push_back(std::make_unique<juce::AudioParameterInt>(NUM_VOICES, "Number of Voices", 1, 48, 8));
 		// FM parameters

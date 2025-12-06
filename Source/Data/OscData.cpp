@@ -25,9 +25,9 @@ void OscData::prepare(juce::dsp::ProcessSpec& spec)
 /**
  * Imposta la forma d'onda dell'oscillatore principale.
  * Indici:
- * 0 = Sine, 1 = Saw, 2 = Square.
+ * 0 = Sine, 1 = Saw, 2 = Square, 3 = Triangle.
  *
- * @param choice indice forma d'onda (0..2).
+ * @param choice indice forma d'onda (0..3).
  * In caso di indice non valido: jassertfalse.
  */
 void OscData::setWaveType(const int choice)
@@ -43,6 +43,10 @@ void OscData::setWaveType(const int choice)
 	case 2:
 		initialise([](float x) { return x < 0.0f ? -1.0f : 1.0f; }); // Square wave
 		break;
+    case 3:
+        // Triangle wave via asin(sin(x)) normalized to [-1, 1]
+        initialise([](float x) { return 2.0f / juce::MathConstants<float>::pi * std::asin(std::sin(x)); });
+        break;
 	default:
 		jassertfalse; // Unknown wave type!
 		break;
