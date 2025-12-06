@@ -23,6 +23,7 @@ namespace Gui
 		utils::setButton(deleteButton, "Delete", this);
 		utils::setButton(previousPresetButton, "<", this);
 		utils::setButton(nextPresetButton, ">", this);
+
 		presetList.setTextWhenNothingSelected("Select Preset");
 		presetList.setJustificationType(juce::Justification::centred);
 		presetList.setMouseCursor(juce::MouseCursor::PointingHandCursor);
@@ -171,6 +172,13 @@ namespace Gui
 		}
 
 		checkPreset(presetManager.getCurrentPreset());
+
+		// Ripristina il colore originale dopo un breve delay forzando un repaint (disable/enable)
+		button->setEnabled(false);
+		juce::Timer::callAfterDelay(150, [button]
+			{
+				button->setEnabled(true);
+			});
 	}
 
 	/**

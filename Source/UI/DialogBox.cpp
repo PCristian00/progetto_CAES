@@ -113,6 +113,13 @@ void DialogBox::buttonClicked(juce::Button* button) {
 		// Handle right button click
 		rightFunction();
 	}
+
+	// Ripristina il colore originale dopo un breve delay forzando un repaint (disable/enable)
+	button->setEnabled(false);
+	juce::Timer::callAfterDelay(150, [button]
+		{
+			button->setEnabled(true);
+		});
 }
 
 /**
