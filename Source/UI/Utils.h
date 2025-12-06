@@ -50,12 +50,9 @@ namespace utils
 	// Disegna bordo con titolo
 	void drawBorders(juce::Graphics& g, juce::Component* parent, juce::Colour colour, juce::String title = "") noexcept;
 
-	/**
-	 * Applica tema colore a una `ComboBox` e, opzionalmente, al suo `PopupMenu` tramite LookAndFeel.
-	 * Se `laf` e' non nullo, imposta i colori del popup su quel `LookAndFeel`.
-	 */
-	inline void themeComboBox(juce::ComboBox& combo, juce::Colour base, juce::LookAndFeel* laf = nullptr)
-	{
+
+	void themeComboBox(juce::ComboBox& combo, juce::Colour base, juce::LookAndFeel* laf = nullptr);
+	/*{
 		combo.setColour(juce::ComboBox::backgroundColourId, base.withAlpha(0.35f));
 		combo.setColour(juce::ComboBox::textColourId, juce::Colours::white);
 		combo.setColour(juce::ComboBox::outlineColourId, base.darker(0.5f));
@@ -70,15 +67,15 @@ namespace utils
 			laf->setColour(juce::PopupMenu::highlightedTextColourId, juce::Colours::black);
 			laf->setColour(juce::PopupMenu::headerTextColourId, base.brighter(0.8f));
 		}
-	}
+	}*/
 
-	inline void themeButton(juce::Button& button, juce::Colour base)
-	{
+	void themeButton(juce::Button& button, juce::Colour base);
+	/*{
 		button.setColour(juce::TextButton::buttonColourId, base.withAlpha(0.25f));
 		button.setColour(juce::TextButton::buttonOnColourId, base);
 		button.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
 		button.setColour(juce::TextButton::textColourOffId, juce::Colours::white);
-	}
+	}*/
 
 	// Struttura riutilizzabile Slider + Label + Attachment
 	/**
