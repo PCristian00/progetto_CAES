@@ -27,6 +27,9 @@ private:
 	void comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged) override;
 	void updateVisibility();	
 
+	// Carica un'immagine PNG embedded (icona) da BinaryData per lo sfondo quando FX = None
+	juce::Image loadEmbeddedPngIcon() const;
+
 	APVTS& apvts;
 
 	utils::DropDown fxType;
@@ -38,4 +41,8 @@ private:
 	LabeledSlider chRateLS, chDepthLS, chDelayLS, chFeedbackLS; // Slider Chorus
 	LabeledSlider flRateLS, flDepthLS, flDelayLS, flFeedbackLS; // Slider Flanger
 	LabeledSlider rvSizeLS, rvDampLS, rvWidthLS; // Slider Reverb
+
+	// Immagine di sfondo da mostrare quando l'effetto è "None"
+	juce::Image bgImage;
+	bool showBg{ false };
 };

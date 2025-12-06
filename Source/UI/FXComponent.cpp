@@ -67,6 +67,9 @@ FXComponent::FXComponent(APVTS& state)
 	rvSizeLS.setThemeColour(utils::fxCol);
 	rvDampLS.setThemeColour(utils::fxCol);
 	rvWidthLS.setThemeColour(utils::fxCol);
+
+	// Pre-carica opzionalmente l'immagine embedded (se disponibile)
+	bgImage = loadEmbeddedPngIcon();
 }
 
 /**
@@ -89,6 +92,10 @@ void FXComponent::updateVisibility()
 	const bool showRv = (type == 3);
 	const bool showNone = (type == 0);
 
+	// Aggiorna visibilita' immagine di sfondo
+	const bool prevShowBg = showBg;
+	showBg = showNone;
+
 	wetLS.setVisible(!showNone);
 	bypass.setVisible(!showNone);
 
@@ -106,6 +113,10 @@ void FXComponent::updateVisibility()
 
 	for each(LabeledSlider * ls in rvSliders)
 		ls->setVisible(showRv);
+
+	// Richiedi repaint se la visibilita' dello sfondo è cambiata
+	if (prevShowBg != showBg)
+		repaint();
 }
 
 /**
@@ -115,6 +126,30 @@ void FXComponent::paint(juce::Graphics& g)
 {
 	g.fillAll(juce::Colours::black);
 	utils::drawBorders(g, this, utils::fxCol, "FX");
+
+	// Se FX = None, disegna l'immagine di sfondo (icona)
+	if (showBg)
+	{
+		if (!bgImage.isValid())
+			bgImage = loadEmbeddedPngIcon();
+
+		if (bgImage.isValid())
+		{
+			auto content = utils::getContentArea(this);
+			// Escludi la riga superiore (header) dalla content area dedicata agli slider
+			const int headerH = content.getHeight() / 8;
+			auto imageArea = content.withY(content.getY() + headerH + utils::padding)
+								.withHeight(content.getHeight() - headerH - utils::padding);
+
+
+			// Mantieni proporzioni e centrami nell'area disponibile
+			g.setOpacity(0.35f);
+			g.drawImageWithin(bgImage,
+				imageArea.getX(), imageArea.getY(), imageArea.getWidth(), imageArea.getHeight(),
+				juce::RectanglePlacement::centred | juce::RectanglePlacement::onlyReduceInSize);
+			g.setOpacity(1.0f);
+		}
+	}
 }
 
 /**
@@ -153,4 +188,45 @@ void FXComponent::resized()
 	utils::layoutVisibleRow(startX, rowY, totalWidth, rowH, chSliders);
 	utils::layoutVisibleRow(startX, rowY, totalWidth, rowH, flSliders);
 	utils::layoutVisibleRow(startX, rowY, totalWidth, rowH, rvSliders);
+}
+
+/**
+ * Carica l'icona PNG embedded tramite BinaryData.
+ * Nome risorsa attesa: "sub_synth_icon.png" (come originale in Projucer).
+ */
+juce::Image FXComponent::loadEmbeddedPngIcon() const
+{
+    for (int i = 0; i < BinaryData::namedResourceListSize; ++i)
+    {
+        const juce::String originalName = BinaryData::originalFilenames[i];
+        if (originalName.equalsIgnoreCase("sub_synth_icon.png"))
+        {
+            int dataSize = 0;
+            const char* data = BinaryData::getNamedResource(BinaryData::namedResourceList[i], dataSize);
+            if (data != nullptr && dataSize > 0)
+            {
+                juce::MemoryInputStream mis(data, (size_t)dataSize, false);
+                return juce::ImageFileFormat::loadFrom(mis);
+            }
+            break;
+        }
+    }
+
+    // Fallback: prima PNG embedded disponibile
+    for (int i = 0; i < BinaryData::namedResourceListSize; ++i)
+    {
+        const juce::String originalName = BinaryData::originalFilenames[i];
+        if (originalName.endsWithIgnoreCase(".png"))
+        {
+            int dataSize = 0;
+            const char* data = BinaryData::getNamedResource(BinaryData::namedResourceList[i], dataSize);
+            if (data != nullptr && dataSize > 0)
+            {
+                juce::MemoryInputStream mis(data, (size_t)dataSize, false);
+                return juce::ImageFileFormat::loadFrom(mis);
+            }
+        }
+    }
+
+    return {};
 }
