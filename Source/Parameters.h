@@ -14,7 +14,7 @@
 namespace parameters
 {
 	// Oscillator: IDs
-	static constexpr const char* OSCILLATOR_TYPE = "OSC_TYPE";	// 0=Sine, 1=Saw, 2=Square
+	static constexpr const char* OSCILLATOR_TYPE = "OSC_TYPE";	// 0=Sine, 1=Saw, 2=Square, 3=Triangle
 	// Voices
 	static constexpr const char* NUM_VOICES = "NUM_VOICES";
 	// FM: IDs

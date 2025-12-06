@@ -165,7 +165,7 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
 		buffer.clear(i, 0, buffer.getNumSamples());
 
-    // Count active voices (per polyphonic gain scaling handled by VoiceData/SynthVoice)
+	// Conta le voci attive
     int activeVoices = 0;
     for (int i = 0; i < synth.getNumVoices(); ++i)
         if (auto* v = synth.getVoice(i); v != nullptr && v->isVoiceActive())
