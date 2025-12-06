@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="IN6TnE" name="SubSynth" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
-              companyName="univpm" version="1.1.4">
+              companyName="univpm" version="1.1.4" pluginDesc="Sintetizzatore con filtri ed effetti realizzato da Cristian Pietroniro.">
   <MAINGROUP id="nUzka3" name="SubSynth">
     <GROUP id="{11D3644D-AD7F-BC34-2D8E-F448FCDB550C}" name="Resources">
       <FILE id="a9da3g" name="alien.preset" compile="0" resource="1" file="Source/Resources/alien.preset"/>
@@ -79,6 +79,8 @@
       <FILE id="a3Azs6" name="SynthVoice.h" compile="0" resource="0" file="Source/SynthVoice.h"/>
       <FILE id="Zlo4sn" name="SynthSound.h" compile="0" resource="0" file="Source/SynthSound.h"/>
     </GROUP>
+    <FILE id="RJ2mSy" name="sub_synth_icon.png" compile="0" resource="1"
+          file="sub_synth_icon.png"/>
   </MAINGROUP>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
@@ -98,7 +100,7 @@
   </MODULES>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
   <EXPORTFORMATS>
-    <VS2022 targetFolder="Builds/VisualStudio2022">
+    <VS2022 targetFolder="Builds/VisualStudio2022" smallIcon="RJ2mSy" bigIcon="RJ2mSy">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" targetName="SubSynthDB"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="SubSynth"/>
