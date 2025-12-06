@@ -52,7 +52,6 @@ namespace utils
 	void themeComboBox(juce::ComboBox& combo, juce::Colour base, juce::LookAndFeel* laf = nullptr);
 	void themeButton(juce::Button& button, juce::Colour base);
 
-	// Struttura riutilizzabile Slider + Label + Attachment
 	/**
 	 * LabeledSlider: incapsula uno Slider con la sua Label e l'attachment APVTS.
 	 * Fornisce costruttori rapidi per: sola label, label+attachment, aggiunta al parent,

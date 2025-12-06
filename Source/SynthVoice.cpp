@@ -58,6 +58,14 @@ void SynthVoice::stopNote(float velocity, bool allowTailOff)
 	adsr.noteOff();
 	modAdsr.noteOff();
 
+	// Se non e' consentito il tail-off, interrompi immediatamente la nota
+	if (!allowTailOff)
+	{
+		clearCurrentNote();
+		adsr.reset();
+		modAdsr.reset();
+	}
+
 	if (debugAmpEnvEnabled)
 		DBG("[AmpADSR] stopNote vel=" << velocity << " tailOff=" << (allowTailOff ? "true" : "false"));
 	if (debugModEnvEnabled)
@@ -204,6 +212,12 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 		}
 
 		++startSample;
+	}
+
+	// Se gli inviluppi hanno terminato, libera la voce
+	if (!adsr.isActive() && !modAdsr.isActive())
+	{
+		clearCurrentNote();
 	}
 
 	// Incrementa contatori blocchi
