@@ -15,15 +15,12 @@
 void VoiceData::prepareVoice(SynthVoice& voice, double sampleRate, int samplesPerBlock, int numOutputChannels)
 {
 	voice.prepareToPlay(sampleRate, samplesPerBlock, numOutputChannels);
-	voice.setAmpEnvelopeDebug(false);
-	voice.setModEnvelopeDebug(false);
-	voice.setEnvelopeDebugRates(60, 120);
 }
 
 /*Applica i parametri della voce dal ValueTreeState. */
 void VoiceData::applyParams(SynthVoice& voice,
-                            const juce::AudioProcessorValueTreeState& apvts,
-                            int activeVoices)
+	const juce::AudioProcessorValueTreeState& apvts,
+	int activeVoices)
 {
 	const float attack = apvts.getRawParameterValue(parameters::ATTACK)->load();
 	const float decay = apvts.getRawParameterValue(parameters::DECAY)->load();
@@ -44,11 +41,11 @@ void VoiceData::applyParams(SynthVoice& voice,
 	const float modSustain = apvts.getRawParameterValue(parameters::MOD_SUSTAIN)->load();
 	const float modRelease = apvts.getRawParameterValue(parameters::MOD_RELEASE)->load();
 
-    voice.getOscillator().setWaveType(oscChoice);
-    voice.getOscillator().setFmParams(fmDepth, fmFreq);
+	voice.getOscillator().setWaveType(oscChoice);
+	voice.getOscillator().setFmParams(fmDepth, fmFreq);
 
-    voice.updateADSR(voice.getAmpADSR(), attack, decay, sustain, release);
-    voice.setGainLinear(gain, activeVoices);
+	voice.updateADSR(voice.getAmpADSR(), attack, decay, sustain, release);
+	voice.setGainLinear(gain, activeVoices);
 	voice.updateFilter(filterType, filterCutOff, filterResonance);
-    voice.updateADSR(voice.getModADSR(), modAttack, modDecay, modSustain, modRelease);
+	voice.updateADSR(voice.getModADSR(), modAttack, modDecay, modSustain, modRelease);
 }
