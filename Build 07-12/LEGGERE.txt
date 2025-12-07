@@ -1,0 +1,5 @@
+Questa è la compilazione più recente del plug-in (versione Release) in formato VST3.
+Inserire in una DAW compatibile.
+
+In caso di modifiche, ricompilare (VisualStudio2022) e usare la versione che si trova in
+"...\progetto_CAES\Builds\VisualStudio2022\x64\Release\VST3\SubSynth.vst3\Contents\x86_64-win\SubSynth.vst3"
