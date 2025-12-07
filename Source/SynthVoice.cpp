@@ -35,7 +35,7 @@ void SynthVoice::startNote(int midiNoteNumber,
 	juce::SynthesiserSound* sound,
 	int currentPitchWheelPosition)
 {
-	juce::ignoreUnused(sound, currentPitchWheelPosition);
+    juce::ignoreUnused(sound, currentPitchWheelPosition, velocity);
 
 	osc.setFrequency(midiNoteNumber);
 	adsr.noteOn();
@@ -50,6 +50,7 @@ void SynthVoice::startNote(int midiNoteNumber,
  */
 void SynthVoice::stopNote(float velocity, bool allowTailOff)
 {
+    juce::ignoreUnused(velocity);
 	adsr.noteOff();
 	modAdsr.noteOff();
 
