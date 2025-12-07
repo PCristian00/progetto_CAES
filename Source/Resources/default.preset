@@ -7,7 +7,7 @@
   <PARAM id="CH_FEEDBACK" value="0.0"/>
   <PARAM id="CH_RATE" value="1.199999809265137"/>
   <PARAM id="DECAY" value="0.1000000014901161"/>
-  <PARAM id="FILTER_CUTOFF" value="200.0"/>
+  <PARAM id="FILTER_CUTOFF" value="150.0"/>
   <PARAM id="FILTER_RESONANCE" value="1.0"/>
   <PARAM id="FILTER_TYPE" value="0.0"/>
   <PARAM id="FL_DELAY_MS" value="1.200000047683716"/>

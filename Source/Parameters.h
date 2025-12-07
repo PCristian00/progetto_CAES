@@ -78,7 +78,7 @@ namespace parameters
 		params.push_back(std::make_unique<juce::AudioParameterFloat>(RELEASE, "Release", 0.1f, 3.0f, 0.4f));
 		// Filter parameters
 		params.push_back(std::make_unique<juce::AudioParameterChoice>(FILTER_TYPE, "Filter Type", juce::StringArray{ "Low-Pass", "Band-Pass", "High-Pass" }, 0));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(FILTER_CUTOFF, "Filter Cutoff", juce::NormalisableRange<float>{20.0f, 20000.0f, 0.1f, 0.6f}, 200.0f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(FILTER_CUTOFF, "Filter Cutoff", juce::NormalisableRange<float>{20.0f, 20000.0f, 0.1f, 0.6f}, 150.0f));
 		params.push_back(std::make_unique<juce::AudioParameterFloat>(FILTER_RESONANCE, "Filter Resonance", juce::NormalisableRange<float>{1.0f, 10.0f, 0.1f}, 1.0f));
 		// Filter ADSR parameters
 		params.push_back(std::make_unique<juce::AudioParameterFloat>(MOD_ATTACK, "Mod Attack", 0.1f, 1.0f, 0.1f));
