@@ -25,30 +25,33 @@ namespace utils
 	const int Ystart = padding * 4;
 
 	// Colore dei componenti di oscillatore e inviluppo
-	const juce::Colour oscCol = juce::Colours::red;
+	const juce::Colour oscCol = juce::Colours::mediumvioletred;
 	// Colore dei componenti dei filtri
-	const juce::Colour filtCol = juce::Colours::green;
+	const juce::Colour filtCol = juce::Colours::cornflowerblue;
 	// Colore di FX Component
 	const juce::Colour fxCol = juce::Colours::indianred;
 	// Colore dei restanti componenti
-	const juce::Colour miscCol = juce::Colours::yellowgreen;
+	const juce::Colour miscCol = juce::Colours::blueviolet;
+	// Colore specifico per PresetPanel
+	const juce::Colour presetCol = juce::Colours::slateblue;
 
 
 
 	// Altezza dell'area riservata al titolo/bordo
 	inline int titleAreaHeight() noexcept { return 2 * padding; }
 
-	// Impostazioni comuni per button
 	void setButton(juce::Button& button, const juce::String& buttonText, juce::Component* parent = nullptr) noexcept;
 
-	// Bounds interni ridotti dal padding di contenitore
 	juce::Rectangle<int> getBoundsWithPadding(juce::Component* parent = nullptr, int paddingOverride = 0) noexcept;
-	// Area contenuti: bounds con padding, meno l'area del titolo/bordo, e con rientro interno
+
 	juce::Rectangle<int> getContentArea(juce::Component* parent) noexcept;
-	// Disegna bordo con titolo
+
 	void drawBorders(juce::Graphics& g, juce::Component* parent, juce::Colour colour, juce::String title = "") noexcept;
 
-	// Struttura riutilizzabile Slider + Label + Attachment
+
+	void themeComboBox(juce::ComboBox& combo, juce::Colour base, juce::LookAndFeel* laf = nullptr);
+	void themeButton(juce::Button& button, juce::Colour base);
+
 	/**
 	 * LabeledSlider: incapsula uno Slider con la sua Label e l'attachment APVTS.
 	 * Fornisce costruttori rapidi per: sola label, label+attachment, aggiunta al parent,
@@ -136,6 +139,23 @@ namespace utils
 			this->slider.setTextValueSuffix(unit);
 		}
 
+		/** Applica una tema colore allo slider/label basato sul colore del bordo. */
+		void setThemeColour(juce::Colour base)
+		{
+			// Slider palette
+			slider.setColour(juce::Slider::thumbColourId, base);
+			slider.setColour(juce::Slider::trackColourId, base.darker(0.3f));
+			slider.setColour(juce::Slider::rotarySliderFillColourId, base);
+			slider.setColour(juce::Slider::rotarySliderOutlineColourId, base.darker(0.5f));
+			slider.setColour(juce::Slider::backgroundColourId, base.withAlpha(0.15f));
+			slider.setColour(juce::Slider::textBoxTextColourId, juce::Colours::white);
+			slider.setColour(juce::Slider::textBoxBackgroundColourId, base.withAlpha(0.25f));
+			slider.setColour(juce::Slider::textBoxOutlineColourId, base.darker(0.6f));
+
+			// Label text colour harmonised
+			label.setColour(juce::Label::textColourId, base.brighter(0.6f));
+		}
+
 		/** Imposta visibilita' coerente di label e slider. */
 		void setVisible(bool v)
 		{
@@ -154,6 +174,7 @@ namespace utils
 		juce::Slider& getSlider() noexcept { return slider; }
 		/** Accesso diretto alla label. */
 		juce::Label& getLabel()  noexcept { return label; }
+
 	};
 
 	/**
@@ -166,6 +187,14 @@ namespace utils
 		juce::ComboBox cBox;
 		std::unique_ptr<ComboBoxAttachment> attachment;
 		juce::StringArray choices;
+		// LookAndFeel dedicato per permettere colori personalizzati del PopupMenu
+		std::unique_ptr<juce::LookAndFeel_V4> ownedLaf;
+
+		~DropDown()
+		{
+			if (ownedLaf && &cBox.getLookAndFeel() == ownedLaf.get())
+				cBox.setLookAndFeel(nullptr);
+		}
 
 		/** Costruttore base: inizializza giustificazione centrata. */
 		explicit DropDown()
@@ -273,6 +302,17 @@ namespace utils
 			setBounds(juce::Rectangle<int>(x, y, width, height));
 		}
 
+		void setThemeColour(juce::Colour base)
+		{
+			if (!ownedLaf)
+				ownedLaf = std::make_unique<juce::LookAndFeel_V4>();
+			// Associa il LookAndFeel dedicato alla combo, cosi' il PopupMenu usa i suoi colori
+			cBox.setLookAndFeel(ownedLaf.get());
+			// Applica i colori alla combo e alla tendina (PopupMenu) tramite helper
+			themeComboBox(cBox, base, ownedLaf.get());
+
+		}
+
 		/** Imposta visibilita' combo. */
 		void setVisible(bool v)
 		{
@@ -287,10 +327,10 @@ namespace utils
 
 		/** Accesso diretto alla ComboBox. */
 		juce::ComboBox& getComboBox() noexcept { return cBox; }
+
 	};
 
-	// Mostra una riga di sliders etichettati (LabeledSlider), distribuiti uniformemente
 	void layoutVisibleRow(int x, int y, int totalWidth, int height, std::initializer_list<LabeledSlider*> sliders) noexcept;
-	// Mostra una riga di sliders etichettati (LabeledSlider) preceduti da una combo box, distribuiti uniformemente
+
 	void comboAndSliderRow(utils::DropDown& dd, std::initializer_list<LabeledSlider*> sliders, juce::Component* parent, int x = 0, int y = 0, int totalWidth = 0, int height = 0) noexcept;
 }

@@ -14,7 +14,7 @@
 namespace parameters
 {
 	// Oscillator: IDs
-	static constexpr const char* OSCILLATOR_TYPE = "OSC_TYPE";	// 0=Sine, 1=Saw, 2=Square
+	static constexpr const char* OSCILLATOR_TYPE = "OSC_TYPE";	// 0=Sine, 1=Saw, 2=Square, 3=Triangle
 	// Voices
 	static constexpr const char* NUM_VOICES = "NUM_VOICES";
 	// FM: IDs
@@ -62,8 +62,8 @@ namespace parameters
 	{
 		std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
 
-		// Combobox: switch oscillator
-		params.push_back(std::make_unique<juce::AudioParameterChoice>(OSCILLATOR_TYPE, "Oscillator", juce::StringArray{ "Sine", "Saw", "Square" }, 0));
+        // Combobox: switch oscillator
+        params.push_back(std::make_unique<juce::AudioParameterChoice>(OSCILLATOR_TYPE, "Oscillator", juce::StringArray{ "Sine", "Saw", "Square", "Triangle" }, 0));
 		// Voices
 		params.push_back(std::make_unique<juce::AudioParameterInt>(NUM_VOICES, "Number of Voices", 1, 48, 8));
 		// FM parameters
@@ -78,7 +78,7 @@ namespace parameters
 		params.push_back(std::make_unique<juce::AudioParameterFloat>(RELEASE, "Release", 0.1f, 3.0f, 0.4f));
 		// Filter parameters
 		params.push_back(std::make_unique<juce::AudioParameterChoice>(FILTER_TYPE, "Filter Type", juce::StringArray{ "Low-Pass", "Band-Pass", "High-Pass" }, 0));
-		params.push_back(std::make_unique<juce::AudioParameterFloat>(FILTER_CUTOFF, "Filter Cutoff", juce::NormalisableRange<float>{20.0f, 20000.0f, 0.1f, 0.6f}, 200.0f));
+		params.push_back(std::make_unique<juce::AudioParameterFloat>(FILTER_CUTOFF, "Filter Cutoff", juce::NormalisableRange<float>{20.0f, 20000.0f, 0.1f, 0.6f}, 150.0f));
 		params.push_back(std::make_unique<juce::AudioParameterFloat>(FILTER_RESONANCE, "Filter Resonance", juce::NormalisableRange<float>{1.0f, 10.0f, 0.1f}, 1.0f));
 		// Filter ADSR parameters
 		params.push_back(std::make_unique<juce::AudioParameterFloat>(MOD_ATTACK, "Mod Attack", 0.1f, 1.0f, 0.1f));

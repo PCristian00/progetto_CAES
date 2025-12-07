@@ -35,16 +35,11 @@ void SynthVoice::startNote(int midiNoteNumber,
 	juce::SynthesiserSound* sound,
 	int currentPitchWheelPosition)
 {
-	juce::ignoreUnused(sound, currentPitchWheelPosition);
+    juce::ignoreUnused(sound, currentPitchWheelPosition, velocity);
 
 	osc.setFrequency(midiNoteNumber);
 	adsr.noteOn();
 	modAdsr.noteOn();
-
-	if (debugAmpEnvEnabled)
-		DBG("[AmpADSR] startNote MIDI=" << midiNoteNumber << " vel=" << velocity);
-	if (debugModEnvEnabled)
-		DBG("[ModADSR] startNote MIDI=" << midiNoteNumber << " vel=" << velocity);
 }
 
 /**
@@ -55,13 +50,17 @@ void SynthVoice::startNote(int midiNoteNumber,
  */
 void SynthVoice::stopNote(float velocity, bool allowTailOff)
 {
+    juce::ignoreUnused(velocity);
 	adsr.noteOff();
 	modAdsr.noteOff();
 
-	if (debugAmpEnvEnabled)
-		DBG("[AmpADSR] stopNote vel=" << velocity << " tailOff=" << (allowTailOff ? "true" : "false"));
-	if (debugModEnvEnabled)
-		DBG("[ModADSR] stopNote vel=" << velocity << " tailOff=" << (allowTailOff ? "true" : "false"));
+	// Se non e' consentito il tail-off, interrompi immediatamente la nota
+	if (!allowTailOff)
+	{
+		clearCurrentNote();
+		adsr.reset();
+		modAdsr.reset();
+	}
 }
 
 /**
@@ -90,29 +89,38 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outpu
 	gain.prepare(spec);
 
 	isPrepared = true;
-
-	if (debugAmpEnvEnabled)
-		DBG("[AmpADSR] prepareToPlay sr=" << sampleRate << " block=" << samplesPerBlock);
-	if (debugModEnvEnabled)
-		DBG("[ModADSR] prepareToPlay sr=" << sampleRate << " block=" << samplesPerBlock);
 }
 
 /**
- * Aggiorna parametri dell'ADSR ampiezza e il gain complessivo.
+ * Aggiorna i parametri di un inviluppo ADSR (amp o mod) passato.
  *
  * @param attack A.
  * @param decay D.
  * @param sustain S.
  * @param release R.
- * @param gainValue gain lineare.
  */
-void SynthVoice::updateADSR(const float attack, const float decay, const float sustain, const float release, const float gainValue)
+void SynthVoice::updateADSR(ADSRData& target, const float attack, const float decay, const float sustain, const float release)
 {
-	adsr.update(attack, decay, sustain, release);
-	gain.setGainLinear(gainValue);
+	target.update(attack, decay, sustain, release);
+}
 
-	if (debugAmpEnvEnabled)
-		DBG("[AmpADSR] updateADSR A=" << attack << " D=" << decay << " S=" << sustain << " R=" << release << " Gain=" << gainValue);
+/**
+ * Imposta il gain lineare smussato.
+ */
+void SynthVoice::setGainLinear(const float gainValue)
+{
+	gain.setGainLinear(gainValue);
+}
+
+/**
+ * Imposta il gain lineare applicando uno scaling polifonico (1/sqrt(n)) se n>0.
+ */
+void SynthVoice::setGainLinear(const float baseGainValue, int activeVoices)
+{
+	float scale = 1.0f;
+	if (activeVoices > 0)
+		scale = 1.0f / std::sqrt(static_cast<float>(activeVoices));
+	gain.setGainLinear(baseGainValue * scale);
 }
 
 /**
@@ -130,36 +138,14 @@ void SynthVoice::updateFilter(int type, float cutoff, float resonance)
 	filterResonance = resonance;
 
 	filter.updateParameters(filterType, filterCutoff, filterResonance, 1.0f);
-
-	if (debugModEnvEnabled)
-		DBG("[ModADSR] BaseFilter type=" << filterType << " cutoff=" << filterCutoff << " res=" << filterResonance);
 }
 
 /**
- * Aggiorna i parametri dell'inviluppo di modulazione (Mod ADSR).
+ * Genera il blocco di samples audio.
  *
- * @param attack A.
- * @param decay D.
- * @param sustain S.
- * @param release R.
- */
-void SynthVoice::updateModADSR(const float attack, const float decay, const float sustain, const float release)
-{
-	modAdsr.update(attack, decay, sustain, release);
-
-	if (debugModEnvEnabled)
-		DBG("[ModADSR] updateModADSR A=" << attack << " D=" << decay << " S=" << sustain << " R=" << release);
-}
-
-/**
- * Renderizza il prossimo blocco audio:
- * - Genera sample dall'oscillatore, applica ADSR amp e gain smussato
- * - Aggiorna filtro per-sample con modulazione proveniente dal Mod ADSR
- * - Somma il risultato nei canali di output
- *
- * @param outputBuffer buffer destinazione.
- * @param startSample indice di partenza.
- * @param numSamples numero di campioni da generare.
+ * @param outputBuffer buffer di output (multi-canale).
+ * @param startSample indice del primo sample da scrivere.
+ * @param numSamples numero di samples da generare.
  */
 void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 	int startSample,
@@ -169,19 +155,6 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 
 	const int numChannels = outputBuffer.getNumChannels();
 
-	// Reset tracking per blocco
-	if (debugModEnvEnabled)
-	{
-		lastBlockModMin = 1.0f;
-		lastBlockModMax = 0.0f;
-	}
-	if (debugAmpEnvEnabled)
-	{
-		lastBlockAmpMin = 1.0f;
-		lastBlockAmpMax = 0.0f;
-		lastAppliedAmpPeak = 0.0f;
-	}
-
 	for (int i = 0; i < numSamples; ++i)
 	{
 		const float envAmp = adsr.getNextSample();
@@ -189,20 +162,7 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 		const float oscSample = osc.processSample(0.0f);
 		float sample = oscSample * envAmp * smoothedGain;
 
-		if (debugAmpEnvEnabled)
-		{
-			if (envAmp < lastBlockAmpMin) lastBlockAmpMin = envAmp;
-			if (envAmp > lastBlockAmpMax) lastBlockAmpMax = envAmp;
-			const float appliedAmp = envAmp * smoothedGain;
-			if (appliedAmp > lastAppliedAmpPeak) lastAppliedAmpPeak = appliedAmp;
-		}
-
 		const float mod = modAdsr.getNextSample();
-		if (debugModEnvEnabled)
-		{
-			if (mod < lastBlockModMin) lastBlockModMin = mod;
-			if (mod > lastBlockModMax) lastBlockModMax = mod;
-		}
 
 		filter.updateParameters(filterType, filterCutoff, filterResonance, mod);
 
@@ -211,30 +171,13 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer,
 			const float filtered = filter.processSample(channel, sample);
 			outputBuffer.addSample(channel, startSample, filtered);
 		}
-
 		++startSample;
 	}
 
-	// Incrementa contatori blocchi
-	ampBlockCounter++;
-	modBlockCounter++;
-
-	// Stampa solo ogni N blocchi
-	if (debugAmpEnvEnabled && (ampBlockCounter % ampPrintEvery == 0))
+	// Se gli inviluppi hanno terminato, libera la voce
+	if (!adsr.isActive() && !modAdsr.isActive())
 	{
-		DBG("[AmpADSR] Block#" << ampBlockCounter
-			<< " envMin=" << lastBlockAmpMin
-			<< " envMax=" << lastBlockAmpMax
-			<< " appliedPeak=" << lastAppliedAmpPeak);
-	}
-
-	if (debugModEnvEnabled && (modBlockCounter % modPrintEvery == 0))
-	{
-		lastEffectiveCutoff = filterCutoff * lastBlockModMax;
-		DBG("[ModADSR] Block#" << modBlockCounter
-			<< " modMin=" << lastBlockModMin
-			<< " modMax=" << lastBlockModMax
-			<< " cutoffEffApprox=" << lastEffectiveCutoff);
+		clearCurrentNote();
 	}
 }
 

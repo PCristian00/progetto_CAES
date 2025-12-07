@@ -21,11 +21,16 @@
 OscComponent::OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::String waveSelectorId)
 	: fmFreqLS("FM Freq", apvts, parameters::FM_FREQUENCY, *this, juce::Slider::LinearBarVertical, true)
 	, fmDepthLS("FM Depth", apvts, parameters::FM_DEPTH, *this, juce::Slider::LinearBarVertical, true)
-	, oscWaveSelector(apvts, waveSelectorId, *this, { "Sine","Saw","Square" })
+    , oscWaveSelector(apvts, waveSelectorId, *this, { "Sine","Saw","Square","Triangle" })
 {
 	fmFreqLS.setUnitSuffix(" Hz");
 
 	// I restanti slider sono lineari e non hanno unita'
+
+	// Theme colours based on border colour
+	fmFreqLS.setThemeColour(utils::oscCol);
+	fmDepthLS.setThemeColour(utils::oscCol);
+	oscWaveSelector.setThemeColour(utils::oscCol);
 }
 
 OscComponent::~OscComponent() {}

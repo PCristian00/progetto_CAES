@@ -100,30 +100,17 @@ void SubSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 	lastSampleRate = sampleRate;
 	lastBlockSize = samplesPerBlock;
 
-	synth.setCurrentPlaybackSampleRate(sampleRate);
-	for (int i = 0; i < synth.getNumVoices(); ++i)
-		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
-		{
-			voice->prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
-			voice->setAmpEnvelopeDebug(false);
-			voice->setModEnvelopeDebug(false);
-			voice->setEnvelopeDebugRates(60, 120);
-		}
+    synth.setCurrentPlaybackSampleRate(sampleRate);
+    for (int i = 0; i < synth.getNumVoices(); ++i)
+        if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
+        {
+            voiceData.prepareVoice(*voice, sampleRate, samplesPerBlock, getTotalNumOutputChannels());
+        }
 
 	fx.prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
 
-	// Preparazione safety limiter
-	{
-		juce::dsp::ProcessSpec spec;
-		spec.sampleRate = sampleRate;
-		spec.maximumBlockSize = static_cast<juce::uint32>(samplesPerBlock);
-		spec.numChannels = static_cast<juce::uint32>(getTotalNumOutputChannels());
-		safetyLimiter.reset();
-		safetyLimiter.prepare(spec);
-		// valori default
-		safetyLimiter.setThreshold(-0.5f);   // dB
-		safetyLimiter.setRelease(50.0f);     // ms
-	}
+    // Preparazione limiter
+    limiter.prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
 }
 
 /**
@@ -178,40 +165,17 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
 		buffer.clear(i, 0, buffer.getNumSamples());
 
-	// Count active voices to scale gain only when stacking actually occurs
-	int activeVoices = 0;
-	for (int i = 0; i < synth.getNumVoices(); ++i)
-		if (auto* v = synth.getVoice(i); v != nullptr && v->isVoiceActive())
-			++activeVoices;
+	// Conta le voci attive
+    int activeVoices = 0;
+    for (int i = 0; i < synth.getNumVoices(); ++i)
+        if (auto* v = synth.getVoice(i); v != nullptr && v->isVoiceActive())
+            ++activeVoices;
 
-	const float polyGainScale = activeVoices > 0 ? 1.0f / std::sqrt(static_cast<float>(activeVoices)) : 1.0f;
-
-	for (int i = 0; i < synth.getNumVoices(); ++i)
-		if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
-		{
-			float attack = apvts.getRawParameterValue(parameters::ATTACK)->load();
-			float decay = apvts.getRawParameterValue(parameters::DECAY)->load();
-			float sustain = apvts.getRawParameterValue(parameters::SUSTAIN)->load();
-			float release = apvts.getRawParameterValue(parameters::RELEASE)->load();
-			float gain = apvts.getRawParameterValue(parameters::GAIN)->load();
-			const int oscChoice = static_cast<int>(apvts.getRawParameterValue(parameters::OSCILLATOR_TYPE)->load());
-			float fmFreq = apvts.getRawParameterValue(parameters::FM_FREQUENCY)->load();
-			float fmDepth = apvts.getRawParameterValue(parameters::FM_DEPTH)->load();
-			float filterType = apvts.getRawParameterValue(parameters::FILTER_TYPE)->load();
-			float filterCutOff = apvts.getRawParameterValue(parameters::FILTER_CUTOFF)->load();
-			float filterResonance = apvts.getRawParameterValue(parameters::FILTER_RESONANCE)->load();
-			float modAttack = apvts.getRawParameterValue(parameters::MOD_ATTACK)->load();
-			float modDecay = apvts.getRawParameterValue(parameters::MOD_DECAY)->load();
-			float modSustain = apvts.getRawParameterValue(parameters::MOD_SUSTAIN)->load();
-			float modRelease = apvts.getRawParameterValue(parameters::MOD_RELEASE)->load();
-
-			voice->getOscillator().setWaveType(oscChoice);
-			voice->getOscillator().setFmParams(fmDepth, fmFreq);
-			// Separare updateADSR da GAIN
-			voice->updateADSR(attack, decay, sustain, release, gain * polyGainScale);
-			voice->updateFilter(static_cast<int>(filterType), filterCutOff, filterResonance);
-			voice->updateModADSR(modAttack, modDecay, modSustain, modRelease);
-		}
+    for (int i = 0; i < synth.getNumVoices(); ++i)
+        if (auto* voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
+        {
+            voiceData.applyParams(*voice, apvts, activeVoices);
+        }
 
 	// Render dry
 	synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
@@ -253,20 +217,14 @@ void SubSynthAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 	// Applica FX post-synth
 	fx.process(buffer);
 
-	// Aggiorna limiter dai parametri APVTS
-	{
-		const float thrDb = apvts.getRawParameterValue(parameters::LIM_THRESHOLD_DB)->load();
-		const float relMs = apvts.getRawParameterValue(parameters::LIM_RELEASE_MS)->load();
-		safetyLimiter.setThreshold(thrDb);
-		safetyLimiter.setRelease(relMs);
-	}
-
-	// processing finale del limiter
-	{
-		juce::dsp::AudioBlock<float> block(buffer);
-		juce::dsp::ProcessContextReplacing<float> ctx(block);
-		safetyLimiter.process(ctx);
-	}
+    // Aggiorna e applica limiter post chain
+    {
+        const float thrDb = apvts.getRawParameterValue(parameters::LIM_THRESHOLD_DB)->load();
+        const float relMs = apvts.getRawParameterValue(parameters::LIM_RELEASE_MS)->load();
+        limiter.setThreshold(thrDb);
+        limiter.setRelease(relMs);
+        limiter.process(buffer);
+    }
 }
 
 /**
@@ -336,14 +294,11 @@ void SubSynthAudioProcessor::updateSynthVoices(int desired)
 			auto* v = new SynthVoice();
 			synth.addVoice(v);
 
-			// Se prepareToPlay è già stato chiamato, prepara la nuova voce subito
-			if (lastSampleRate > 0.0)
-			{
-				v->prepareToPlay(lastSampleRate, lastBlockSize, getTotalNumOutputChannels());
-				v->setAmpEnvelopeDebug(false);
-				v->setModEnvelopeDebug(false);
-				v->setEnvelopeDebugRates(60, 120);
-			}
+            // Se prepareToPlay è già stato chiamato, prepara la nuova voce subito
+            if (lastSampleRate > 0.0)
+            {
+                voiceData.prepareVoice(*v, lastSampleRate, lastBlockSize, getTotalNumOutputChannels());
+            }
 		}
 	}
 	else // desired < current

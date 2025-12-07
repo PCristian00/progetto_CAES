@@ -29,10 +29,15 @@ DialogBox::DialogBox(juce::String messageText, juce::String acceptButtonText, ju
 	message.setText(messageText, juce::dontSendNotification);
 	addAndMakeVisible(message);
 
-	if (acceptButtonText.isNotEmpty())
+	if (acceptButtonText.isNotEmpty()) {
 		utils::setButton(leftButton, acceptButtonText, this);
-	if (closeButtonText.isNotEmpty())
+		utils::themeButton(leftButton, utils::presetCol);
+
+	}
+	if (closeButtonText.isNotEmpty()) {
 		utils::setButton(rightButton, closeButtonText, this);
+		utils::themeButton(rightButton, utils::presetCol);
+	}
 
 	leftFunction = std::move(acceptFunction);
 	rightFunction = [this]() { this->close(); };
@@ -108,6 +113,13 @@ void DialogBox::buttonClicked(juce::Button* button) {
 		// Handle right button click
 		rightFunction();
 	}
+
+	// Ripristina il colore originale dopo un breve delay forzando un repaint (disable/enable)
+	button->setEnabled(false);
+	juce::Timer::callAfterDelay(150, [button]
+		{
+			button->setEnabled(true);
+		});
 }
 
 /**
